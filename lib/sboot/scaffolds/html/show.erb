@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+	<input type="hidden" name="id" value="" >
+<% @properties.each do |property| -%>
+	<p>
+	  <strong><%= property[:name].capitalize %>:</strong>
+	  <%= @task.project_id %>
+	</p>
+<% end -%>
+<p>
+  <strong>Project:</strong>
+  <%= @task.project_id %>
+</p>
+
+<%= link_to 'Edit', edit_task_path(@task) %> |
+<%= link_to 'Back', tasks_path %>

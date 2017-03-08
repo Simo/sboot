@@ -1,0 +1,59 @@
+package <%= @package %>.business.services.impl;
+
+import <%= @package %>.business.dto.<%= @name.capitalize %>Dto;
+import <%= @package %>.business.services.<%= @name.capitalize %>Service;
+import <%= @package %>.exceptions.EntityNotFoundException;
+import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
+import <%= @package %>.persistence.repositories.<%= @name.capitalize %>Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created on .
+ */
+@Service
+public class <%= @name.capitalize %>ServiceImpl implements <%= @name.capitalize %>Service {
+
+    @Autowired
+    private <%= @name.capitalize %>Repository repository;
+
+    @Override
+    public List<<%= @name.capitalize %>Dto> trovaTutti() {
+        List<<%= @name.capitalize %>> source = repository.findAll();
+        List<<%= @name.capitalize %>Dto> dtos = new ArrayList<<%= @name.capitalize %>Dto>();
+        for (<%= @name.capitalize %> entity : source){
+            <%= @name.capitalize %>Dto dto = new <%= @name.capitalize %>Dto(entity);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    @Override
+    public <%= @name.capitalize %>Dto trova(Long id) {
+        return new <%= @name.capitalize %>Dto(this.findOneSafe(id));
+    }
+
+    @Override
+    public <%= @name.capitalize %>Dto salva(<%= @name.capitalize %>Dto model) {
+        return new <%= @name.capitalize %>Dto(repository.save(model.convert()));
+    }
+
+    @Override
+    @Transactional
+    public Long cancella(Long id) {
+        return repository.deleteById(id);
+    }
+
+    private <%= @name.capitalize %> findOneSafe(Long id) {
+        <%= @name.capitalize %> spandimento = repository.findOne(id);
+        if (spandimento == null) {
+            throw new EntityNotFoundException("404","Entita non trovata per la comunicazione in oggetto");
+        } else {
+            return spandimento;
+        }
+    }
+}

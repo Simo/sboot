@@ -1,0 +1,51 @@
+package <%= @package %>.business.dto;
+
+import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
+
+/**
+ * Created by sbierti on 24/05/16.
+ */
+public class <%= @name.capitalize %>Dto {
+
+    private Long id;
+    <% @properties.each do |property| %>
+    private <%= property[:type] %> <%= property[:name] %>;
+    <% end %>
+
+    public <%= @name.capitalize %>Dto(){}
+
+    public <%= @name.capitalize %>Dto(<%= @name.capitalize %> entity){
+        this.id = entity.getId();
+				<% @properties.each do |property| -%>
+		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
+		    <% end -%>
+    }
+
+    public <%= @name.capitalize %> convert(){
+        <%= @name.capitalize %> entity = new <%= @name.capitalize %>();
+        entity.setId(this.id);
+				<% @properties.each do |property| -%>
+		    entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
+		    <% end -%>
+        return entity;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    <% @properties.each do |property| -%>
+    public <%= property[:type] %> get<%= property[:name].capitalize %>() {
+        return <%= property[:name] %>;
+    }
+
+    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
+        this.<%= property[:name] %> = <%= property[:name] %>;
+    }
+
+		<% end -%>
+}

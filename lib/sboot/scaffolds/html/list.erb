@@ -1,0 +1,23 @@
+<h1>ELenco</h1>
+
+<table>
+  <thead>
+    <tr>
+      <% @properties.each do |property| -%><th><%= property[:name].capitalize %></th>
+			<% end -%><th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+		<tr th:each="<%= @name.downcase %>Elemento : ${<%= @name.downcase %>Lista}">
+	      <% @properties.each do |property| -%><td th:text="${<%= @name.downcase %>Elemento.<%= property[:name] %>}"><%= property[:name].capitalize %></td>
+				<% end -%><td><a th:href="@{/<%= @name.downcase %>/${<%= @name.downcase %>Elemento.id}}">Mostra</a></td>
+				<td><a th:href="@{/<%= @name.downcase %>/${<%= @name.downcase %>Elemento.id}/edit}">Modifica</a></td>
+				<td><a th:href="@{/<%= @name.downcase %>/${<%= @name.downcase %>Elemento.id}/delete}">Cancella</a></td>
+		</tr>
+  </tbody>
+</table>
+
+<br>
+
+<a th:href="@{/<%= @name.downcase %>/new}">Inserisci</a>

@@ -1,0 +1,38 @@
+package <%= @package %>.persistence.entities;
+
+import javax.persistence.*;
+
+/**
+ * Created on .
+ */
+@Entity
+@Table(name = "T_<%= @name.upcase %>")
+public class <%= @name.capitalize %> {
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO, generator="spandimento_seq_gen")
+    @SequenceGenerator(name="spandimento_seq_gen", sequenceName="SEQ_TNIT_SPANDIMENTO_ID")
+    @Column(name = "ID")
+    private Long id;
+		<% @properties.each do |property| -%>
+		@Column(name = "<%= property[:name].upcase %>")
+    private <%= property[:type] %> <%= property[:name] %>;
+    <% end -%>
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+		<% @properties.each do |property| -%>
+		public <%= property[:type] %> get<%= property[:name].capitalize %>() {
+        return <%= property[:name] %>;
+    }
+
+    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
+        this.<%= property[:name] %> = <%= property[:name] %>;
+    }
+		<% end -%>
+}

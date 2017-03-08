@@ -1,0 +1,19 @@
+package <%= @package %>.business.services;
+
+import <%= @package %>.business.dto.<%= @name.capitalize %>Dto;
+
+import java.util.List;
+
+/**
+ * Created on.
+ */
+public interface <%= @name.capitalize %>Service {
+
+    List<<%= @name.capitalize %>Dto> trovaTutti();
+
+    <%= @name.capitalize %>Dto trova(Long id);
+
+    <%= @name.capitalize %>Dto salva(<%= @name.capitalize %>Dto model);
+
+    Long cancella(Long id);
+}

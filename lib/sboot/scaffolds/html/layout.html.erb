@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="ISO-8859-1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">ETP</title>
+
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" th:href="@{resources/node_modules/bootstrap/dist/css/bootstrap.min.css}" />
+		<link rel="stylesheet" th:href="@{resources/node_modules/bootstrap-material-design/dist/css/bootstrap-material-design.min.css}" />
+		<link rel="stylesheet" th:href="@{resources/node_modules/bootstrap-material-design/dist/css/ripples.min.css}" />
+		<link rel="stylesheet" th:href="@{resources/node_modules/snackbar/dist/css/snackbar.min.css}" >
+		<link rel="stylesheet" th:href="@{/resources/css/datatables.min.css}" >
+		<link rel="stylesheet" th:href="@{/resources/css/jquery-ui.min.css}" >
+		<link rel="stylesheet" th:href="@{/resources/css/sipesca.css}" >
+
+		<script type="text/javascript" th:src="@{/resources/node_modules/jquery/dist/jquery.min.js}"></script>
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="bs-docs-section clearfix">
+				<div class="row">
+					<div class="col-md-12">
+							<div class="navbar navbar-fixed-top">
+								<div class="container-fluid">
+									<div class="navbar-header">
+										<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+											<span class="icon-bar"></span>
+											<span class="icon-bar"></span>
+											<span class="icon-bar"></span>
+										</button>
+										<a class="navbar-brand" href="javascript:void(0)">Brand</a>
+									</div>
+									<div class="navbar-collapse collapse navbar-responsive-collapse">
+										<ul class="nav navbar-nav">
+											<li th:classappend="${menuAttivo}=='amministrazione' ? 'active evidence info' : '' "><a th:href="amministrazione">Configurazione</a></li>
+											<li th:classappend="${menuAttivo}=='anagrafica' ? 'active evidence info' : '' "><a th:href="anagrafica">Anagrafica</a></li>
+											<li th:classappend="${menuAttivo}=='pagamenti' ? 'active  evidence info' : '' "><a th:href="pagamenti">Pagamenti</a></li>
+											<li th:classappend="${menuAttivo}=='report' ? 'active evidence info' : '' "><a th:href="report">Report</a></li>
+										</ul>
+										<ul class="nav navbar-nav navbar-right">
+											<li class="dropdown">
+												<a href="bootstrap-elements.html" data-target="#" class="dropdown-toggle" data-toggle="dropdown"> <i class="material-icons">face</i> Mario Rossi
+												<b class="caret"></b></a>
+												<ul class="dropdown-menu">
+													<li><a href="javascript:void(0)">Action</a></li>
+													<li><a href="javascript:void(0)">Another action</a></li>
+													<li><a href="javascript:void(0)">Something else here</a></li>
+													<li class="divider"></li>
+													<li><a href="javascript:void(0)">Separated link</a></li>
+												</ul>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div layout:fragment="content"></div>
+		</div>
+		<br>		
+
+		<!-- dialog -->
+		<div th:replace="anagraficaRicerca :: copy"></div>
+		<div th:include="baseModal :: modal"></div>
+		
+		<script type="text/javascript" th:src="@{/resources/node_modules/bootstrap/dist/js/bootstrap.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/node_modules/bootstrap-material-design/dist/js/ripples.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/node_modules/bootstrap-material-design/dist/js/material.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/node_modules/snackbar/dist/snackbar.min.js}"></script>	
+		<script type="text/javascript" th:src="@{/resources/js/esterni/jquery.nouislider.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/esterni/bootstrap3-typeahead.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/esterni/datatables.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/esterni/jquery.validate.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/esterni/additional-methods.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/esterni/jquery-ui.min.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/layout.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/common.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/anagrafica.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/indirizzi.js}"></script>
+		<script type="text/javascript" th:src="@{/resources/js/contatti.js}"></script>
+	</body>
+</html>
