@@ -16,7 +16,8 @@ module Sboot
     end
     
     def basic_path
-      "#{File.dirname __FILE__}/generated"
+      #"#{File.dirname __FILE__}/generated"
+      "#{ Dir.pwd }"
     end
     
     def package_to_path

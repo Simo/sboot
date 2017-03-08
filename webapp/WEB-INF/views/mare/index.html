@@ -1,0 +1,25 @@
+<h1>ELenco</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+			<th>Altezza</th>
+			<th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+		<tr th:each="mareElemento : ${mareLista}">
+	      <td th:text="${mareElemento.nome}">Nome</td>
+				<td th:text="${mareElemento.altezza}">Altezza</td>
+				<td><a th:href="@{/mare/${mareElemento.id}}">Mostra</a></td>
+				<td><a th:href="@{/mare/${mareElemento.id}/edit}">Modifica</a></td>
+				<td><a th:href="@{/mare/${mareElemento.id}/delete}">Cancella</a></td>
+		</tr>
+  </tbody>
+</table>
+
+<br>
+
+<a th:href="@{/mare/new}">Inserisci</a>
