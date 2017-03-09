@@ -5,16 +5,16 @@ import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
 /**
  * Created by sbierti on 24/05/16.
  */
-public class <%= @name.capitalize %>Dto {
+public class <%= @name.capitalize %>DTO {
 
     private Long id;
     <% @properties.each do |property| %>
     private <%= property[:type] %> <%= property[:name] %>;
     <% end %>
 
-    public <%= @name.capitalize %>Dto(){}
+    public <%= @name.capitalize %>DTO(){}
 
-    public <%= @name.capitalize %>Dto(<%= @name.capitalize %> entity){
+    public <%= @name.capitalize %>DTO(<%= @name.capitalize %> entity){
         this.id = entity.getId();
 				<% @properties.each do |property| -%>
 		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
