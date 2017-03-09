@@ -9,16 +9,21 @@ module Sboot
 
     desc "generate [ENV] :package :persona :proprieta'",
       "la flag [ENV] accetta come parametri: fullstack(default),backend,business,conversion,persistence"
+      method_option :api => false
       method_option :env, :default => "fullstack"
       def generate(package, name, *args)
         properties = generate_attributes args
         writer = Sboot::Writer.new :package => package, :name => name.downcase.capitalize, :properties => properties
-        writer.fullstack unless options[:env]
-        writer.fullstack if options[:env] == 'fullstack'
-        writer.backend if options[:env] == 'backend'
-        writer.business if options[:env] == 'business'
-        writer.convertion if options[:env] == 'convertion'
-        writer.persistence if options[:env] == 'persistence'
+        if options[:api]
+          writer.api
+        else
+          writer.fullstack unless options[:env]
+          writer.fullstack if options[:env] == 'fullstack'
+          writer.backend if options[:env] == 'backend'
+          writer.business if options[:env] == 'business'
+          writer.convertion if options[:env] == 'convertion'
+          writer.persistence if options[:env] == 'persistence'
+        end
       end
 
       private
@@ -31,7 +36,7 @@ module Sboot
             type = 'String'
           else
             name = array[0].downcase
-            if array[1].downcase == 'string' || array[1].downcase == 'text'
+            if array[1].downcase == 'string' || array[1].downcase == 'text' || array[1].downcase == 'varchar' || array[1].downcase == 'varchar2'
               type = 'String'
             end
             if array[1].downcase == 'number' || array[1].downcase == 'long'

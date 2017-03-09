@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/<%= @name.downcase %>")
 @Api("/api/<%= @name.downcase %>")
 public class <%= @name.capitalize %>Controller {
-  
+
     @Autowired
     private <%= @name.capitalize %>Service service;
     @Autowired
@@ -42,7 +42,7 @@ public class <%= @name.capitalize %>Controller {
         @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO[].class)
     })
     public List<<%= @name.capitalize %>DTO> findAll() {
-        return service.findAll();
+        return service.trovaTutti();
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,7 +54,7 @@ public class <%= @name.capitalize %>Controller {
     public <%= @name.capitalize %>DTO create(
             @ApiParam(required = true, name = "<%= @name.downcase %>", value = "New <%= @name.downcase %>")
             @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
-        return service.create(dto);
+        return service.salva(dto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,11 +65,22 @@ public class <%= @name.capitalize %>Controller {
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
     public <%= @name.capitalize %>DTO update(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> che si vuole aggiornare", defaultValue = "0")
-            @PathVariable Long id,
             @ApiParam(required = true, name = "<%= @name.downcase %>", value = "")
             @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
-        return service.update(id, dto);
+        return service.salva(dto);
+    }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Visualizza <%= @name.capitalize %>", notes = "Visualizza una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
+        @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
+        @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
+    })
+    public <%= @name.capitalize %>DTO show(
+            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> che si vuole aggiornare", defaultValue = "0")
+            @PathVariable Long id) {
+        return service.trova(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
