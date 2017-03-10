@@ -9,8 +9,7 @@ module Sboot
 
     desc "generate [ENV] :package :persona :proprieta'",
       "la flag [ENV] accetta come parametri: fullstack(default),backend,business,conversion,persistence"
-      method_option :api => false
-      method_option :env, :default => "fullstack"
+      method_options :api => false, :env => "fullstack"
       def generate(package, name, *args)
         properties = generate_attributes args
         writer = Sboot::Writer.new :package => package, :name => name.downcase.capitalize, :properties => properties
