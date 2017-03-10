@@ -34,7 +34,7 @@ module Sboot
     def conversion
       persistence
       write_dto 'dto'
-      puts "create #{name.capitalize}Dto.java in #{package_to_path}/business/dtos"
+      puts "create #{name.capitalize}DTO.java in #{package_to_path}/business/dtos"
     end
 
     def business
@@ -53,6 +53,7 @@ module Sboot
 
     def fullstack
       backend
+      write_layout 'layout'
       write_html 'list'
     end
 
@@ -62,11 +63,11 @@ module Sboot
       write_dto 'dto_rest'
       write_service 'service'
       write_service_impl 'serviceimpl'
-      write_controller 'controller_rest'
+      write_controller_rest 'controller_rest'
       write_swaggerconfig
     end
 
-    def write path,template,type
+    def write(path,template,type)
       create_missing_folders path
       File.open("#{basic_path}/#{package_to_path}/#{path}/#{@name}#{type ? type : ''}.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
@@ -83,6 +84,13 @@ module Sboot
     def write_repository(template)
       create_missing_folders "persistence/repositories"
       File.open("#{basic_path}/#{package_to_path}/persistence/repositories/#{@name}Repository.java", 'w') do |f|
+        f.write ERB.new(getTemplate(template),nil,'-').result(binding)
+      end
+    end
+
+    def write_exception(template)
+      create_missing_folders "business/exceptions"
+      File.open("#{basic_path}/#{package_to_path}/business/exceptions/EntityNotFoundException.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
@@ -122,9 +130,30 @@ module Sboot
       end
     end
 
+    def write_controller_rest template
+      create_missing_folders "web/controllers/api"
+      File.open("#{basic_path}/#{package_to_path}/web/controllers/api/#{@name}Controller.java", 'w') do |f|
+        f.write ERB.new(getTemplate(template),nil,'-').result(binding)
+      end
+    end
+
+    def write_layout template
+      create_missing_layout
+      File.open("#{layout_path}/layout.html", 'w') do |f|
+        f.write ERB.new(getTemplateHtml(template),nil,'-').result(binding)
+      end
+    end
+
     def write_html template
       create_missing_views
       File.open("#{views_path}/index.html", 'w') do |f|
+        f.write ERB.new(getTemplateHtml(template),nil,'-').result(binding)
+      end
+    end
+
+    def write_show template
+      create_missing_views
+      File.open("#{views_path}/dettaglio.html", 'w') do |f|
         f.write ERB.new(getTemplateHtml(template),nil,'-').result(binding)
       end
     end
@@ -141,8 +170,16 @@ module Sboot
       FileUtils.mkdir_p "#{basic_path}/#{package_to_path}/#{relative_path}"
     end
 
+    def create_missing_layout
+      FileUtils.mkdir_p "#{basic_path}/webapp/WEB-INF/views/layout"
+    end
+
     def create_missing_views
       FileUtils.mkdir_p "#{basic_path}/webapp/WEB-INF/views/#{name.downcase}"
+    end
+
+    def layout_path
+      "#{basic_path}/webapp/WEB-INF/views/layout"
     end
 
     def views_path

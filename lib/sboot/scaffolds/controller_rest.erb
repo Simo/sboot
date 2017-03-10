@@ -93,7 +93,7 @@ public class <%= @name.capitalize %>Controller {
     public void delete(
             @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> da cancellare")
             @PathVariable Long id) {
-        service.delete(id);
+        service.cancella(id);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

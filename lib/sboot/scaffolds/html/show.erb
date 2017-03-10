@@ -1,15 +1,25 @@
-<p id="notice"><%= notice %></p>
-	<input type="hidden" name="id" value="" >
-<% @properties.each do |property| -%>
-	<p>
-	  <strong><%= property[:name].capitalize %>:</strong>
-	  <%= @task.project_id %>
-	</p>
-<% end -%>
-<p>
-  <strong>Project:</strong>
-  <%= @task.project_id %>
-</p>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
+    <head>
+        <meta charset="utf-8">
+        <title>Dettaglio <%= @name.capitalize %></title>
+    </head>
+    <body layout:fragment="content">
+			<p>
+				<strong>Id:</strong>
+				<span th:text="${<%= @name.downcase %>.id}"></span>
+			</p>
+			<% @properties.each do |property| -%>
+				<p>
+				  <strong><%= property[:name].capitalize %>:</strong>
+				  <span th:text="${<%= @name.downcase %>.<%= property[:name] %>}"></span>
+				</p>
+			<% end -%>
 
-<%= link_to 'Edit', edit_task_path(@task) %> |
-<%= link_to 'Back', tasks_path %>
+			<a th:href="@{'/<%= @name.downcase %>/'+${<%= @name.downcase %>.id}+'/edit'}">Modifica</a>
+			<a th:href="@{'/<%= @name.downcase %>'}">Indietro</a>
+
+  </body>
+</html>

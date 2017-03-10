@@ -2,10 +2,10 @@ package <%= @package %>.web.controllers;
 
 import <%= @package %>.business.dtos.<%= @name.capitalize %>DTO;
 import <%= @package %>.business.services.<%= @name.capitalize %>Service;
-import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -59,14 +59,14 @@ public class <%= @name.capitalize %>Controller {
     }
 
     @RequestMapping(value = "/<%= @name.downcase %>/{id}",method = RequestMethod.DELETE)
-    public Long delete(@PathVariable Long id){
-				Long idDeleted = service.delete(id);
+    public String deleteRest(@PathVariable Long id){
+				Long idDeleted = service.cancella(id);
 				return "redirect:/<%= @name.downcase %>";
     }
 
 		@RequestMapping(value = "/<%= @name.downcase %>/{id}/delete",method = RequestMethod.GET)
-    public Long delete(@PathVariable Long id){
-				Long idDeleted = service.delete(id);
+    public String delete(@PathVariable Long id){
+				Long idDeleted = service.cancella(id);
 				return "redirect:/<%= @name.downcase %>";
     }
 

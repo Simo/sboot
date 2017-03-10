@@ -22,7 +22,7 @@ public class <%= @name.capitalize %>ServiceImpl implements <%= @name.capitalize 
     private <%= @name.capitalize %>Repository repository;
 
     @Override
-    public List<<%= @name.capitalize %>Dto> trovaTutti() {
+    public List<<%= @name.capitalize %>DTO> trovaTutti() {
         List<<%= @name.capitalize %>> source = repository.findAll();
         List<<%= @name.capitalize %>DTO> dtos = new ArrayList<<%= @name.capitalize %>DTO>();
         for (<%= @name.capitalize %> entity : source){

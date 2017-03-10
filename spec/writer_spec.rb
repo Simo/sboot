@@ -49,6 +49,11 @@ describe Sboot::Writer do
       expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/persistence/repositories/#{writer.name.capitalize}Repository.java").to be(true)
     end
 
+    it "write exception EntityNotFound" do
+      writer.write_exception 'exception'
+      expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/business/exceptions/EntityNotFoundException.java").to be(true)
+    end
+
     it 'write dto' do
       writer.write_dto 'dto'
       expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/business/dtos/#{writer.name.capitalize}DTO.java").to be(true)
@@ -75,8 +80,8 @@ describe Sboot::Writer do
     end
 
     it 'write controller_rest' do
-      writer.write_controller 'controller_rest'
-      expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/web/controllers/#{writer.name.capitalize}Controller.java").to be(true)
+      writer.write_controller_rest 'controller_rest'
+      expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/web/controllers/api/#{writer.name.capitalize}Controller.java").to be(true)
     end
 
     it "write messagedto" do
@@ -84,9 +89,19 @@ describe Sboot::Writer do
       expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/business/dtos/MessageDTO.java").to be(true)
     end
 
+    it "write layout.html" do
+      writer.write_layout 'layout'
+      expect(File.exists? "#{writer.basic_path}/webapp/WEB-INF/views/layout/layout.html").to be(true)
+    end
+
     it 'write index.html' do
       writer.write_html 'list'
       expect(File.exists? "#{writer.basic_path}/webapp/WEB-INF/views/#{writer.name.downcase}/index.html").to be(true)
+    end
+
+    it "write show.html" do
+      writer.write_show 'show'
+      expect(File.exists? "#{writer.basic_path}/webapp/WEB-INF/views/#{writer.name.downcase}/dettaglio.html").to be(true)
     end
 
     it "write swaggerconfig" do
@@ -131,7 +146,7 @@ describe Sboot::Writer do
       expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/web/controllers/#{writer.name.capitalize}Controller.java").to be(true)
     end
 
-    #after(:each) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
+    after(:each) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
 
   end
 
