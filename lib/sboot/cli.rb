@@ -7,7 +7,7 @@ module Sboot
 
     source_root "#{File.dirname __FILE__}/scaffolds/"
 
-    desc "generate [ENV] :package :persona :proprieta'",
+    desc "generate [ENV] :package :entita' :proprieta'",
       "la flag [ENV] accetta come parametri: fullstack(default),backend,business,conversion,persistence"
       method_options :api => false, :env => "fullstack"
       def generate(package, name, *args)

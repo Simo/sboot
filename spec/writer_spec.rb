@@ -3,7 +3,7 @@ require 'fileutils'
 
 describe Sboot::Writer do
 
-  subject(:writer){ Sboot::Writer.new package: 'it.insiel.siagri.nitrati', name: 'Persona', properties: [{name: 'name',type: 'String'},{name: 'age',type: 'Long'}] }
+  subject(:writer){ Sboot::Writer.new package: 'it.insiel.siagri.nitrati', name: 'Casa', properties: [{name: 'indirizzo',type: 'String'},{name: 'civico',type: 'Long'}] }
 
   describe 'initialization' do
 
@@ -107,6 +107,11 @@ describe Sboot::Writer do
     it "write swaggerconfig" do
       writer.write_swaggerconfig
       expect(File.exists? "#{writer.basic_path}/#{writer.package_to_path}/configurations/SwaggerConfig.java").to be(true)
+    end
+
+    it "write controller test" do
+      writer.write_controller_test 'controller_test'
+      expect(File.exists? "#{writer.test_basic_path}/#{writer.package_to_path}/web/controllers/#{writer.name.capitalize}ControllerTest.java").to be(true)
     end
 
     #after(:all) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }

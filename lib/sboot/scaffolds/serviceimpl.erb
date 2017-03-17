@@ -12,14 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created on .
- */
 @Service
 public class <%= @name.capitalize %>ServiceImpl implements <%= @name.capitalize %>Service {
 
-    @Autowired
     private <%= @name.capitalize %>Repository repository;
+
+		@Autowired
+		public <%= @name.capitalize %>ServiceImpl(<%= @name.capitalize %>Repository repo){
+			this.repository = repo;
+		}
 
     @Override
     public List<<%= @name.capitalize %>DTO> trovaTutti() {

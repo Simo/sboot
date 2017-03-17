@@ -44,7 +44,7 @@ describe Sboot::CLI do
       expect(File.exists? "it/insiel/siagri/nitrati/configurations/SwaggerConfig.java").to be(true)
     end
 
-    #after(:each) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
+    after(:each) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
   end
 
 end

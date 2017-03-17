@@ -20,6 +20,10 @@ module Sboot
       "#{ Dir.pwd }"
     end
 
+    def test_basic_path
+      "#{ Dir.pwd }/test/java"
+    end
+
     def package_to_path
       @package.gsub(/\./,"/")
     end
@@ -165,6 +169,14 @@ module Sboot
       end
     end
 
+    def write_controller_test template
+      create_test_folders
+      FileUtils.mkdir_p "#{test_basic_path}/#{package_to_path}/web/controllers"
+      File.open("#{test_basic_path}/#{package_to_path}/web/controllers/#{@name}ControllerTest.java", 'w') do |f|
+        f.write ERB.new(getTemplate(template),nil,'-').result(binding)
+      end
+    end
+
     private
     def create_missing_folders relative_path
       FileUtils.mkdir_p "#{basic_path}/#{package_to_path}/#{relative_path}"
@@ -176,6 +188,10 @@ module Sboot
 
     def create_missing_views
       FileUtils.mkdir_p "#{basic_path}/webapp/WEB-INF/views/#{name.downcase}"
+    end
+
+    def create_test_folders
+      FileUtils.mkdir_p "#{basic_path}/test/java"
     end
 
     def layout_path
