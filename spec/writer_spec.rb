@@ -114,7 +114,7 @@ describe Sboot::Writer do
       expect(File.exists? "#{writer.test_basic_path}/#{writer.package_to_path}/web/controllers/#{writer.name.capitalize}ControllerTest.java").to be(true)
     end
 
-    #after(:all) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
+    after(:all) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
   end
 
   describe 'enviromental callings' do
