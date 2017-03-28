@@ -70,7 +70,7 @@ public class <%= @name.capitalize %>Controller {
         return service.salva(dto);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Visualizza <%= @name.capitalize %>", notes = "Visualizza una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
     @ApiResponses({
         @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
