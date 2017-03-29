@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
 import <%= @package %>.business.dtos.MessageDTO;
-import <%= @package %>.business.dtos.<%= @name.capitalize %>DTO;
+import <%= @package %>.business.dtos.<%= @name.split('_').collect(&:capitalize).join %>DTO;
 import <%= @package %>.business.services.exceptions.EntityNotFoundException;
-import <%= @package %>.business.services.<%= @name.capitalize %>Service;
+import <%= @package %>.business.services.<%= @name.split('_').collect(&:capitalize).join %>Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,88 +27,87 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/<%= @name.downcase %>")
+@RequestMapping(value={"/api/<%= @name.downcase %>","/rest/<%= @name.downcase %>"})
 @Api("/api/<%= @name.downcase %>")
-public class <%= @name.capitalize %>Controller {
+public class <%= @name.split('_').collect(&:capitalize).join %>Controller {
 
-    @Autowired
-    private <%= @name.capitalize %>Service service;
-    @Autowired
-    private MessageSource messageSource;
+@Autowired
+private <%= @name.split('_').collect(&:capitalize).join %>Service service;
+@Autowired
+private MessageSource messageSource;
 
-    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Trova tutte le <%= @name.capitalize %>", notes = "Recupera la lista di tutte le <%= @name.capitalize %>", response = <%= @name.capitalize %>DTO[].class)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO[].class)
-    })
-    public List<<%= @name.capitalize %>DTO> findAll() {
-        return service.trovaTutti();
-    }
+@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+@ApiOperation(value = "Trova tutte le <%= @name.split('_').collect(&:capitalize).join %>", notes = "Recupera la lista di tutte le <%= @name.split('_').collect(&:capitalize).join %>", response = <%= @name.split('_').collect(&:capitalize).join %>DTO[].class)
+@ApiResponses({
+@ApiResponse(code = 200, message = "Success", response = <%= @name.split('_').collect(&:capitalize).join %>DTO[].class)
+})
+public List<<%= @name.split('_').collect(&:capitalize).join %>DTO> findAll() {
+  return service.trovaTutti();
+  }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Crea nuova <%= @name.capitalize %>", notes = "Crea una nuova <%= @name.capitalize %>", response = <%= @name.capitalize %>DTO.class)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
-        @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class)
-    })
-    public <%= @name.capitalize %>DTO create(
-            @ApiParam(required = true, name = "<%= @name.downcase %>", value = "New <%= @name.downcase %>")
-            @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
-        return service.salva(dto);
-    }
+  @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiOperation(value = "Crea nuova <%= @name.split('_').collect(&:capitalize).join %>", notes = "Crea una nuova <%= @name.split('_').collect(&:capitalize).join %>", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class)
+  @ApiResponses({
+  @ApiResponse(code = 200, message = "Success", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class),
+  @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class)
+  })
+  public <%= @name.split('_').collect(&:capitalize).join %>DTO create(
+  @ApiParam(required = true, name = "<%= @name.downcase %>", value = "New <%= @name.downcase %>")
+  @Valid @RequestBody <%= @name.split('_').collect(&:capitalize).join %>DTO dto) {
+  return service.salva(dto);
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Esegui update <%= @name.capitalize %>", notes = "Aggiorna una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
-        @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
-        @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
-    })
-    public <%= @name.capitalize %>DTO update(
-            @ApiParam(required = true, name = "<%= @name.downcase %>", value = "")
-            @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
-        return service.salva(dto);
-    }
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiOperation(value = "Esegui update <%= @name.split('_').collect(&:capitalize).join %>", notes = "Aggiorna una <%= @name.split('_').collect(&:capitalize).join %> esistente", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class)
+  @ApiResponses({
+  @ApiResponse(code = 200, message = "Success", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class),
+  @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
+  @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
+  })
+  public <%= @name.split('_').collect(&:capitalize).join %>DTO update(
+  @ApiParam(required = true, name = "<%= @name.downcase %>", value = "")
+  @Valid @RequestBody <%= @name.split('_').collect(&:capitalize).join %>DTO dto) {
+  return service.salva(dto);
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Visualizza <%= @name.capitalize %>", notes = "Visualizza una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
-        @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
-        @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
-    })
-    public <%= @name.capitalize %>DTO show(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> che si vuole aggiornare", defaultValue = "0")
-            @PathVariable Long id) {
-        return service.trova(id);
-    }
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ApiOperation(value = "Visualizza <%= @name.split('_').collect(&:capitalize).join %>", notes = "Visualizza una <%= @name.split('_').collect(&:capitalize).join %> esistente", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class)
+  @ApiResponses({
+  @ApiResponse(code = 200, message = "Success", response = <%= @name.split('_').collect(&:capitalize).join %>DTO.class),
+  @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
+  @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
+  })
+  public <%= @name.split('_').collect(&:capitalize).join %>DTO show(
+  @ApiParam(required = true, name = "id", value = "ID della <%= @name.split('_').collect(&:capitalize).join %> che si vuole aggiornare", defaultValue = "0")
+  @PathVariable Long id) {
+  return service.trova(id);
+  }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Cancella <%= @name.downcase %>", notes = "Cancella una <%= @name.capitalize %> esistente")
-    @ApiResponses({
-        @ApiResponse(code = 204, message = "Success"),
-        @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
-    })
-    public void delete(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> da cancellare")
-            @PathVariable Long id) {
-        service.cancella(id);
-    }
+  @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ApiOperation(value = "Cancella <%= @name.downcase %>", notes = "Cancella una <%= @name.split('_').collect(&:capitalize).join %> esistente")
+  @ApiResponses({
+  @ApiResponse(code = 204, message = "Success"),
+  @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
+  })
+  public void delete(
+  @ApiParam(required = true, name = "id", value = "ID della <%= @name.split('_').collect(&:capitalize).join %> da cancellare")
+  @PathVariable Long id) {
+  service.cancella(id);
+  }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public MessageDTO handleValidationException(MethodArgumentNotValidException ex) {
-        Locale locale = LocaleContextHolder.getLocale();
-        String code = ex.getBindingResult().getFieldError().getDefaultMessage();
-        return new MessageDTO(messageSource.getMessage(code, null, locale));
-    }
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public MessageDTO handleValidationException(MethodArgumentNotValidException ex) {
+  Locale locale = LocaleContextHolder.getLocale();
+  String code = ex.getBindingResult().getFieldError().getDefaultMessage();
+  return new MessageDTO(messageSource.getMessage(code, null, locale));
+  }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(EntityNotFoundException.class)
-    public MessageDTO handleNotFoundException(EntityNotFoundException ex) {
-        String[] parameters = {Long.toString(ex.getId())};
-        Locale locale = LocaleContextHolder.getLocale();
-        return new MessageDTO(messageSource.getMessage("exception.EntityNotFound.description", parameters, locale));
-    }
-}
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(EntityNotFoundException.class)
+  public MessageDTO handleNotFoundException(EntityNotFoundException ex) {
+  String message = "Entità " + ex.getErrCode() +"(" +ex.getId() +") non trovata.";
+  return new MessageDTO(message);
+  }
+  }

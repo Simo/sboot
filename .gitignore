@@ -10,3 +10,4 @@
 /it/**
 /webapp/**
 .DS_Store
+.idea/

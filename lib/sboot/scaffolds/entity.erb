@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "T_<%= @name.upcase %>")
-public class <%= @name.capitalize %> {
+public class <%= @name.split('_').collect(&:capitalize).join %> {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="spandimento_seq_gen")

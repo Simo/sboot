@@ -1,7 +1,7 @@
 package <%= @package %>.web.controllers;
 
-import <%= @package %>.business.dtos.<%= @name.capitalize %>DTO;
-import <%= @package %>.business.services.<%= @name.capitalize %>Service;
+import <%= @package %>.business.dtos.<%= @name.split('_').collect(&:capitalize).join %>DTO;
+import <%= @package %>.business.services.<%= @name.split('_').collect(&:capitalize).join %>Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,73 +10,73 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.List;
 
 @Controller
-public class <%= @name.capitalize %>Controller {
+public class <%= @name.split('_').collect(&:capitalize).join %>Controller {
 
-    @Autowired
-    private <%= @name.capitalize %>Service service;
+@Autowired
+private <%= @name.split('_').collect(&:capitalize).join %>Service service;
 
-    @RequestMapping(value = "/<%= @name.downcase %>", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView index(){
-        ModelAndView mav = new ModelAndView("<%= @name.downcase %>/index");
-				mav.addObject("<%= @name.downcase %>Lista",service.trovaTutti());
-				return mav;
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/{id}", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView dettaglio(@PathVariable Long id){
-        ModelAndView mav = new ModelAndView("<%= @name.downcase %>/dettaglio");
-				mav.addObject("<%= @name.downcase %>",service.trova(id));
-				return mav;
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView nuovo(){
-        ModelAndView mav = new ModelAndView("<%= @name.downcase %>/nuovo");
-				mav.addObject("<%= @name.downcase %>",new <%= @name.capitalize %>DTO());
-				return mav;
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/{id}/edit", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView modifica(@PathVariable Long id){
-        ModelAndView mav = new ModelAndView("<%= @name.downcase %>/modifica");
-				mav.addObject("<%= @name.downcase %>",service.trova(id));
-				return mav;
-    }
-
-    @RequestMapping(value = "/<%= @name.downcase %>",method = RequestMethod.POST)
-    public String salva(@ModelAttribute <%= @name.capitalize %>DTO model){
-				<%= @name.capitalize %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @name.downcase %>/"+newModel.getId();
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/{id}",method = {RequestMethod.POST, RequestMethod.PUT})
-    public String salva(@PathVariable Long id, @ModelAttribute <%= @name.capitalize %>DTO model){
-				<%= @name.capitalize %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @name.downcase %>/"+newModel.getId();
-    }
-
-    @RequestMapping(value = "/<%= @name.downcase %>/{id}",method = RequestMethod.DELETE)
-    public String deleteRest(@PathVariable Long id){
-				Long idDeleted = service.cancella(id);
-				return "redirect:/<%= @name.downcase %>";
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/{id}/delete",method = RequestMethod.GET)
-    public String delete(@PathVariable Long id){
-				Long idDeleted = service.cancella(id);
-				return "redirect:/<%= @name.downcase %>";
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>", method = RequestMethod.GET, produces = ("application/json"))
-		@ResponseBody
-    public List<<%= @name.capitalize %>DTO> indexJson(){
-        return service.trovaTutti();
-    }
-
-		@RequestMapping(value = "/<%= @name.downcase %>/{id}", method = RequestMethod.GET, produces = ("application/json"))
-		@ResponseBody
-    public <%= @name.capitalize %>DTO dettaglioJson(@PathVariable Long id){
-				return service.trova(id);
-    }
-
+@RequestMapping(value = "/<%= @name.downcase %>", method = RequestMethod.GET, produces = ("text/html"))
+public ModelAndView index(){
+ModelAndView mav = new ModelAndView("<%= @name.downcase %>/index");
+mav.addObject("<%= @name.downcase %>Lista",service.trovaTutti());
+return mav;
 }
+
+@RequestMapping(value = "/<%= @name.downcase %>/{id}", method = RequestMethod.GET, produces = ("text/html"))
+public ModelAndView dettaglio(@PathVariable Long id){
+ModelAndView mav = new ModelAndView("<%= @name.downcase %>/dettaglio");
+mav.addObject("<%= @name.downcase %>",service.trova(id));
+return mav;
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
+public ModelAndView nuovo(){
+ModelAndView mav = new ModelAndView("<%= @name.downcase %>/nuovo");
+mav.addObject("<%= @name.downcase %>",new <%= @name.split('_').collect(&:capitalize).join %>DTO());
+return mav;
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>/{id}/edit", method = RequestMethod.GET, produces = ("text/html"))
+public ModelAndView modifica(@PathVariable Long id){
+ModelAndView mav = new ModelAndView("<%= @name.downcase %>/modifica");
+mav.addObject("<%= @name.downcase %>",service.trova(id));
+return mav;
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>",method = RequestMethod.POST)
+public String salva(@ModelAttribute <%= @name.split('_').collect(&:capitalize).join %>DTO model){
+<%= @name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
+return "redirect:/<%= @name.downcase %>/"+newModel.getId();
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>/{id}",method = {RequestMethod.POST, RequestMethod.PUT})
+public String salva(@PathVariable Long id, @ModelAttribute <%= @name.split('_').collect(&:capitalize).join %>DTO model){
+<%= @name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
+return "redirect:/<%= @name.downcase %>/"+newModel.getId();
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>/{id}",method = RequestMethod.DELETE)
+public String deleteRest(@PathVariable Long id){
+Long idDeleted = service.cancella(id);
+return "redirect:/<%= @name.downcase %>";
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>/{id}/delete",method = RequestMethod.GET)
+public String delete(@PathVariable Long id){
+Long idDeleted = service.cancella(id);
+return "redirect:/<%= @name.downcase %>";
+}
+
+@RequestMapping(value = "/<%= @name.downcase %>", method = RequestMethod.GET, produces = ("application/json"))
+@ResponseBody
+public List<<%= @name.split('_').collect(&:capitalize).join %>DTO> indexJson(){
+	return service.trovaTutti();
+	}
+
+	@RequestMapping(value = "/<%= @name.downcase %>/{id}", method = RequestMethod.GET, produces = ("application/json"))
+	@ResponseBody
+	public <%= @name.split('_').collect(&:capitalize).join %>DTO dettaglioJson(@PathVariable Long id){
+	return service.trova(id);
+	}
+
+	}

@@ -1,53 +1,53 @@
 package <%= @package %>.business.dtos;
 
-import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
+import <%= @package %>.persistence.entities.<%= @name.split('_').collect(&:capitalize).join %>;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "<%= @name.capitalize %>", description = "Un oggetto <%= @name.capitalize %>")
-public class <%= @name.capitalize %>DTO {
-    @ApiModelProperty(value = "Identificativo univoco per un entita' <%= @name.capitalize %>")
-    private Long id;
+@ApiModel(value = "<%= @name.split('_').collect(&:capitalize).join %>", description = "Un oggetto <%= @name.split('_').collect(&:capitalize).join %>")
+public class <%= @name.split('_').collect(&:capitalize).join %>DTO {
+@ApiModelProperty(value = "Identificativo univoco per un entita' <%= @name.split('_').collect(&:capitalize).join %>")
+private Long id;
 
-    <% @properties.each do |property| %>
-    @ApiModelProperty(value = "<%= property[:name] %> di <%= @name.capitalize %>")
-    private <%= property[:type] %> <%= property[:name] %>;
-    <% end %>
+<% @properties.each do |property| %>
+		@ApiModelProperty(value = "<%= property[:name] %> di <%= @name.split('_').collect(&:capitalize).join %>")
+		private <%= property[:type] %> <%= property[:name] %>;
+<% end %>
 
-    public <%= @name.capitalize %>DTO(){}
+public <%= @name.split('_').collect(&:capitalize).join %>DTO(){}
 
-    public <%= @name.capitalize %>DTO(<%= @name.capitalize %> entity){
-        this.id = entity.getId();
-				<% @properties.each do |property| -%>
-		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
-		    <% end -%>
-    }
+public <%= @name.split('_').collect(&:capitalize).join %>DTO(<%= @name.split('_').collect(&:capitalize).join %> entity){
+this.id = entity.getId();
+<% @properties.each do |property| -%>
+		this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
+<% end -%>
+}
 
-    public <%= @name.capitalize %> convert(){
-        <%= @name.capitalize %> entity = new <%= @name.capitalize %>();
-        entity.setId(this.id);
-				<% @properties.each do |property| -%>
-		    entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
-		    <% end -%>
-        return entity;
-    }
+public <%= @name.split('_').collect(&:capitalize).join %> convert(){
+<%= @name.split('_').collect(&:capitalize).join %> entity = new <%= @name.split('_').collect(&:capitalize).join %>();
+entity.setId(this.id);
+<% @properties.each do |property| -%>
+		entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
+<% end -%>
+return entity;
+}
 
-    public Long getId() {
-        return id;
-    }
+public Long getId() {
+return id;
+}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+public void setId(Long id) {
+this.id = id;
+}
 
-    <% @properties.each do |property| -%>
-    public <%= property[:type] %> get<%= property[:name].capitalize %>() {
-        return <%= property[:name] %>;
-    }
+<% @properties.each do |property| -%>
+		public <%= property[:type] %> get<%= property[:name].capitalize %>() {
+		return <%= property[:name] %>;
+		}
 
-    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
-        this.<%= property[:name] %> = <%= property[:name] %>;
-    }
+		public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
+		this.<%= property[:name] %> = <%= property[:name] %>;
+		}
 
-		<% end -%>
+<% end -%>
 }

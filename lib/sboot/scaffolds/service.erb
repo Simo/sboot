@@ -1,16 +1,16 @@
 package <%= @package %>.business.services;
 
-import <%= @package %>.business.dtos.<%= @name.capitalize %>DTO;
+import <%= @package %>.business.dtos.<%= @name.split('_').collect(&:capitalize).join %>DTO;
 
 import java.util.List;
 
-public interface <%= @name.capitalize %>Service {
+public interface <%= @name.split('_').collect(&:capitalize).join %>Service {
 
-    List<<%= @name.capitalize %>DTO> trovaTutti();
+List<<%= @name.split('_').collect(&:capitalize).join %>DTO> trovaTutti();
 
-    <%= @name.capitalize %>DTO trova(Long id);
+  <%= @name.split('_').collect(&:capitalize).join %>DTO trova(Long id);
 
-    <%= @name.capitalize %>DTO salva(<%= @name.capitalize %>DTO model);
+  <%= @name.split('_').collect(&:capitalize).join %>DTO salva(<%= @name.split('_').collect(&:capitalize).join %>DTO model);
 
-    Long cancella(Long id);
-}
+  Long cancella(Long id);
+  }
