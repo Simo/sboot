@@ -8,6 +8,24 @@ module Sboot
     source_root "#{File.dirname __FILE__}/scaffolds/"
 
     desc "generate [ENV] :package :entita' :proprieta'",
+         "la flag [ENV] accetta come parametri: fullstack(default),backend,business,conversion,persistence"
+    method_options :api => false, :env => "fullstack"
+    def init(package)
+      writer = Sboot::Writer.new :package => package
+      if options[:api]
+        writer.api
+      else
+        writer.fullstack unless options[:env]
+        writer.fullstack if options[:env] == 'fullstack'
+        writer.backend if options[:env] == 'backend'
+        writer.business if options[:env] == 'business'
+        writer.convertion if options[:env] == 'convertion'
+        writer.persistence if options[:env] == 'persistence'
+      end
+    end
+
+
+    desc "generate [ENV] :package :entita' :proprieta'",
       "la flag [ENV] accetta come parametri: fullstack(default),backend,business,conversion,persistence"
       method_options :api => false, :env => "fullstack"
       def generate(package, name, *args)
