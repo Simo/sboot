@@ -3,15 +3,15 @@ package <%= @package %>.persistence.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "T_<%= @name.upcase %>")
-public class <%= @name.capitalize %> {
+@Table(name = "T_<%= @entity.name.upcase %>")
+public class <%= @entity.name.capitalize %> {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO, generator="spandimento_seq_gen")
     @SequenceGenerator(name="spandimento_seq_gen", sequenceName="SEQ_TNIT_SPANDIMENTO_ID")
     @Column(name = "ID")
     private Long id;
-		<% @properties.each do |property| -%>
+		<% @entity.properties.each do |property| -%>
 		@Column(name = "<%= property[:name].upcase %>")
     private <%= property[:type] %> <%= property[:name] %>;
     <% end -%>
@@ -23,7 +23,7 @@ public class <%= @name.capitalize %> {
     public void setId(Long id) {
         this.id = id;
     }
-		<% @properties.each do |property| -%>
+		<% @entity.properties.each do |property| -%>
 		public <%= property[:type] %> get<%= property[:name].capitalize %>() {
         return <%= property[:name] %>;
     }

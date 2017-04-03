@@ -1,9 +1,9 @@
 package <%= @package %>.persistence.repositories;
 
-import <%= @package %>.persistence.entities.<%= @name.capitalize %>;
+import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface <%= @name.capitalize %>Repository extends JpaRepository<<%= @name.capitalize %>,Long> {
+public interface <%= @entity.name.capitalize %>Repository extends JpaRepository<<%= @entity.name.capitalize %>,Long> {
 
     Long deleteById(Long id);
 

@@ -1,10 +1,10 @@
 package <%= @package %>.business.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
+public class <%= @entity.name.capitalize %>EntityNotFoundException extends RuntimeException {
     private Long id;
     private String klass;
 
-    public EntityNotFoundException(String klass, Long id) {
+    public <%= @entity.name.capitalize %>EntityNotFoundException(String klass, Long id) {
         this.klass = klass;
         this.id = id;
     }

@@ -8,7 +8,7 @@ describe Sboot::CLI do
   end
 
   describe 'user interaction' do
-
+=begin
     it 'env to default' do
       subject.generate 'it.insiel.siagri.nitrati','Persona','nome eta:int'
       expect(File.exists? "it/insiel/siagri/nitrati/persistence/entities/Persona.java").to be(true)
@@ -45,6 +45,7 @@ describe Sboot::CLI do
     end
 
     after(:each) { Dir.glob(['it','webapp']).each { |f| FileUtils.rm_rf f } }
+=end
   end
 
 end

@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe Sboot::ConfigWriter do
 
+  subject(:config_writer){ Sboot::ConfigWriter.new package: 'it.insiel.gcs.progetto' }
+
   describe 'initialization' do
 
     it 'initialization works' do
-      config_writer = Sboot::ConfigWriter.new package: 'it.insiel.gcs.progetto'
       expect(config_writer).to be_an_instance_of Sboot::ConfigWriter
     end
 
@@ -22,7 +23,6 @@ describe Sboot::ConfigWriter do
   describe 'writing config file' do
 
     it "write the configuration file in the same folder" do
-      config_writer = Sboot::ConfigWriter.new package: 'it.insiel.gcs.progetto'
       config_writer.write
       expect(File.exists? '.sbootconf').to be(true)
     end

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
+    <head>
+        <meta charset="utf-8">
+        <title>Lista <%= @entity.name.capitalize %></title>
+    </head>
+    <body layout:fragment="content">
+      <h1>ELenco</h1>
+      <table>
+        <thead>
+          <tr>
+            <% @entity.properties.each do |property| -%><th><%= property[:name].capitalize %></th>
+      			<% end -%><th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+        <% unless @entity.collection_defined? -%><tr th:each="<%= @entity.name.downcase %>Elemento : ${<%= @entity.name.downcase %>Lista}">
+      	      <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>Elemento.<%= property[:name] %>}"><%= property[:name].capitalize %></td>
+      				<% end -%><td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.id}}">Mostra</a></td>
+      				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.id}/edit}">Modifica</a></td>
+      				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.id}/delete}">Cancella</a></td>
+      		</tr><% end -%>
+        <% if @entity.collection_defined?-%><tr th:each="<%= @entity.name.downcase %> : ${<%= @entity.name_pluralized.downcase %>}">
+              <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"><%= property[:name].capitalize %></td>
+              <% end -%><td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.id}}">Mostra</a></td>
+              <td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.id}/edit}">Modifica</a></td>
+              <td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.id}/delete}">Cancella</a></td>
+            </tr>
+        <% end -%>
+        </tbody>
+      </table>
+      <br>
+      <a th:href="@{'/<%= @entity.collection.downcase %>/new'}">Inserisci</a>
+  </body>
+</html>

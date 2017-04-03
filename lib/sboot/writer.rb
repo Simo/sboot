@@ -71,10 +71,10 @@ module Sboot
       write_swaggerconfig
     end
 
-    def write(path,template,type)
+    def write entity, path, type
       create_missing_folders path
-      File.open("#{basic_path}/#{package_to_path}/#{path}/#{@name}#{type ? type : ''}.java", 'w') do |f|
-        f.write ERB.new(getTemplate(template),nil,'-').result(binding)
+      File.open("#{path}/#{@name}.java", 'w') do |f|
+        f.write ERB.new(getTemplate(type),nil,'-').result(binding)
       end
     end
 

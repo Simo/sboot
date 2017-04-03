@@ -1,58 +1,65 @@
 require "strscan"
 
+module Sboot
+  class Config
 
-class Config
+    NAME = /[\w\.]+/
+    WHITESPACE =/\s+/
 
-  NAME = /\w+/
-  WHITESPACE =/\s+/
-
-  def initialize(config_file)
-    @config_data = File.read(config_file)
-    @config = {}
-    parse_file
-  end
-
-  def [](name)
-    @config[name]
-  end
-
-  private
-
-  def parse_file
-    @line = 0
-    @scanner = StringScanner.new(@config_data)
-    until @scanner.eos?
-      @line += 1
-      parse_item
+    def initialize(config_file)
+      @config_data = File.read(config_file)
+      @config = {}
+      parse_file
     end
-  end
 
-  def parse_item
-    name = @scanner.scan(NAME)
-    fail syntax_error unless name
+    def [](name)
+      @config[name]
+    end
 
-    @scanner.skip(WHITESPACE)
-    fail syntax_error unless @scanner.scan(/=/)
+    def key value
+      @config.key(value)
+    end
 
-    @scanner.skip(WHITESPACE)
+    private
 
-    quote = @scanner.scan(/"|'/)
-    fail syntax_error unless quote
+    def parse_file
+      @line = 0
+      @scanner = StringScanner.new(@config_data)
+      until @scanner.eos?
+        @line += 1
+        parse_item
+      end
+    end
 
-    value = @scanner.scan_until(/(?=#{quote})/)
-    fail syntax_error unless value
+    def parse_item
+      name = @scanner.scan(NAME)
+      fail syntax_error unless name
 
-    @scanner.scan(/#{quote}/)
+      @scanner.skip(WHITESPACE)
+      fail syntax_error unless @scanner.scan(/=/)
 
-    @config[name] = value
+      @scanner.skip(WHITESPACE)
 
-    @scanner.skip(WHITESPACE)
-  end
+      quote = @scanner.scan(/"|'/)
+      fail syntax_error unless quote
 
-  class SyntaxError < StandardError; end
+      value = @scanner.scan_until(/(?=#{quote})/)
+      fail syntax_error unless value
 
-  def syntax_error
-    SyntaxError.new("Errore di sintassi alla riga #{@line} (pos.#{@scanner.pos})")
+      @scanner.scan(/#{quote}/)
+
+      @config[name] = value
+
+      @scanner.skip(WHITESPACE)
+    end
+
+    class SyntaxError < StandardError; end
+
+    def syntax_error
+      SyntaxError.new("Errore di sintassi alla riga #{@line} (pos.#{@scanner.pos})")
+    end
+
   end
 
 end
+
