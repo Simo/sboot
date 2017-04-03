@@ -69,7 +69,7 @@ public class <%= @entity.name.capitalize %>Controller {
             @Valid @RequestBody <%= @entity.name.capitalize %>DTO dto) {
         return service.salva(dto);
     }
-  
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Visualizza <%= @entity.name.capitalize %>", notes = "Visualizza una <%= @entity.name.capitalize %> esistente", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
