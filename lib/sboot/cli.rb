@@ -19,26 +19,9 @@ module Sboot
       "la flag [ENV] accetta come parametri: fullstack(default),api,backend,business,conversion,persistence"
     method_options :env => "fullstack"
     def generate(name, *args)
-      #properties = generate_attributes args
-      #entity = DomainEntity.new name: domain_names(name)[:name], name_pluralized: domain_names(name)[:name], properties: properties, environment: options[:env]
-      editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), options[:env]), "#{ Dir.pwd }/.sbootconf"
+      environment = options[:env] || 'fullstack'
+      editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), environment), "#{ Dir.pwd }/.sbootconf"
       editor.publish
-
-=begin
-      writer = Sboot::Writer.new :package => package, :name => name.downcase.capitalize, :properties => properties
-
-      if options[:api]
-        writer.api
-      else
-        writer.fullstack unless options[:env]
-        writer.fullstack if options[:env] == 'fullstack'
-        writer.backend if options[:env] == 'backend'
-        writer.business if options[:env] == 'business'
-        writer.convertion if options[:env] == 'convertion'
-        writer.persistence if options[:env] == 'persistence'
-      end
-=end
-
     end
 
     private
@@ -47,11 +30,11 @@ module Sboot
       names = {}
       array_of_names = name.split(":")
       if array_of_names.length == 1
-        names['name'] = array_of_names[0]
-        names['pluralize'] = nil
+        names[:name] = array_of_names[0]
+        names[:pluralize] = nil
       else
-        names['name'] = array_of_names[0]
-        names['pluralize'] = array_of_names[1]
+        names[:name] = array_of_names[0]
+        names[:pluralize] = array_of_names[1]
       end
       names
     end
