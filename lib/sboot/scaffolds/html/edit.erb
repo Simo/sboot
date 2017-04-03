@@ -7,12 +7,12 @@
 </head>
 <body layout:fragment="content">
 
-    <h1>Modifica <%= @name.capitalize %></h1>
+    <h1>Modifica <%= @entity.name.capitalize %></h1>
 
-    <div th:include="<%= @name.downcase %>/form:: form('/<%= @name.downcase %>/'+${<%= @name.downcase %>.id})"></div>
+    <div th:include="<%= @entity.name.downcase %>/form:: form('/<%= @entity.collection %>/'+${<%= @entity.name.downcase %>.id})"></div>
 
-    <a th:href="@{'/<%= @name.downcase %>/'+${<%= @name.downcase %>.id}}">Dettaglio</a>
-    <a th:href="@{'/<%= @name.downcase %>'}">Indietro</a>
+    <a th:href="@{'/<%= @entity.collection %>/'+${<%= @entity.name.downcase %>.id}}">Dettaglio</a>
+    <a th:href="@{'/<%= @entity.collection %>'}">Indietro</a>
 
 </body>
 </html>

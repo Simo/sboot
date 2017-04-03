@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="form(action)">
+  <form th:action="@{${action}}" method="post" th:object="${model}">
+    <% @entity.properties.each do |property| -%>
+    <input type="hidden" th:field="${casa.id}" />
+    <div class="form-group">
+      <label for="indirizzo"><%= property[:name].capitalize %></label>
+      <input type="text" id="<%= property[:name] %>" class="form-control" th:field="${<%= @entity.name.downcase %>.<%= property[:name] %>}" placeholder="<%= property[:name].capitalize %>"/>
+    </div>
+    <% end -%>
+    <input type="submit" class="btn btn-default" value="Salva" />
+  </form>
+</div>
+
+</body>
+</html>

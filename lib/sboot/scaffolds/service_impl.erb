@@ -1,0 +1,60 @@
+package <%= @package %>.business.services.impl;
+
+import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
+import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
+import <%= @package %>.business.exceptions.EntityNotFoundException;
+import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
+import <%= @package %>.persistence.repositories.<%= @entity.name.capitalize %>Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.name.capitalize %>Service {
+
+    private <%= @entity.name.capitalize %>Repository repository;
+
+		@Autowired
+		public <%= @entity.name.capitalize %>ServiceImpl(<%= @entity.name.capitalize %>Repository repo){
+			this.repository = repo;
+		}
+
+    @Override
+    public List<<%= @entity.name.capitalize %>DTO> trovaTutti() {
+        List<<%= @entity.name.capitalize %>> source = repository.findAll();
+        List<<%= @entity.name.capitalize %>DTO> dtos = new ArrayList<<%= @entity.name.capitalize %>DTO>();
+        for (<%= @entity.name.capitalize %> entity : source){
+            <%= @entity.name.capitalize %>DTO dto = new <%= @entity.name.capitalize %>DTO(entity);
+            dtos.add(dto);
+        }
+        return dtos;
+    }
+
+    @Override
+    public <%= @entity.name.capitalize %>DTO trova(Long id) {
+        return new <%= @entity.name.capitalize %>DTO(this.findOneSafe(id));
+    }
+
+    @Override
+    public <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model) {
+        return new <%= @entity.name.capitalize %>DTO(repository.save(model.convert()));
+    }
+
+    @Override
+    @Transactional
+    public Long cancella(Long id) {
+        return repository.deleteById(id);
+    }
+
+    private <%= @entity.name.capitalize %> findOneSafe(Long id) {
+        <%= @entity.name.capitalize %> entity = repository.findOne(id);
+        if (entity == null) {
+            throw new EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),id);
+        } else {
+            return entity;
+        }
+    }
+}

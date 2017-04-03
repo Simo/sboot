@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
 import <%= @package %>.business.dtos.MessageDTO;
-import <%= @package %>.business.dtos.<%= @name.capitalize %>DTO;
+import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
 import <%= @package %>.business.services.exceptions.EntityNotFoundException;
-import <%= @package %>.business.services.<%= @name.capitalize %>Service;
+import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,71 +27,71 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/<%= @name.downcase %>")
-@Api("/api/<%= @name.downcase %>")
-public class <%= @name.capitalize %>Controller {
+@RequestMapping("/api/<%= @entity.name.downcase %>")
+@Api("/api/<%= @entity.name.downcase %>")
+public class <%= @entity.name.capitalize %>Controller {
 
     @Autowired
-    private <%= @name.capitalize %>Service service;
+    private <%= @entity.name.capitalize %>Service service;
     @Autowired
     private MessageSource messageSource;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Trova tutte le <%= @name.capitalize %>", notes = "Recupera la lista di tutte le <%= @name.capitalize %>", response = <%= @name.capitalize %>DTO[].class)
+    @ApiOperation(value = "Trova tutte le <%= @entity.name.capitalize %>", notes = "Recupera la lista di tutte le <%= @entity.name.capitalize %>", response = <%= @entity.name.capitalize %>DTO[].class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO[].class)
+        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO[].class)
     })
-    public List<<%= @name.capitalize %>DTO> findAll() {
+    public List<<%= @entity.name.capitalize %>DTO> findAll() {
         return service.trovaTutti();
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Crea nuova <%= @name.capitalize %>", notes = "Crea una nuova <%= @name.capitalize %>", response = <%= @name.capitalize %>DTO.class)
+    @ApiOperation(value = "Crea nuova <%= @entity.name.capitalize %>", notes = "Crea una nuova <%= @entity.name.capitalize %>", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
+        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO.class),
         @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class)
     })
-    public <%= @name.capitalize %>DTO create(
-            @ApiParam(required = true, name = "<%= @name.downcase %>", value = "New <%= @name.downcase %>")
-            @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
+    public <%= @entity.name.capitalize %>DTO create(
+            @ApiParam(required = true, name = "<%= @entity.name.downcase %>", value = "New <%= @entity.name.downcase %>")
+            @Valid @RequestBody <%= @entity.name.capitalize %>DTO dto) {
         return service.salva(dto);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Esegui update <%= @name.capitalize %>", notes = "Aggiorna una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
+    @ApiOperation(value = "Esegui update <%= @entity.name.capitalize %>", notes = "Aggiorna una <%= @entity.name.capitalize %> esistente", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
+        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO.class),
         @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
-    public <%= @name.capitalize %>DTO update(
-            @ApiParam(required = true, name = "<%= @name.downcase %>", value = "")
-            @Valid @RequestBody <%= @name.capitalize %>DTO dto) {
+    public <%= @entity.name.capitalize %>DTO update(
+            @ApiParam(required = true, name = "<%= @entity.name.downcase %>", value = "")
+            @Valid @RequestBody <%= @entity.name.capitalize %>DTO dto) {
         return service.salva(dto);
     }
-
+  
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Visualizza <%= @name.capitalize %>", notes = "Visualizza una <%= @name.capitalize %> esistente", response = <%= @name.capitalize %>DTO.class)
+    @ApiOperation(value = "Visualizza <%= @entity.name.capitalize %>", notes = "Visualizza una <%= @entity.name.capitalize %> esistente", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @name.capitalize %>DTO.class),
+        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO.class),
         @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
-    public <%= @name.capitalize %>DTO show(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> che si vuole aggiornare", defaultValue = "0")
+    public <%= @entity.name.capitalize %>DTO show(
+            @ApiParam(required = true, name = "id", value = "ID della <%= @entity.name.capitalize %> che si vuole aggiornare", defaultValue = "0")
             @PathVariable Long id) {
         return service.trova(id);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Cancella <%= @name.downcase %>", notes = "Cancella una <%= @name.capitalize %> esistente")
+    @ApiOperation(value = "Cancella <%= @entity.name.downcase %>", notes = "Cancella una <%= @entity.name.capitalize %> esistente")
     @ApiResponses({
         @ApiResponse(code = 204, message = "Success"),
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
     public void delete(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @name.capitalize %> da cancellare")
+            @ApiParam(required = true, name = "id", value = "ID della <%= @entity.name.capitalize %> da cancellare")
             @PathVariable Long id) {
         service.cancella(id);
     }

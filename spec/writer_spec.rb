@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'fileutils'
 
-describe Sboot::Writer do
+xdescribe Sboot::Writer do
 
   subject(:writer){ Sboot::Writer.new package: 'it.insiel.siagri.nitrati', name: 'Casa', properties: [{name: 'indirizzo',type: 'String'},{name: 'civico',type: 'Long'}] }
 
