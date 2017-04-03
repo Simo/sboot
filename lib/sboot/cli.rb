@@ -22,7 +22,7 @@ module Sboot
       #properties = generate_attributes args
       #entity = DomainEntity.new name: domain_names(name)[:name], name_pluralized: domain_names(name)[:name], properties: properties, environment: options[:env]
       editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), options[:env]), "#{ Dir.pwd }/.sbootconf"
-      editor.publish :env
+      editor.publish
 
 =begin
       writer = Sboot::Writer.new :package => package, :name => name.downcase.capitalize, :properties => properties
