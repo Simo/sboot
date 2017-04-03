@@ -21,7 +21,7 @@ module Sboot
     def generate(name, *args)
       #properties = generate_attributes args
       #entity = DomainEntity.new name: domain_names(name)[:name], name_pluralized: domain_names(name)[:name], properties: properties, environment: options[:env]
-      editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), options[:env]), "#{ Dir.pwd }.sbootconf"
+      editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), options[:env]), "#{ Dir.pwd }/.sbootconf"
       editor.publish :env
 
 =begin
