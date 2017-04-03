@@ -11,7 +11,7 @@ module Sboot
       @backend = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
       @api = [:entity, :repository, :dto_rest, :exception, :service, :service_impl, :message, :controller_rest]
       @fullstack = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
-      @html = [:layout, :index, :show, :new, :edit]
+      @html = [:layout, :index, :show, :new, :edit, :form]
       @fulltest = [:controller_test, :service_test]
       @apitest = [:controller_rest_test, :service_test]
       @servicetest = [:service_test]
@@ -30,7 +30,7 @@ module Sboot
     end
 
     def create_html_stack env
-      {files: create_filetype_array(env), path: config['html_path'], active: html_needed?(env) }
+      {files: create_filetype_array(:html), path: config['html_path'], active: html_needed?(env) }
     end
 
     def create_test_stack env

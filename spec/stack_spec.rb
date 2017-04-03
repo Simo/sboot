@@ -24,7 +24,7 @@ describe Sboot::Stack do
     end
 
     it 'array for fullstack should have length fixed' do
-      expect(stack.define_stacks('fullstack')[:code][:files].length).to be 8
+      expect(stack.define_stacks('fullstack')[:code][:files].length).to be 7
     end
 
     it 'code fullstack files each should be instances of FileType' do
@@ -47,8 +47,8 @@ describe Sboot::Stack do
       expect(stack.send('create_filetype_array','fullstack')).to be_an Array
     end
 
-    it 'should return an 8 elements array for fullstack' do
-      expect(stack.send('create_filetype_array','fullstack').length).to be 8
+    it 'should return an 7 elements array for fullstack' do
+      expect(stack.send('create_filetype_array','fullstack').length).to be 7
     end
 
     it 'should return an array of FileType' do

@@ -15,7 +15,7 @@ module Sboot
         path = "#{stack[:path]}/#{create_path file}"
         create_missing_folders path
         File.open "#{path}/#{file.ext}.html", 'w' do |f|
-          f.write ERB.new(getTemplate(file.ext),nil,'-').result(binding)
+          f.write ERB.new(getTemplate(file.key),nil,'-').result(binding)
         end
       end
     end
