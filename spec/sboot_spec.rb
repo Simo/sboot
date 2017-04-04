@@ -33,7 +33,7 @@ describe Sboot::CLI do
       expect(File.exists? "src/test/java/it/insiel/gcs/progetto/web/controllers/CasaControllerTestIT.java").to be(true)
     end
 
-    after(:all) { Dir.glob(['src', '.sbootconf']).each { |f| FileUtils.rm_rf f } }
+    #after(:all) { Dir.glob(['src', '.sbootconf']).each { |f| FileUtils.rm_rf f } }
   end
 
   describe 'helper methods' do

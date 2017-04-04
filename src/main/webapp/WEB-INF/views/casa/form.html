@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="form(action)">
+  <form th:action="@{${action}}" method="post" th:object="${model}">
+        <input type="hidden" th:field="${casa.id}" />
+    <div class="form-group">
+      <label for="indirizzo">Id</label>
+      <input type="text" id="id" class="form-control" th:field="${casa.id}" placeholder="Id"/>
+    </div>
+        <input type="hidden" th:field="${casa.id}" />
+    <div class="form-group">
+      <label for="indirizzo">Indirizzo civico</label>
+      <input type="text" id="indirizzo civico" class="form-control" th:field="${casa.indirizzo civico}" placeholder="Indirizzo civico"/>
+    </div>
+        <input type="submit" class="btn btn-default" value="Salva" />
+  </form>
+</div>
+
+</body>
+</html>

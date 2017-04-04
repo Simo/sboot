@@ -1,11 +1,12 @@
 module Sboot
   class ArgsResolver
 
-    attr_accessor :types, :constraints
+    attr_accessor :types, :constraints, :has_id
 
     def initialize options={}
       @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Interger'}
       @constraints = {pk: 'pk'}
+      @has_id = false
     end
 
     ## args e' un'array di stringhe
@@ -17,6 +18,7 @@ module Sboot
         array = arg.split(":")
         properties << send("format#{array.length}", array)
       end
+      properties.unshift({name: 'id',type: 'Long', constraint: 'pk'}) unless @has_id
       properties
     end
 
@@ -33,7 +35,7 @@ module Sboot
     end
 
     def format3 array
-      {name: array[0].downcase,type: detect_type(array[1]), constraint: detect_constraint(array[2])}
+      {name: array[0].downcase,type: detect_type(array[1]), constraint: detect_constraint(array[2])} if is_a_constraint? array[2]
     end
 
     def is_a_type? value
@@ -41,7 +43,9 @@ module Sboot
     end
 
     def is_a_constraint? value
-      @constraints[value.to_sym]
+      ret = @constraints[value.to_sym]
+      @has_id = true if ret
+      ret
     end
 
     def detect_type value
