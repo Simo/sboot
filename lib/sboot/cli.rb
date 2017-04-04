@@ -40,28 +40,8 @@ module Sboot
     end
 
     def generate_attributes args
-      properties = []
-      args.each do |arg|
-        array = arg.split(":")
-        if array.length == 1
-          name = array[0].downcase
-          type = 'String'
-        else
-          name = array[0].downcase
-          if array[1].downcase == 'string' || array[1].downcase == 'text' || array[1].downcase == 'varchar' || array[1].downcase == 'varchar2'
-            type = 'String'
-          end
-          if array[1].downcase == 'number' || array[1].downcase == 'long'
-            type = 'Long'
-          end
-          if array[1].downcase == 'int' || array[1].downcase == 'integer'
-            type = 'Integer'
-          end
-        end
-        property = {name: name,type: type}
-        properties << property
-      end
-      properties
+      resolver = Sboot::ArgsResolver.new
+      resolver.resolve args
     end
 
     def domain_entity name, properties, environment

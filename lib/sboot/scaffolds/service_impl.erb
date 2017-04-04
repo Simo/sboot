@@ -2,7 +2,7 @@ package <%= @package %>.business.services.impl;
 
 import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
 import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
-import <%= @package %>.business.exceptions.EntityNotFoundException;
+import <%= @package %>.business.exceptions.<%= @entity.name.capitalize %>EntityNotFoundException;
 import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
 import <%= @package %>.persistence.repositories.<%= @entity.name.capitalize %>Repository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.na
     private <%= @entity.name.capitalize %> findOneSafe(Long id) {
         <%= @entity.name.capitalize %> entity = repository.findOne(id);
         if (entity == null) {
-            throw new EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),id);
+            throw new <%= @entity.name.capitalize %>EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),id);
         } else {
             return entity;
         }

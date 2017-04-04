@@ -1,0 +1,82 @@
+package <%= @package %>.business.services.impl;
+
+import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
+import <%= @package %>.business.exceptions.<%= @entity.name.capitalize %>EntityNotFoundException;
+import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
+import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
+import <%= @package %>.persistence.repositories.<%= @entity.name.capitalize %>Repository;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@RunWith(SpringRunner.class)
+public class <%= @entity.name.capitalize %>ServiceImplTest {
+
+    @MockBean
+    private <%= @entity.name.capitalize %>Repository repository;
+
+    private <%= @entity.name.capitalize %>Service service;
+
+    private List<<%= @entity.name.capitalize %>> lista = new ArrayList<<%= @entity.name.capitalize %>>();
+
+    <%= @entity.name.capitalize %> <%= @entity.name.downcase %>1;
+
+    @Before
+    public void setUp() throws Exception {
+        this.service = new <%= @entity.name.capitalize %>ServiceImpl(this.repository);
+        <%= @entity.name.downcase %>1 = new <%= @entity.name.capitalize %>();
+        <%= @entity.name.downcase %>1.setId(1L);
+        <%= @entity.name.downcase %>1.setIndirizzo("via pazza");
+        <%= @entity.name.downcase %>1.setCivico(34L);
+        lista.add(casa1);
+    }
+
+    @Test
+    public void trovaTutti() throws Exception {
+        assertThat(this.repository).isNotNull();
+        when(this.repository.findAll()).thenReturn(this.lista);
+        assertThat(this.service.trovaTutti().size()).isEqualTo(1);
+        assertThat(this.service.trovaTutti().get(0)).isInstanceOf(<%= @entity.name.capitalize %>DTO.class);
+    }
+
+    @Test
+    public void trova() throws Exception {
+        assertThat(this.repository).isNotNull();
+        when(this.repository.findOne(1L)).thenReturn(this.casa1);
+        assertThat(this.service.trova(1L)).isInstanceOf(<%= @entity.name.capitalize %>DTO.class);
+    }
+
+    @Test(expected = <%= @entity.name.capitalize %>EntityNotFoundException.class)
+    public void nonTrova() throws Exception {
+        assertThat(this.repository).isNotNull();
+        when(this.repository.findOne(1L)).thenReturn(null);
+        assertThat(this.service.trova(1L));
+    }
+
+
+    @Test
+    public void salva() throws Exception {
+        assertThat(this.repository).isNotNull();
+        <%= @entity.name.capitalize %>DTO new<%= @entity.name.capitalize %>Dto = new <%= @entity.name.capitalize %>DTO(casa1);
+        when(this.repository.save(any(<%= @entity.name.capitalize %>.class))).thenReturn(this.casa1);
+        assertThat(this.service.salva(new<%= @entity.name.capitalize %>Dto).getId()).isEqualTo(1L);
+    }
+
+    @Test
+    public void cancella() throws Exception {
+        assertThat(this.repository).isNotNull();
+        <%= @entity.name.capitalize %>DTO casaDto = new <%= @entity.name.capitalize %>DTO(casa1);
+        when(this.repository.deleteById(1L)).thenReturn(1L);
+        assertThat(this.service.cancella(casaDto.getId())).isEqualTo(1L);
+    }
+}
