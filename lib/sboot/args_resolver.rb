@@ -15,6 +15,7 @@ module Sboot
     def resolve args
       properties = []
       args.each do |arg|
+        puts "#{arg} f"
         array = arg.split(":")
         properties << send("format#{array.length}", array)
       end

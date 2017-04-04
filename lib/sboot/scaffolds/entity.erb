@@ -6,16 +6,16 @@ import javax.persistence.*;
 @Table(name = "T_<%= @entity.name.upcase %>")
 public class <%= @entity.name.capitalize %> {
 
+@Id
+@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
+@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
+@Column(name = "<%= @entity.primary_key[:name].upcase %>")
+private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+
 		<% @entity.properties.each do |property| -%>
-			<% if property[:constraint] == 'pk' -%>
-				@Id
-				@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
-				@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
-				@Column(name = "<%= property[:name].upcase %>")
-				private <%= property[:type] %> <%= property[:name] %>;
-			<% else -%>
-				@Column(name = "<%= property[:name].upcase %>")
-				private <%= property[:type] %> <%= property[:name] %>;
+			<% unless property[:constraint] == 'pk' -%>
+		@Column(name = "<%= property[:name].upcase %>")
+		private <%= property[:type] %> <%= property[:name] %>;
 			<% end -%>
     <% end -%>
 

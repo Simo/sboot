@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sboot::TestWriter do
 
-  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String'},{name: 'civico',type: 'Long'}], environment: 'fullstack' }
+  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::TestWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity }
 
   subject(:ft){{files: [FileType.new(key: :service_test, reference: 'business/services', extension: 'ServiceTest'),

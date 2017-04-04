@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DomainEntity do
 
-  subject(:entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String'},{name: 'civico',type: 'Long'}], environment: 'fullstack' }
+  subject(:entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
 
   describe 'initialize' do
 
@@ -40,5 +40,31 @@ describe DomainEntity do
       new_entity = DomainEntity.new name: 'Casa', name_pluralized: nil, properties: [{name: 'indirizzo',type: 'String'},{name: 'civico',type: 'Long'}], environment: 'fullstack'
       expect(new_entity.collection_defined?).to be(false)
     end
+
+    it 'should return Casa' do
+      expect(entity.class_name).to eql 'Casa'
+    end
+
+    it 'should return Casa' do
+      expect(entity.single_capitalize).to eql 'Casa'
+    end
+
+    it 'should return Case' do
+      expect(entity.collection_capitalize).to eql 'Case'
+    end
+
+    it 'should return casa' do
+      expect(entity.single_downcase).to eql 'casa'
+    end
+
+    it 'should return case' do
+      expect(entity.collection_downcase).to eql 'case'
+    end
+
+    it 'should return the property marked as primary key' do
+      expect(entity.primary_key[:name]).to eql 'indirizzo'
+    end
+
   end
+
 end

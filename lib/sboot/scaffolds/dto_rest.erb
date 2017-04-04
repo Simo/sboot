@@ -6,18 +6,20 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "<%= @entity.name.capitalize %>", description = "Un oggetto <%= @entity.name.capitalize %>")
 public class <%= @entity.name.capitalize %>DTO {
-    @ApiModelProperty(value = "Identificativo univoco per un entita' <%= @entity.name.capitalize %>")
-    private Long id;
 
     <% @entity.properties.each do |property| %>
-    @ApiModelProperty(value = "<%= property[:name] %> di <%= @entity.name.capitalize %>")
+		<% if property[:constraint] == 'pk'-%>
+		@ApiModelProperty(value = "Identificativo univoco per un entita' <%= @entity.name.capitalize %>")
+		private Long id;
+		<% else -%>
+		@ApiModelProperty(value = "<%= property[:name] %> di <%= @entity.name.capitalize %>")
     private <%= property[:type] %> <%= property[:name] %>;
+		<% end -%>
     <% end %>
 
     public <%= @entity.name.capitalize %>DTO(){}
 
     public <%= @entity.name.capitalize %>DTO(<%= @entity.name.capitalize %> entity){
-        this.id = entity.getId();
 				<% @entity.properties.each do |property| -%>
 		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
 		    <% end -%>
@@ -25,19 +27,10 @@ public class <%= @entity.name.capitalize %>DTO {
 
     public <%= @entity.name.capitalize %> convert(){
         <%= @entity.name.capitalize %> entity = new <%= @entity.name.capitalize %>();
-        entity.setId(this.id);
 				<% @entity.properties.each do |property| -%>
 		    entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
 		    <% end -%>
         return entity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     <% @entity.properties.each do |property| -%>
