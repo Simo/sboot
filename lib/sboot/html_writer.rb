@@ -3,6 +3,7 @@ require 'fileutils'
 
 module Sboot
   class HtmlWriter
+    include Sboot::HtmlHelper
 
     attr_accessor :entity
 
@@ -11,6 +12,7 @@ module Sboot
     end
 
     def write stack
+      create_package_json unless package_json_exists?
       stack[:files].each do |file|
         path = "#{stack[:path]}/#{create_path file}"
         create_missing_folders path
@@ -21,6 +23,17 @@ module Sboot
     end
 
     private
+
+    def create_package_json
+      create_missing_folders 'src/main/webapp/resources'
+      File.open "src/main/webapp/resources/package.json", 'w' do |f|
+        f.write ERB.new(getPackageJson,nil,'-').result(binding)
+      end
+    end
+
+    def package_json_exists?
+      File.exists? "src/main/webapp/resources/package.json"
+    end
 
     def create_path file
       if file.ref == file.ext
@@ -36,6 +49,10 @@ module Sboot
 
     def getTemplate template_name
       File.read "#{File.dirname __FILE__}/scaffolds/html/#{template_name}.erb"
+    end
+
+    def getPackageJson
+      File.read "#{File.dirname __FILE__}/scaffolds/config/package.erb"
     end
 
   end

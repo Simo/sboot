@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DomainEntity do
 
-  subject(:entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
+  subject(:entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil},{name: 'dataInizio',type: 'Date',constraint: nil}], environment: 'fullstack' }
 
   describe 'initialize' do
 
@@ -63,6 +63,10 @@ describe DomainEntity do
 
     it 'should return the property marked as primary key' do
       expect(entity.primary_key[:name]).to eql 'indirizzo'
+    end
+
+    it 'should return true for presence of date in types' do
+      expect(entity.datetype).to be true
     end
 
   end

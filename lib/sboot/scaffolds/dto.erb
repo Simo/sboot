@@ -1,37 +1,63 @@
 package <%= @package %>.business.dtos;
 
+<% if @entity.datetype -%>
+import java.text.ParseException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;<% end -%>
 import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
 
 public class <%= @entity.name.capitalize %>DTO {
 
     <% @entity.properties.each do |property| %>
-    private <%= property[:type] %> <%= property[:name] %>;
+    private <%= property.dto_type %> <%= property[:name] %>;
     <% end %>
 
     public <%= @entity.name.capitalize %>DTO(){}
 
-    public <%= @entity.name.capitalize %>DTO(<%= @entity.name.capitalize %> entity){
-				<% @entity.properties.each do |property| -%>
-		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
-		    <% end -%>
-    }
+	public <%= @entity.name.capitalize %>DTO(<%= @entity.name.capitalize %> entity){
+		<% @entity.properties.each do |property| -%>
+		<% unless property.peculiar_type? -%>
+		this.<%= property.dto_type %> = entity.get<%= property[:name].capitalize %>();
+		<% else -%>
+		this.<%= property.dto_type %> = this.toString(entity.get<%= property[:name].capitalize %>());
+		<% end -%>
+		<% end -%>
+	}
 
     public <%= @entity.name.capitalize %> convert(){
-        <%= @entity.name.capitalize %> entity = new <%= @entity.name.capitalize %>();
-				<% @entity.properties.each do |property| -%>
-		    entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
-		    <% end -%>
-        return entity;
-    }
-
-    <% @entity.properties.each do |property| -%>
-    public <%= property[:type] %> get<%= property[:name].capitalize %>() {
-        return <%= property[:name] %>;
-    }
-
-    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
-        this.<%= property[:name] %> = <%= property[:name] %>;
-    }
-
+      <%= @entity.name.capitalize %> entity = new <%= @entity.name.capitalize %>();
+			<% @entity.properties.each do |property| -%>
+<% unless property.peculiar_type? -%>
+			entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
+<% else -%>entity.set<%= property[:name].capitalize %>(toDate(this.<%= property[:name] %>));
 		<% end -%>
+<% end -%>
+    	return entity;
+    }
+
+<% @entity.properties.each do |property| -%>
+  public <%= property.dto_type %> get<%= property[:name].capitalize %>() {
+		return <%= property[:name] %>;
+  }
+
+  public void set<%= property[:name].capitalize %>(<%= property.dto_type %> <%= property[:name] %>) {
+    this.<%= property[:name] %> = <%= property[:name] %>;
+  }
+<% end -%>
+
+<% if @entity.datetype -%>
+	public Date toDate(String dateString){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date dateToBeReturned = formatter.parse(dateString)
+		return dateToBeReturned;
+	}
+
+	public String toString(Date dateDate){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateToBeReturned = formatter.format(dateDate);
+		return dateToBeReturned;
+	}
+<% end -%>
 }

@@ -15,7 +15,7 @@ describe Sboot::CLI do
     end
 
     it 'should publish fullstack' do
-      subject.generate 'casa:case', 'indirizzo civico:number'
+      subject.generate 'casa:case', 'indirizzo', 'civico:number'
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/repositories/CasaRepository.java").to be(true)
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/dtos/CasaDTO.java").to be(true)

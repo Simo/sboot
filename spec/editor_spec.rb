@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sboot::Editor do
 
-  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String', constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
+  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'fullstack' }
   subject(:editor){ Sboot::Editor.new domain_entity, "#{File.dirname __FILE__}/assets/.sbootconf" }
 
 
@@ -47,7 +47,7 @@ describe Sboot::Editor do
     end
 
     it 'should publish backend' do
-      domain_entity_backend = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String', constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'backend'
+      domain_entity_backend = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'backend'
       editor = Sboot::Editor.new domain_entity_backend, "#{File.dirname __FILE__}/assets/.sbootconf"
       editor.publish
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
@@ -68,7 +68,7 @@ describe Sboot::Editor do
     end
 
     it 'should publish business' do
-      domain_entity_business = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String', constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'business'
+      domain_entity_business = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'business'
       editor = Sboot::Editor.new domain_entity_business, "#{File.dirname __FILE__}/assets/.sbootconf"
       editor.publish
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
@@ -89,7 +89,7 @@ describe Sboot::Editor do
     end
 
     it 'should publish conversion' do
-      domain_entity_conversion = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String', constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'conversion'
+      domain_entity_conversion = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'conversion'
       editor = Sboot::Editor.new domain_entity_conversion, "#{File.dirname __FILE__}/assets/.sbootconf"
       editor.publish
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
@@ -110,7 +110,7 @@ describe Sboot::Editor do
     end
 
     it 'should publish persistence' do
-      domain_entity_persistence = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String', constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'persistence'
+      domain_entity_persistence = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'persistence'
       editor = Sboot::Editor.new domain_entity_persistence, "#{File.dirname __FILE__}/assets/.sbootconf"
       editor.publish
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)

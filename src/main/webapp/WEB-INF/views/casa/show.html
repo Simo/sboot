@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
+    <head>
+        <meta charset="utf-8">
+        <title>Dettaglio Casa</title>
+    </head>
+    <body layout:fragment="content">
+			<p>
+				<strong>Id:</strong>
+				<span th:text="${casa.id}"></span>
+			</p>
+							<p>
+				  <strong>Id:</strong>
+				  <span th:text="${casa.id}"></span>
+				</p>
+							<p>
+				  <strong>Indirizzo:</strong>
+				  <span th:text="${casa.indirizzo}"></span>
+				</p>
+							<p>
+				  <strong>Civico:</strong>
+				  <span th:text="${casa.civico}"></span>
+				</p>
+			
+			<a th:href="@{'/case/'+${casa.id}+'/edit'}">Modifica</a>
+			<a th:href="@{'/case'}">Indietro</a>
+
+  </body>
+</html>

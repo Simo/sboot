@@ -121,5 +121,13 @@ describe Sboot::ArgsResolver do
 
   end
 
+  describe 'specific type detection' do
+
+    it 'should detect Date type' do
+      expect(resolver.send('detect_type','date'.to_sym)).to eql 'Date'
+    end
+
+  end
+
 
 end

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
@@ -8,12 +7,12 @@
 
 <div th:fragment="form(action)">
   <form th:action="@{${action}}" method="post" th:object="${model}">
+    <%= hidden_field @entity.primary_key %>
     <% @entity.properties.each do |property| -%>
-    <input type="hidden" th:field="${<%= @entity.name.downcase %>.<%= @entity.primary_key[:name] %>}" />
-    <% unless property[:pk] == 'pk'  -%>
+    <% unless property.constraint == 'pk'  -%>
     <div class="form-group">
-      <label for="indirizzo"><%= property[:name].capitalize %></label>
-      <input type="text" id="<%= property[:name] %>" class="form-control" th:field="${<%= @entity.name.downcase %>.<%= property[:name] %>}" placeholder="<%= property[:name].capitalize %>"/>
+      <%= label property  %>
+      <%= text_field property %>
     </div>
     <% end -%>
     <% end -%>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="form(action)">
+  <form th:action="@{${action}}" method="post" th:object="${model}">
+    <input type="hidden" th:field="${casa.id}" />
+                    <div class="form-group">
+      <label for="indirizzo">Indirizzo</label>
+      <input type="text" class="form-control" th:field="${casa.indirizzo}" placeholder="Indirizzo"/>
+    </div>
+                <div class="form-group">
+      <label for="civico">Civico</label>
+      <input type="text" class="form-control" th:field="${casa.civico}" placeholder="Civico"/>
+    </div>
+            <input type="submit" class="btn btn-default" value="Salva" />
+  </form>
+</div>
+
+</body>
+</html>

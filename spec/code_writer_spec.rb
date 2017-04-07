@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sboot::CodeWriter do
 
-  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long',constraint: nil}], environment: 'fullstack' }
+  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String',constraint: 'pk'), Sboot::Property.new(name: 'dataInizio',type: 'Date',constraint: nil)], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::CodeWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity }
   subject(:ps){{files: [FileType.new(key: :entity, reference: 'persistence/entities', extension: ''),
                         FileType.new(key: :repository, reference: 'persistence/repositories', extension: 'Repository')], path: 'src/main/java', active: true}}
@@ -99,7 +99,7 @@ describe Sboot::CodeWriter do
       expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/web/controller/api/#{writer.entity.name.capitalize}Controller.java").to be(true)
     end
 
-    after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
+    #after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
 
   end
 

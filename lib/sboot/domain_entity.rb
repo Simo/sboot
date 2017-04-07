@@ -1,6 +1,6 @@
 class DomainEntity
 
-  attr_accessor :name, :name_pluralized, :properties, :pk, :environment, :primary_key
+  attr_accessor :name, :name_pluralized, :properties, :pk, :environment, :primary_key, :datetype
 
   def initialize options={}
     @name = options[:name]
@@ -8,7 +8,7 @@ class DomainEntity
     @properties = options[:properties]
     @pk = options[:pk]
     @environment = options[:environment]
-    send('primary_key_property')
+    send('define_key_properties')
   end
 
   def class_name
@@ -47,9 +47,10 @@ class DomainEntity
     @name_pluralized ? @name != @name_pluralized : false
   end
 
-  def primary_key_property
+  def define_key_properties
     @properties.each do |property|
       @primary_key = property if property[:constraint] == 'pk'
+      @datetype = true if property[:type] == 'Date'
     end
   end
 

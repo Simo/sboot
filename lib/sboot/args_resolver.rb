@@ -4,7 +4,7 @@ module Sboot
     attr_accessor :types, :constraints, :has_id
 
     def initialize options={}
-      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Interger'}
+      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Interger',double: 'Double',numeric: 'Double',date: 'Date'}
       @constraints = {pk: 'pk'}
       @has_id = false
     end
@@ -15,28 +15,27 @@ module Sboot
     def resolve args
       properties = []
       args.each do |arg|
-        puts "#{arg} f"
         array = arg.split(":")
         properties << send("format#{array.length}", array)
       end
-      properties.unshift({name: 'id',type: 'Long', constraint: 'pk'}) unless @has_id
+      properties.unshift(Sboot::Property.new name: 'id',type: 'Long', constraint: 'pk') unless @has_id
       properties
     end
 
     private
 
     def format1 array
-      {name: array[0].downcase,type: 'String', constraint: nil}
+      Sboot::Property.new name: array[0].downcase,type: 'String', constraint: nil
     end
 
     def format2 array
-      ret = {name: array[0].downcase,type: detect_type(array[1]), constraint: nil} if is_a_type? array[1]
-      ret = {name: array[0].downcase,type: 'Long', constraint: detect_constraint(array[1])} if is_a_constraint? array[1]
+      ret = Sboot::Property.new name: array[0].downcase,type: detect_type(array[1]), constraint: nil if is_a_type? array[1]
+      ret = Sboot::Property.new name: array[0].downcase,type: 'Long', constraint: detect_constraint(array[1]) if is_a_constraint? array[1]
       ret
     end
 
     def format3 array
-      {name: array[0].downcase,type: detect_type(array[1]), constraint: detect_constraint(array[2])} if is_a_constraint? array[2]
+      Sboot::Property.new name: array[0].downcase,type: detect_type(array[1]), constraint: detect_constraint(array[2]) if is_a_constraint? array[2]
     end
 
     def is_a_type? value

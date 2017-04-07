@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sboot::HtmlWriter do
 
-  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
+  subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String',constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::HtmlWriter.new entity: domain_entity }
 
   describe 'initialization' do
@@ -14,6 +14,12 @@ describe Sboot::HtmlWriter do
   end
 
   describe 'writing files' do
+
+    it 'should write package.json' do
+      stack = { files: [], path: 'src/main/webapp/WEB-INF/views' }
+      writer.write stack
+      expect(File.exists? 'src/main/webapp/resources/package.json').to be(true)
+    end
 
     it "should write layout file" do
       stack = {files: [FileType.new(key: :layout, reference: 'layouts', extension: 'layout')], path: 'src/main/webapp/WEB-INF/views'}
