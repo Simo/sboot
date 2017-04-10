@@ -8,8 +8,5 @@
 /pkg/
 /spec/reports/
 /tmp/
-/it/**
-/webapp/**
-/test/**
 tags
 .DS_Store
