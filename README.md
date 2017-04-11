@@ -53,7 +53,7 @@ Ci sono 2 comandi disponibili
 
 Il comando generate nei suoi parametri accetta diverse opzioni
 
-### - - env = {stack}
+### --env = {stack}
 
 La lista delle opzioni comprende:
 

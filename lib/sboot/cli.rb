@@ -22,13 +22,15 @@ module Sboot
       environment = options[:env] || 'fullstack'
       editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), environment), "#{ Dir.pwd }/.sbootconf"
       editor.publish
-      # procedure per effettuare l'installazione delle dipendenze di npm
-      # spostiamo nella cartella del file package.json
-      Dir.chdir('src/main/webapp/resources')
-      # eseguiamo il comando di installazione delle dipendenze
-      run 'npm install'
-      # riposizioniamo nella cartella root (importante per i test)
-      Dir.chdir('../../../../')
+      if environment == 'fullstack'
+          # procedure per effettuare l'installazione delle dipendenze di npm
+          # spostiamo nella cartella del file package.json
+          Dir.chdir('src/main/webapp/resources')
+          # eseguiamo il comando di installazione delle dipendenze
+          run 'npm install'
+          # riposizioniamo nella cartella root (importante per i test)
+          Dir.chdir('../../../../')
+      end
     end
 
     private

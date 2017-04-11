@@ -36,6 +36,30 @@ describe Sboot::CLI do
     after(:all) { Dir.glob(['src', '.sbootconf']).each { |f| FileUtils.rm_rf f } }
   end
 
+  describe 'user interaction on api' do
+
+    it 'should write a .sbootconf' do
+      subject.init 'it.insiel.gcs.progetto'
+      expect(File.exists? ".sbootconf").to be(true)
+    end
+
+    it 'should publish api' do
+      subject.options = { env: 'api'}
+      subject.generate 'casa:case', 'indirizzo', 'civico:number'
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/repositories/CasaRepository.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/dtos/CasaDTO.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/exceptions/CasaEntityNotFoundException.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/CasaService.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/impl/CasaServiceImpl.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/web/controllers/api/CasaController.java").to be(true)
+      expect(File.exists? "src/test/java/it/insiel/gcs/progetto/business/services/CasaServiceTest.java").to be(true)
+      expect(File.exists? "src/test/java/it/insiel/gcs/progetto/web/controllers/api/CasaControllerTestIT.java").to be(true)
+    end
+
+    after(:all) { Dir.glob(['src', '.sbootconf']).each { |f| FileUtils.rm_rf f } }
+  end
+
   describe 'helper methods' do
 
     it 'should generate an hash with domain_names' do

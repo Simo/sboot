@@ -19,12 +19,24 @@ describe Sboot::Stack do
       expect(stack.define_stacks('fullstack')).to be_an Hash
     end
 
+    it 'should return the stacks hash for api' do
+      expect(stack.define_stacks('api')).to be_an Hash
+    end
+
     it 'should contain an array of filetypes' do
       expect(stack.define_stacks('fullstack')[:code][:files]).to be_an Array
     end
 
+    it 'should contain an array of filetypes for api' do
+      expect(stack.define_stacks('api')[:code][:files]).to be_an Array
+    end
+
     it 'array for fullstack should have length fixed' do
       expect(stack.define_stacks('fullstack')[:code][:files].length).to be 7
+    end
+
+    it 'array for api should have length fixed' do
+      expect(stack.define_stacks('api')[:code][:files].length).to be 8
     end
 
     it 'code fullstack files each should be instances of FileType' do

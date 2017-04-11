@@ -1,7 +1,7 @@
 module Sboot
   class Stack
 
-    attr_accessor :config, :persistence, :conversion, :business, :backend, :fullstack, :html, :fulltest, :servicetest
+    attr_accessor :config, :persistence, :conversion, :business, :backend, :api, :fullstack, :html, :fulltest, :apitest, :servicetest
 
     def initialize options={}
       @config = options[:config]
@@ -17,6 +17,10 @@ module Sboot
       @servicetest = [:service_test]
     end
 
+    def [](key)
+      send("#{key}")
+    end
+
     def define_stacks env
       {code: create_code_stack(env),
        html: create_html_stack(env),
@@ -26,7 +30,7 @@ module Sboot
     private
 
     def create_code_stack env
-      {files: create_filetype_array(env), path: config['main_path'], active: true }
+      {files: create_filetype_array(env.to_sym), path: config['main_path'], active: true }
     end
 
     def create_html_stack env

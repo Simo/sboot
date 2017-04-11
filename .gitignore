@@ -8,5 +8,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/src/**
+.sbootconf
 tags
 .DS_Store
