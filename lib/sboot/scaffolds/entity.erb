@@ -1,6 +1,7 @@
 package <%= @package %>.persistence.entities;
 
 import javax.persistence.*;
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 <% if @entity.datetype -%>import java.util.Date;<% end -%>
 
 @Entity

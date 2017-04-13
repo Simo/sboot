@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 
 @Service
 public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.name.capitalize %>Service {
@@ -34,8 +35,8 @@ public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.na
     }
 
     @Override
-    public <%= @entity.name.capitalize %>DTO trova(Long id) {
-        return new <%= @entity.name.capitalize %>DTO(this.findOneSafe(id));
+    public <%= @entity.name.capitalize %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
+        return new <%= @entity.name.capitalize %>DTO(this.findOneSafe(<%= @entity.primary_key.name %>));
     }
 
     @Override
@@ -43,16 +44,34 @@ public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.na
         return new <%= @entity.name.capitalize %>DTO(repository.save(model.convert()));
     }
 
+		@Override
+		public List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models) {
+
+			List<<%= @entity.name.capitalize %>> entities = new ArrayList<<%= @entity.name.capitalize %>>();
+			for (<%= @entity.name.capitalize %>DTO model : models){
+				<%= @entity.name.capitalize %> entity = model.convert();
+				entities.add(entity);
+			}
+
+			List<<%= @entity.name.capitalize %>DTO> dtos = new ArrayList<<%= @entity.name.capitalize %>DTO>();
+			for (<%= @entity.name.capitalize %> entity : repository.save(entities)){
+				<%= @entity.name.capitalize %>DTO dto = new <%= @entity.name.capitalize %>DTO(entity);
+				dtos.add(dto);
+			}
+
+			return dtos;
+		}
+
     @Override
     @Transactional
-    public Long cancella(Long id) {
-        return repository.deleteById(id);
+    public Long cancella(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
+        return repository.deleteBy<%= @entity.primary_key.name.capitalize %>(<%= @entity.primary_key.name %>);
     }
 
-    private <%= @entity.name.capitalize %> findOneSafe(Long id) {
-        <%= @entity.name.capitalize %> entity = repository.findOne(id);
+    private <%= @entity.name.capitalize %> findOneSafe(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
+        <%= @entity.name.capitalize %> entity = repository.findOne(<%= @entity.primary_key.name %>);
         if (entity == null) {
-            throw new <%= @entity.name.capitalize %>EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),id);
+            throw new <%= @entity.name.capitalize %>EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),<%= @entity.primary_key.name %>);
         } else {
             return entity;
         }

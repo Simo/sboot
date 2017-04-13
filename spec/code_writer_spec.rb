@@ -29,6 +29,14 @@ describe Sboot::CodeWriter do
                         FileType.new(key: :service, reference: 'business/services', extension: 'Service'),
                         FileType.new(key: :service_impl, reference: 'business/services/impl', extension: 'ServiceImpl'),
                         FileType.new(key: :controller, reference: 'web/controller', extension: 'Controller')], path: 'src/main/java', active: true}}
+  subject(:api){{files: [FileType.new(key: :entity, reference: 'persistence/entities', extension: ''),
+                        FileType.new(key: :repository, reference: 'persistence/repositories', extension: 'Repository'),
+                        FileType.new(key: :dto, reference: 'business/dtos', extension: 'DTO'),
+                        FileType.new(key: :exception, reference: 'business/exceptions', extension: 'EntityNotFoundException'),
+                        FileType.new(key: :service, reference: 'business/services', extension: 'Service'),
+                        FileType.new(key: :service_impl, reference: 'business/services/impl', extension: 'ServiceImpl'),
+                        FileType.new(key: :messagedto, reference: 'web/utilities', extension: 'MessageDTO'),
+                        FileType.new(key: :controller, reference: 'web/controller/api', extension: 'Controller')], path: 'src/main/java', active: true}}
 
   describe 'initialize' do
 
@@ -87,10 +95,10 @@ describe Sboot::CodeWriter do
       expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/business/dtos/#{writer.entity.name.capitalize}DTO.java").to be(true)
     end
 
-    it 'write message' do
-      stack = {files: [FileType.new(key: :message, reference: 'web/utilities/messages', extension: 'MessageDTO')], path: 'src/main/java'}
+    it 'write messagedto' do
+      stack = {files: [FileType.new(key: :messagedto, reference: 'web/utilities', extension: 'MessageDTO')], path: 'src/main/java'}
       writer.write stack
-      expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/web/utilities/messages/MessageDTO.java").to be(true)
+      expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/web/utilities/MessageDTO.java").to be(true)
     end
 
     it 'write controller_rest' do
@@ -99,7 +107,7 @@ describe Sboot::CodeWriter do
       expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/web/controller/api/#{writer.entity.name.capitalize}Controller.java").to be(true)
     end
 
-    #after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
+    after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
 
   end
 
@@ -149,6 +157,19 @@ describe Sboot::CodeWriter do
       expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/business/services/impl/#{writer.entity.name.capitalize}ServiceImpl.java").to be(true)
       expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/web/controller/#{writer.entity.name.capitalize}Controller.java").to be(true)
     end
+
+    it 'should write the api stack' do
+      writer.write api
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/persistence/entities/#{writer.entity.name.capitalize}.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/persistence/repositories/#{writer.entity.name.capitalize}Repository.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/business/dtos/#{writer.entity.name.capitalize}DTO.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/business/exceptions/#{writer.entity.name.capitalize}EntityNotFoundException.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/business/services/#{writer.entity.name.capitalize}Service.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/business/services/impl/#{writer.entity.name.capitalize}ServiceImpl.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/web/utilities/MessageDTO.java").to be(true)
+      expect(File.exists? "#{fs[:path]}/#{writer.send('package_to_path')}/web/controller/api/#{writer.entity.name.capitalize}Controller.java").to be(true)
+    end
+
 
     after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
   end

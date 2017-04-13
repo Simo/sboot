@@ -5,7 +5,7 @@ module Sboot
 
     def initialize options={}
       @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Interger',double: 'Double',numeric: 'Double',date: 'Date'}
-      @constraints = {pk: 'pk'}
+      @constraints = {pk: { role: 'pk', type: 'Long'}, uuid: { role: 'pk', type: 'UUID'}}
       @has_id = false
     end
 
@@ -30,7 +30,7 @@ module Sboot
 
     def format2 array
       ret = Sboot::Property.new name: array[0].downcase,type: detect_type(array[1]), constraint: nil if is_a_type? array[1]
-      ret = Sboot::Property.new name: array[0].downcase,type: 'Long', constraint: detect_constraint(array[1]) if is_a_constraint? array[1]
+      ret = Sboot::Property.new name: array[0].downcase,type: detect_constraint_type(array[1]), constraint: detect_constraint(array[1]) if is_a_constraint? array[1]
       ret
     end
 
@@ -52,8 +52,12 @@ module Sboot
       @types[value.to_sym] || 'String'
     end
 
+    def detect_constraint_type constraint
+      @constraints[constraint.to_sym][:type]
+    end
+
     def detect_constraint constraint
-      @constraints[constraint.to_sym]
+      @constraints[constraint.to_sym][:role]
     end
 
   end

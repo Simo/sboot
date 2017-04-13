@@ -1,5 +1,6 @@
 package <%= @package %>.business.services;
 
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
 
 import java.util.List;
@@ -8,10 +9,12 @@ public interface <%= @entity.name.capitalize %>Service {
 
     List<<%= @entity.name.capitalize %>DTO> trovaTutti();
 
-    <%= @entity.name.capitalize %>DTO trova(Long id);
+    <%= @entity.name.capitalize %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 
     <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model);
 
-    Long cancella(Long id);
+    List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models);
+
+    Long cancella(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 
 }

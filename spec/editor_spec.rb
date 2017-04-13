@@ -46,6 +46,22 @@ describe Sboot::Editor do
       expect(File.exists? "src/test/java/it/insiel/gcs/progetto/web/controllers/CasaControllerTestIT.java").to be(true)
     end
 
+    it 'should publish api stack' do
+      domain_entity_api = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'api'
+      editor = Sboot::Editor.new domain_entity_api, "#{File.dirname __FILE__}/assets/.sbootconf"
+      editor.publish
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/entities/Casa.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/persistence/repositories/CasaRepository.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/dtos/CasaDTO.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/exceptions/CasaEntityNotFoundException.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/CasaService.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/impl/CasaServiceImpl.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/web/utilities/MessageDTO.java").to be(true)
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/web/controllers/api/CasaController.java").to be(true)
+      expect(File.exists? "src/test/java/it/insiel/gcs/progetto/business/services/CasaServiceTest.java").to be(true)
+      expect(File.exists? "src/test/java/it/insiel/gcs/progetto/web/controllers/api/CasaControllerTestIT.java").to be(true)
+    end
+
     it 'should publish backend' do
       domain_entity_backend = DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String', constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'backend'
       editor = Sboot::Editor.new domain_entity_backend, "#{File.dirname __FILE__}/assets/.sbootconf"

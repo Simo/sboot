@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import java.util.List;
 
 @Controller
@@ -26,10 +27,10 @@ public class <%= @entity.name.capitalize %>Controller {
 				return mav;
     }
 
-		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{id}", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView dettaglio(@PathVariable Long id){
+		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("text/html"))
+    public ModelAndView dettaglio(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
         ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/dettaglio");
-				mav.addObject("<%= @entity.name.downcase %>",service.trova(id));
+				mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
 				return mav;
     }
 
@@ -40,34 +41,34 @@ public class <%= @entity.name.capitalize %>Controller {
 				return mav;
     }
 
-		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{id}/edit", method = RequestMethod.GET, produces = ("text/html"))
-    public ModelAndView modifica(@PathVariable Long id){
+		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}/edit", method = RequestMethod.GET, produces = ("text/html"))
+    public ModelAndView modifica(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
         ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/modifica");
-				mav.addObject("<%= @entity.name.downcase %>",service.trova(id));
+				mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
 				return mav;
     }
 
     @RequestMapping(value = "/<%= @entity.collection.downcase %>",method = RequestMethod.POST)
     public String salva(@ModelAttribute <%= @entity.name.capitalize %>DTO model){
 				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.getId();
+        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
-		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{id}",method = {RequestMethod.POST, RequestMethod.PUT})
-    public String salva(@PathVariable Long id, @ModelAttribute <%= @entity.name.capitalize %>DTO model){
+		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = {RequestMethod.POST, RequestMethod.PUT})
+    public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.capitalize %>DTO model){
 				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.getId();
+        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
-    @RequestMapping(value = "/<%= @entity.name.downcase %>/{id}",method = RequestMethod.DELETE)
-    public String deleteRest(@PathVariable Long id){
-				Long idDeleted = service.cancella(id);
+    @RequestMapping(value = "/<%= @entity.name.downcase %>/{<%= @entity.primary_key[:name] %>}",method = RequestMethod.DELETE)
+    public String deleteRest(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
+				Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
 				return "redirect:/<%= @entity.collection.downcase %>";
     }
 
-		@RequestMapping(value = "/<%= @entity.name.downcase %>/{id}/delete",method = RequestMethod.GET)
-    public String delete(@PathVariable Long id){
-				Long idDeleted = service.cancella(id);
+		@RequestMapping(value = "/<%= @entity.name.downcase %>/{<%= @entity.primary_key[:name] %>}/delete",method = RequestMethod.GET)
+    public String delete(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
+				Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
 				return "redirect:/<%= @entity.collection.downcase %>";
     }
 
@@ -77,10 +78,10 @@ public class <%= @entity.name.capitalize %>Controller {
         return service.trovaTutti();
     }
 
-		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{id}", method = RequestMethod.GET, produces = ("application/json"))
+		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("application/json"))
 		@ResponseBody
-    public <%= @entity.name.capitalize %>DTO dettaglioJson(@PathVariable Long id){
-				return service.trova(id);
+    public <%= @entity.name.capitalize %>DTO dettaglioJson(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
+				return service.trova(<%= @entity.primary_key[:name] %>);
     }
 
 }

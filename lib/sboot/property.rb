@@ -26,5 +26,11 @@ module Sboot
         true
       end
     end
+
+    def is_uuid?
+      if @type == 'UUID'
+        true
+      end
+    end
   end
 end

@@ -101,8 +101,16 @@ describe Sboot::ArgsResolver do
       expect(resolver.send('is_a_type?', 'pk')).to be_falsey
     end
 
+    it 'should say its not a type on uuid' do
+      expect(resolver.send('is_a_type?', 'uuid')).to be_falsey
+    end
+
     it 'should say its a constraint' do
       expect(resolver.send('is_a_constraint?', 'pk')).to be_truthy
+    end
+
+    it 'should say its a constraint on uuid' do
+      expect(resolver.send('is_a_constraint?', 'uuid')).to be_truthy
     end
 
     it 'should say its not a constraint' do
@@ -114,9 +122,30 @@ describe Sboot::ArgsResolver do
       expect(resolver.has_id).to be true
     end
 
+    it 'should set the variable @has_id on uuid' do
+      resolver.send('is_a_constraint?', 'uuid')
+      expect(resolver.has_id).to be true
+    end
+
     it 'should not set the variable @has_id' do
       resolver.send('is_a_constraint?', 'kp')
       expect(resolver.has_id).to be false
+    end
+
+    it 'should detect pk constraint role' do
+      expect(resolver.send('detect_constraint', 'pk')).to eql 'pk'
+    end
+
+    it 'should detect pk constraint type' do
+      expect(resolver.send('detect_constraint_type', 'pk')).to eql 'Long'
+    end
+
+    it 'should detect uuid constraint role' do
+      expect(resolver.send('detect_constraint', 'uuid')).to eql 'pk'
+    end
+
+    it 'should detect uuid constraint type' do
+      expect(resolver.send('detect_constraint_type', 'uuid')).to eql 'UUID'
     end
 
   end

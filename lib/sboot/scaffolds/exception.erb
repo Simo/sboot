@@ -1,5 +1,7 @@
 package <%= @package %>.business.exceptions;
 
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+
 public class <%= @entity.name.capitalize %>EntityNotFoundException extends RuntimeException {
 
   private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;

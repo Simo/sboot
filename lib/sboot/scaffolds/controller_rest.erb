@@ -1,11 +1,12 @@
-package <%= @package %>.web.api.controllers;
+package <%= @package %>.web.controllers.api;
 
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
-import <%= @package %>.business.dtos.MessageDTO;
+import <%= @package %>.web.utilities.MessageDTO;
 import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
-import <%= @package %>.business.services.exceptions.EntityNotFoundException;
+import <%= @package %>.business.exceptions.<%= @entity.name.capitalize %>EntityNotFoundException;
 import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,7 +58,7 @@ public class <%= @entity.name.capitalize %>Controller {
         return service.salva(dto);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Esegui update <%= @entity.name.capitalize %>", notes = "Aggiorna una <%= @entity.name.capitalize %> esistente", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
         @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO.class),
@@ -70,7 +71,7 @@ public class <%= @entity.name.capitalize %>Controller {
         return service.salva(dto);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Visualizza <%= @entity.name.capitalize %>", notes = "Visualizza una <%= @entity.name.capitalize %> esistente", response = <%= @entity.name.capitalize %>DTO.class)
     @ApiResponses({
         @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.capitalize %>DTO.class),
@@ -78,12 +79,12 @@ public class <%= @entity.name.capitalize %>Controller {
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
     public <%= @entity.name.capitalize %>DTO show(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @entity.name.capitalize %> che si vuole aggiornare", defaultValue = "0")
-            @PathVariable Long id) {
-        return service.trova(id);
+            @ApiParam(required = true, name = "<%= @entity.primary_key[:name] %>", value = "ID della <%= @entity.name.capitalize %> che si vuole aggiornare", defaultValue = "0")
+            @PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
+        return service.trova(<%= @entity.primary_key[:name] %>);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Cancella <%= @entity.name.downcase %>", notes = "Cancella una <%= @entity.name.capitalize %> esistente")
     @ApiResponses({
@@ -91,9 +92,9 @@ public class <%= @entity.name.capitalize %>Controller {
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
     public void delete(
-            @ApiParam(required = true, name = "id", value = "ID della <%= @entity.name.capitalize %> da cancellare")
-            @PathVariable Long id) {
-        service.cancella(id);
+            @ApiParam(required = true, name = "<%= @entity.primary_key[:name] %>", value = "ID della <%= @entity.name.capitalize %> da cancellare")
+            @PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
+        service.cancella(<%= @entity.primary_key[:name] %>);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -105,9 +106,8 @@ public class <%= @entity.name.capitalize %>Controller {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(EntityNotFoundException.class)
-    public MessageDTO handleNotFoundException(EntityNotFoundException ex) {
-        String[] parameters = {Long.toString(ex.getId())};
+    @ExceptionHandler(<%= @entity.name.capitalize %>EntityNotFoundException.class)
+    public MessageDTO handleNotFoundException(<%= @entity.name.capitalize %>EntityNotFoundException ex) {
         Locale locale = LocaleContextHolder.getLocale();
         return new MessageDTO(messageSource.getMessage("exception.EntityNotFound.description", parameters, locale));
     }

@@ -9,7 +9,7 @@ module Sboot
       @conversion = [:entity, :repository, :dto]
       @business = [:entity, :repository, :dto, :exception, :service, :service_impl]
       @backend = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
-      @api = [:entity, :repository, :dto_rest, :exception, :service, :service_impl, :message, :controller_rest]
+      @api = [:entity, :repository, :dto_rest, :exception, :service, :service_impl, :messagedto, :controller_rest]
       @fullstack = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
       @html = [:layout, :index, :show, :new, :edit, :form]
       @fulltest = [:controller_test, :service_test]

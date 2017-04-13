@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;<% end -%>
+<% if @entity.primary_key.is_uuid?-%>import java.util.UUID;<% end -%>
 import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
 
 public class <%= @entity.name.capitalize %>DTO {

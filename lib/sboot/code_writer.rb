@@ -15,7 +15,7 @@ module Sboot
       stack[:files].each do |file|
         path = "#{stack[:path]}/#{create_path file}"
         create_missing_folders path
-        File.open "#{path}/#{ @entity.name.capitalize unless file.key == :message }#{file.ext}.java", 'w' do |f|
+        File.open "#{path}/#{ @entity.name.capitalize unless file.key == :messagedto }#{file.ext}.java", 'w' do |f|
           f.write ERB.new(getTemplate(file.key),nil,'-').result(binding)
         end
       end

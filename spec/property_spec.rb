@@ -30,5 +30,16 @@ describe Sboot::Property do
       property = Sboot::Property.new name: 'dataNascita', type: 'String', constraint: nil
       expect(property.peculiar_type?).to be_falsey
     end
+
+    it 'should return true for a uuid pk' do
+      property = Sboot::Property.new name: 'id', type: 'UUID', constraint: 'pk'
+      expect(property.is_uuid?).to be_truthy
+    end
+
+    it 'should return true for a non-uuid pk' do
+      property = Sboot::Property.new name: 'id', type: 'Long', constraint: 'pk'
+      expect(property.is_uuid?).to be_falsey
+    end
+
   end
 end
