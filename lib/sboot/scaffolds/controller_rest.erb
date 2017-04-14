@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/<%= @entity.name.downcase %>")
-@Api("/api/<%= @entity.name.downcase %>")
+@Api(value="/api/<%= @entity.name.downcase %>",tags={"<%= @entity.name.capitalize %> Endpoint"})
 public class <%= @entity.name.capitalize %>Controller {
 
     @Autowired
