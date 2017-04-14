@@ -17,6 +17,8 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../resources/node_modules/bootstrap/dist/css/bootstrap.min.css" th:href="@{/resources/node_modules/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Datatables Core CSS -->
+    <link href="../../../resources/node_modules/datatables.net-dt/css/jquery.dataTables.css" th:href="@{/resources/node_modules/datatables.net-dt/css/jquery.dataTables.css}" rel="stylesheet">
 
     <!-- Custom CSS -->
     <style>
@@ -107,5 +109,9 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="../../../resources/node_modules/bootstrap/dist/js/bootstrap.min.js" th:src="@{/resources/node_modules/bootstrap/dist/js/bootstrap.min.js}"></script>
-  </body>
+    <!-- DataTables Core Javascript -->
+    <script src="../../../resources/node_modules/datatables.net/js/jquery.dataTables.js" th:src="@{/resources/node_modules/datatables.net/js/jquery.dataTables.js}"></script>
+    <!-- Import personalizzati -->
+    <script layout:fragment="scripting"></script>
+    </body>
 </html>

@@ -7,7 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;
+<% end -%>
 import java.util.List;
 <% if @entity.datetype -%>import java.text.ParseException;
 <% end -%>

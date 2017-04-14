@@ -6,7 +6,8 @@
         <meta charset="utf-8">
         <title>Lista <%= @entity.name.capitalize %></title>
     </head>
-    <body layout:fragment="content">
+    <body>
+    <div layout:fragment="content">
       <h1>Elenco</h1>
       <table>
         <thead>
@@ -33,5 +34,13 @@
       </table>
       <br>
       <a th:href="@{'/<%= @entity.collection.downcase %>/new'}">Inserisci</a>
-  </body>
+    </div>
+    <div layout:fragment="scripting">
+      <script type="text/javascript">
+          $(document).ready(function() {
+              $('table').DataTable();
+          });
+      </script>
+    </div>
+    </body>
 </html>
