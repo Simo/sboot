@@ -7,10 +7,6 @@
         <title>Dettaglio <%= @entity.name.capitalize %></title>
     </head>
     <body layout:fragment="content">
-			<p>
-				<strong>Id:</strong>
-				<span th:text="${<%= @entity.name.downcase %>.id}"></span>
-			</p>
 			<% @entity.properties.each do |property| -%>
 				<p>
 				  <strong><%= property[:name].capitalize %>:</strong>

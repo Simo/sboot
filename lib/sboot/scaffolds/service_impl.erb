@@ -11,7 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;
+<% end -%>
+<% if @entity.datetype -%>import java.text.ParseException;
+<% end -%>
+
 
 @Service
 public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.name.capitalize %>Service {
@@ -40,12 +44,12 @@ public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.na
     }
 
     @Override
-    public <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model) {
+    public <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
         return new <%= @entity.name.capitalize %>DTO(repository.save(model.convert()));
     }
 
 		@Override
-		public List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models) {
+		public List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models) <% if @entity.datetype -%>throws ParseException <% end -%>{
 
 			List<<%= @entity.name.capitalize %>> entities = new ArrayList<<%= @entity.name.capitalize %>>();
 			for (<%= @entity.name.capitalize %>DTO model : models){

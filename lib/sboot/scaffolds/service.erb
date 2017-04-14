@@ -3,6 +3,8 @@ package <%= @package %>.business.services;
 <% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
 
+<% if @entity.datetype -%>import java.text.ParseException;
+<% end -%>
 import java.util.List;
 
 public interface <%= @entity.name.capitalize %>Service {
@@ -11,9 +13,9 @@ public interface <%= @entity.name.capitalize %>Service {
 
     <%= @entity.name.capitalize %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 
-    <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model);
+    <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>;
 
-    List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models);
+    List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models) <% if @entity.datetype -%>throws ParseException <% end -%>;
 
     Long cancella(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 

@@ -9,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 <% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import java.util.List;
+<% if @entity.datetype -%>import java.text.ParseException;
+<% end -%>
 
 @Controller
 public class <%= @entity.name.capitalize %>Controller {
@@ -49,24 +51,24 @@ public class <%= @entity.name.capitalize %>Controller {
     }
 
     @RequestMapping(value = "/<%= @entity.collection.downcase %>",method = RequestMethod.POST)
-    public String salva(@ModelAttribute <%= @entity.name.capitalize %>DTO model){
+    public String salva(@ModelAttribute <%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
 				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
         return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = {RequestMethod.POST, RequestMethod.PUT})
-    public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.capitalize %>DTO model){
+    public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
 				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
         return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
-    @RequestMapping(value = "/<%= @entity.name.downcase %>/{<%= @entity.primary_key[:name] %>}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = RequestMethod.DELETE)
     public String deleteRest(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
 				Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
 				return "redirect:/<%= @entity.collection.downcase %>";
     }
 
-		@RequestMapping(value = "/<%= @entity.name.downcase %>/{<%= @entity.primary_key[:name] %>}/delete",method = RequestMethod.GET)
+		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}/delete",method = RequestMethod.GET)
     public String delete(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
 				Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
 				return "redirect:/<%= @entity.collection.downcase %>";
