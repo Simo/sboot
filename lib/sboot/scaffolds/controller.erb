@@ -32,21 +32,21 @@ public class <%= @entity.name.capitalize %>Controller {
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView dettaglio(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/dettaglio");
+        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/show");
 				mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
 				return mav;
     }
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView nuovo(){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/nuovo");
+        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/new");
 				mav.addObject("<%= @entity.name.downcase %>",new <%= @entity.name.capitalize %>DTO());
 				return mav;
     }
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}/edit", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView modifica(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/modifica");
+        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/edit");
 				mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
 				return mav;
     }
