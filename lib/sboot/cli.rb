@@ -15,7 +15,7 @@ module Sboot
     end
 
 
-    desc "generate [ENV] :entita' :proprieta'",
+    desc "generate [ENV] {entita'} {proprieta'[:tipo][:constraint]}",
       "la flag [ENV] accetta come parametri: fullstack(default),api,backend,business,conversion,persistence"
     method_options :env => "fullstack"
     def generate(name, *args)

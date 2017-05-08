@@ -4,7 +4,7 @@ module Sboot
     attr_accessor :types, :constraints, :has_id
 
     def initialize options={}
-      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Interger',double: 'Double',numeric: 'Double',date: 'Date'}
+      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Integer',double: 'Double',numeric: 'Double',date: 'Date'}
       @constraints = {pk: { role: 'pk', type: 'Long'}, uuid: { role: 'pk', type: 'UUID'}}
       @has_id = false
     end
@@ -49,7 +49,7 @@ module Sboot
     end
 
     def detect_type value
-      @types[value.to_sym] || 'String'
+  @types[value.to_sym] || 'String'
     end
 
     def detect_constraint_type constraint
