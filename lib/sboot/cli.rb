@@ -20,6 +20,8 @@ module Sboot
     method_options :env => "fullstack"
     def generate(name, *args)
       environment = options[:env] || 'fullstack'
+      navigator = Sboot::Navigator.new
+      navigator.nav_to_root_folder Dir.pwd
       editor = Sboot::Editor.new domain_entity(name, generate_attributes(args), environment), "#{ Dir.pwd }/.sbootconf"
       editor.publish
       if environment == 'fullstack'
@@ -29,8 +31,8 @@ module Sboot
           # eseguiamo il comando di installazione delle dipendenze
           run 'npm install'
           # riposizioniamo nella cartella root (importante per i test)
-          Dir.chdir('../../../../')
       end
+      navigator.set_original_path_back
     end
 
     private
@@ -56,5 +58,24 @@ module Sboot
     def domain_entity name, properties, environment
       DomainEntity.new name: domain_names(name)[:name], name_pluralized: domain_names(name)[:pluralize], properties: properties, environment: environment
     end
+
+    def nav_to_root_folder
+
+    end
+
+    def set_root_folder starting_point
+      unless Dir['.sbootconf'].empty?
+        return
+      else
+        here = Dir.pwd
+        Dir.chdir '..'
+        unless here == starting_point
+          set_root_folder here
+        else
+          return
+        end
+      end
+    end
+
   end
 end
