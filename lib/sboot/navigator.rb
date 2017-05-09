@@ -25,8 +25,8 @@ module Sboot
       unless Dir['.sbootconf'].empty?
         return
       else
-        here = Dir.pwd
         Dir.chdir '..'
+        here = Dir.pwd
         unless here == starting_point
           set_root_folder here
         else
