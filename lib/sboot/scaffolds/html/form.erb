@@ -7,7 +7,7 @@
 
 <div th:fragment="form(action)">
   <form th:action="@{${action}}" method="post" th:object="${model}">
-    <%= hidden_field @entity.primary_key %>
+    <%= hidden_field(@entity.primary_key)%>
     <% @entity.properties.each do |property| -%>
     <% unless property.constraint == 'pk'  -%>
     <div class="form-group">

@@ -53,6 +53,9 @@ describe Sboot::CLI do
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/CasaService.java").to be(true)
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/business/services/impl/CasaServiceImpl.java").to be(true)
       expect(File.exists? "src/main/java/it/insiel/gcs/progetto/web/controllers/api/CasaController.java").to be(true)
+
+      expect(File.exists? "src/main/java/it/insiel/gcs/progetto/web/controllers/api/CasaProva.java").to be(true)
+
       expect(File.exists? "src/test/java/it/insiel/gcs/progetto/business/services/CasaServiceTest.java").to be(true)
       expect(File.exists? "src/test/java/it/insiel/gcs/progetto/web/controllers/api/CasaControllerTestIT.java").to be(true)
     end

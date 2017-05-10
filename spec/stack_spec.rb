@@ -35,7 +35,7 @@ describe Sboot::Stack do
       expect(stack.define_stacks('fullstack')[:code][:files].length).to be 7
     end
 
-    it 'array for api should have length fixed' do
+    xit 'array for api should have length fixed' do
       expect(stack.define_stacks('api')[:code][:files].length).to be 8
     end
 

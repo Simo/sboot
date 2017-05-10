@@ -106,7 +106,7 @@ Le proprietà dell'entità verranno mappate direttamente sui campi della tabella
 | number | 'Long' |
 | long | 'Long' |
 | int | 'Integer' |
-| integer | 'Interger' |
+| integer | 'Integer' |
 | double | 'Double' |
 | numeric | 'Double' |
 | date | 'Date' |
@@ -124,16 +124,30 @@ Le proprietà dell'entità verranno mappate direttamente sui campi della tabella
 
 + viene esposto un metodo "deleteById(Tipo id)"
 
-## Development
+## Sviluppo
+
+Per ottenere la gemma direttamente dal sorgente è necessario compilare il codice sorgente
+
+#### Scaricare il codice sorgente
+
+Clonare il repository in locale con il comando:   `git clone https://github.com/Simo/sboot.git`
+
+#### Installare le dipendenze e compilare il codice
+
+All'interno della cartella `sboot` lanciare il comando `bundle` per installare le dipendenze del pacchetto
+Al termine compilare il codice con il comando `rake build`
+Infine 'installare' la gemma in locale con il comando `rake install`
+
+## Contribuire
+
+1. Fork( https://github.com/[my-github-username]/sboot/fork )
+2. Per mantenere allineato il vostro repository con l'originale `git fetch upstream && git merge upstream/master`
+2. Per creare un feature branch (`git checkout -b my-new-feature`)
+3. Committare (`git commit -am 'Add some feature'`)
+4. Eseguire il Push al branch (`git push origin my-new-feature`)
+5. Creare una Pull Request
+
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release` to create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-1. Fork it ( https://github.com/[my-github-username]/sboot/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
