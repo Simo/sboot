@@ -77,4 +77,12 @@ describe Sboot::CLI do
     end
   end
 
+  describe 'ng app generation' do
+
+    it 'should generate new ng app' do
+      subject.ng
+      expect(true).to be true
+    end
+  end
+
 end

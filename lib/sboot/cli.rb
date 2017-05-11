@@ -35,6 +35,19 @@ module Sboot
       navigator.set_original_path_back
     end
 
+    desc "generate an ng app as frontend",
+         "generate an ng app as frontend"
+    def ng
+      #generate_ng_app
+      folder = Dir.getwd
+      Dir.chdir 'ng-app'
+      generate_ng_module
+      generate_ng_controller
+      generate_ng_model
+      generate_ng_service
+      add_ng_service
+    end
+
     private
 
     def domain_names name
@@ -59,21 +72,33 @@ module Sboot
       DomainEntity.new name: domain_names(name)[:name], name_pluralized: domain_names(name)[:pluralize], properties: properties, environment: environment
     end
 
-    def nav_to_root_folder
-
+    def generate_ng_app
+      run 'ng new ng-app'
     end
 
-    def set_root_folder starting_point
-      unless Dir['.sbootconf'].empty?
-        return
-      else
-        here = Dir.pwd
-        Dir.chdir '..'
-        unless here == starting_point
-          set_root_folder here
-        else
-          return
-        end
+    def generate_ng_model
+      run 'ng g class entita/entita'
+    end
+
+    def generate_ng_controller
+      run 'ng g component entita'
+    end
+
+    def generate_ng_service
+      run 'ng g service entita/entita'
+    end
+
+    def generate_ng_module
+      run 'ng g module entitas'
+    end
+
+    def add_ng_service
+      Dir.chdir 'src/app'
+      contents = File.open("app.module.ts", "r+"){ |file| file.read }
+      new_contents = contents.gsub /imports: \[([\w\,\.\(\)\n\r\s]+)/, 'imports: [\1,'
+
+      File.open 'app.module.ts', 'w' do |f|
+        f.puts new_contents
       end
     end
 
