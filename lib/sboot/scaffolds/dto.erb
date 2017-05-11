@@ -1,48 +1,65 @@
 package <%= @package %>.business.dtos;
 
-import <%= @package %>.persistence.entities.<%= @name.split('_').collect(&:capitalize).join %>;
+<% if @entity.datetype -%>
+import java.text.ParseException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+<% end -%>
+import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
+<% if @entity.primary_key.is_uuid?-%>import java.util.UUID;<% end -%>
 
-public class <%= @name.split('_').collect(&:capitalize).join %>DTO {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 
-    private Long id;
-    <% @properties.each do |property| %>
-    private <%= property[:type] %> <%= property[:name] %>;
+    <% @entity.properties.each do |property| %>
+    private <%= property.dto_type %> <%= property[:name] %>;
     <% end %>
 
-    public <%= @name.split('_').collect(&:capitalize).join %>DTO(){}
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(){}
 
-    public <%= @name.split('_').collect(&:capitalize).join %>DTO(<%= @name.split('_').collect(&:capitalize).join %> entity){
-        this.id = entity.getId();
-				<% @properties.each do |property| -%>
-		    this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
-		    <% end -%>
-    }
-
-    public <%= @name.split('_').collect(&:capitalize).join %> convert(){
-        <%= @name.split('_').collect(&:capitalize).join %> entity = new <%= @name.split('_').collect(&:capitalize).join %>();
-        entity.setId(this.id);
-				<% @properties.each do |property| -%>
-		    entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
-		    <% end -%>
-        return entity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    <% @properties.each do |property| -%>
-    public <%= property[:type] %> get<%= property[:name].capitalize %>() {
-        return <%= property[:name] %>;
-    }
-
-    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
-        this.<%= property[:name] %> = <%= property[:name] %>;
-    }
-
+	public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
+		<% @entity.properties.each do |property| -%>
+		<% unless property.peculiar_type? -%>
+		this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
+		<% else -%>
+		this.<%= property[:name] %> = this.toString(entity.get<%= property[:name].capitalize %>());
 		<% end -%>
+		<% end -%>
+	}
+
+    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
+      <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
+			<% @entity.properties.each do |property| -%>
+<% unless property.peculiar_type? -%>
+			entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
+<% else -%>entity.set<%= property[:name].capitalize %>(toDate(this.<%= property[:name] %>));
+		<% end -%>
+<% end -%>
+    	return entity;
+    }
+
+<% @entity.properties.each do |property| -%>
+  public <%= property.dto_type %> get<%= property[:name].capitalize %>() {
+		return <%= property[:name] %>;
+  }
+
+  public void set<%= property[:name].capitalize %>(<%= property.dto_type %> <%= property[:name] %>) {
+    this.<%= property[:name] %> = <%= property[:name] %>;
+  }
+<% end -%>
+
+<% if @entity.datetype -%>
+	public Date toDate(String dateString) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date dateToBeReturned = formatter.parse(dateString);
+		return dateToBeReturned;
+	}
+
+	public String toString(Date dateDate){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateToBeReturned = formatter.format(dateDate);
+		return dateToBeReturned;
+	}
+<% end -%>
 }

@@ -4,22 +4,18 @@
       layout:decorator="layouts/layout">
     <head>
         <meta charset="utf-8">
-        <title>Dettaglio <%= @name.capitalize %></title>
+        <title>Dettaglio <%= @entity.name.capitalize %></title>
     </head>
     <body layout:fragment="content">
-			<p>
-				<strong>Id:</strong>
-				<span th:text="${<%= @name.downcase %>.id}"></span>
-			</p>
-			<% @properties.each do |property| -%>
+			<% @entity.properties.each do |property| -%>
 				<p>
 				  <strong><%= property[:name].capitalize %>:</strong>
-				  <span th:text="${<%= @name.downcase %>.<%= property[:name] %>}"></span>
+				  <span th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"></span>
 				</p>
 			<% end -%>
 
-			<a th:href="@{'/<%= @name.downcase %>/'+${<%= @name.downcase %>.id}+'/edit'}">Modifica</a>
-			<a th:href="@{'/<%= @name.downcase %>'}">Indietro</a>
+			<a th:href="@{'/<%= @entity.collection.downcase %>/'+${<%= @entity.name.downcase %>.id}+'/edit'}">Modifica</a>
+			<a th:href="@{'/<%= @entity.collection.downcase %>'}">Indietro</a>
 
   </body>
 </html>

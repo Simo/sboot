@@ -16,7 +16,9 @@
     <title layout:title-pattern="$DECORATOR_TITLE - $CONTENT_TITLE">MyApp</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" th:href="@{/resources/css/bootstrap.min.css}" rel="stylesheet">
+    <link href="../../../resources/node_modules/bootstrap/dist/css/bootstrap.min.css" th:href="@{/resources/node_modules/bootstrap/dist/css/bootstrap.min.css}" rel="stylesheet">
+    <!-- Datatables Core CSS -->
+    <link href="../../../resources/node_modules/datatables.net-dt/css/jquery.dataTables.css" th:href="@{/resources/node_modules/datatables.net-dt/css/jquery.dataTables.css}" rel="stylesheet">
 
     <!-- Custom CSS -->
     <style>
@@ -102,10 +104,14 @@
         </div>
     </footer>
 
-    <!-- jQuery Version 1.11.1 -->
-    <script src="js/jquery.js" th:src="@{/resources/js/jquery.js}"></script>
+    <!-- jQuery Version 3.2.1 -->
+    <script src="../../../resources/node_modules/jquery/dist/jquery.min.js" th:src="@{/resources/node_modules/jquery/dist/jquery.min.js}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
-  </body>
+    <script src="../../../resources/node_modules/bootstrap/dist/js/bootstrap.min.js" th:src="@{/resources/node_modules/bootstrap/dist/js/bootstrap.min.js}"></script>
+    <!-- DataTables Core Javascript -->
+    <script src="../../../resources/node_modules/datatables.net/js/jquery.dataTables.js" th:src="@{/resources/node_modules/datatables.net/js/jquery.dataTables.js}"></script>
+    <!-- Import personalizzati -->
+    <script layout:fragment="scripting"></script>
+    </body>
 </html>

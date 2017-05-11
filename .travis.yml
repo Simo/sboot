@@ -1,3 +1,13 @@
+before_install:
+  - gem update --system
+  - gem install bundler
 language: ruby
 rvm:
   - 2.2.1
+matrix:
+  allow_failures:
+    - rvm: 2.2.1
+  fast_finish: true
+script: bundle exec rspec
+sudo: false
+cache: bundler

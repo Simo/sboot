@@ -7,11 +7,11 @@
 </head>
 <body layout:fragment="content">
 
-    <h1>Inserisci <%= @name.capitalize %></h1>
+    <h1>Inserisci <%= @entity.name.capitalize %></h1>
 
-    <div th:include="<%= @name.downcase %>/form:: form('/<%= @name.downcase %>')"></div>
+    <div th:include="<%= @entity.name.downcase %>/form:: form('/<%= @entity.collection.downcase %>')"></div>
 
-    <a th:href="@{'/<%= @name.downcase %>'}">Indietro</a>
+    <a th:href="@{'/<%= @entity.collection.downcase %>'}">Indietro</a>
 
 </body>
 </html>

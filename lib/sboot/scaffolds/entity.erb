@@ -1,35 +1,42 @@
 package <%= @package %>.persistence.entities;
 
 import javax.persistence.*;
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;<% end -%>
+<% if @entity.datetype -%>import java.util.Date;<% end -%>
 
 @Entity
-@Table(name = "T_<%= @name.upcase %>")
-public class <%= @name.split('_').collect(&:capitalize).join %> {
+@Table(name = "T_<%= @entity.name.upcase %>")
+public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
 
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO, generator="spandimento_seq_gen")
-    @SequenceGenerator(name="spandimento_seq_gen", sequenceName="SEQ_TNIT_SPANDIMENTO_ID")
-    @Column(name = "ID")
-    private Long id;
-		<% @properties.each do |property| -%>
-		@Column(name = "<%= property[:name].upcase %>")
-    private <%= property[:type] %> <%= property[:name] %>;
-    <% end -%>
+	@Id
+<% if @entity.primary_key.is_uuid? -%>
+	@Type(type="uuid-binary")
+	@GeneratedValue(generator="myUUID")
+	@GenericGenerator(name="myUUID", strategy="uuid2")
+<% end -%>
+<% unless @entity.primary_key.is_uuid? -%>
+	@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
+	@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
+<% end -%>
+	@Column(name = "<%= @entity.primary_key[:name].upcase %>")
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-		<% @properties.each do |property| -%>
-		public <%= property[:type] %> get<%= property[:name].capitalize %>() {
-        return <%= property[:name] %>;
-    }
-
-    public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
-        this.<%= property[:name] %> = <%= property[:name] %>;
-    }
+	private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+	<% @entity.properties.each do |property| -%>
+		<% unless property[:constraint] == 'pk' -%>
+	@Column(name = "<%= property[:name].upcase %>")
+	private <%= property[:type] %> <%= property[:name] %>;
 		<% end -%>
+	<% end -%>
+
+	<% @entity.properties.each do |property| -%>
+	public <%= property[:type] %> get<%= property[:name].capitalize %>() {
+			return <%= property[:name] %>;
+	}
+
+	public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
+			this.<%= property[:name] %> = <%= property[:name] %>;
+	}
+	<% end -%>
 }

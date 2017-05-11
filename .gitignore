@@ -1,3 +1,4 @@
+.idea/
 /.bundle/
 /.yardoc
 /Gemfile.lock
@@ -7,7 +8,7 @@
 /pkg/
 /spec/reports/
 /tmp/
-/it/**
-/webapp/**
+/src/**
+.sbootconf
+tags
 .DS_Store
-.idea/

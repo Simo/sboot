@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<div th:fragment="form(action)">
+  <form th:action="@{${action}}" method="post" th:object="${model}">
+    <%= hidden_field @entity.primary_key %>
+    <% @entity.properties.each do |property| -%>
+    <% unless property.constraint == 'pk'  -%>
+    <div class="form-group">
+      <%= label property  %>
+      <%= text_field property %>
+    </div>
+    <% end -%>
+    <% end -%>
+    <input type="submit" class="btn btn-default" value="Salva" />
+  </form>
+</div>
+
+</body>
+</html>

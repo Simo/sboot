@@ -1,10 +1,12 @@
 package <%= @package %>.persistence.repositories;
 
-import <%= @package %>.persistence.entities.<%= @name.split('_').collect(&:capitalize).join %>;
+import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface <%= @name.split('_').collect(&:capitalize).join %>Repository extends JpaRepository<<%= @name.split('_').collect(&:capitalize).join %>,Long> {
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 
-Long deleteById(Long id);
+public interface <%= @entity.name.split('_').collect(&:capitalize).join %>Repository extends JpaRepository<<%= @entity.name.split('_').collect(&:capitalize).join %>,<%= @entity.primary_key.type %>> {
+
+    Long deleteBy<%= @entity.primary_key.name.split('_').collect(&:capitalize).join %>(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 
 }

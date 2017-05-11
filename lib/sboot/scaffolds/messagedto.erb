@@ -1,12 +1,12 @@
-package <%= @package %>.business.dto;
+package <%= @package %>.web.utilities.messages;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel(value = "Message", description = "A message containing more info why the operation failed")
+@ApiModel(value = "Message", description = "Un messaggio con informazioni supplementari sul fallimento dell'operazione")
 public class MessageDTO {
 
-    @ApiModelProperty(value = "The message itself", readOnly = true)
+    @ApiModelProperty(value = "Il messaggio che viene comunicato", readOnly = true)
     private String message;
 
     public MessageDTO(String message) {
