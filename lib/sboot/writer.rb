@@ -31,28 +31,28 @@ module Sboot
     def persistence
       write_entity 'entity'
       write_repository 'repository'
-      puts "create #{name.split('_').collect(&:capitalize).join}.java in #{package_to_path}/persistence/entities"
-      puts "create #{name.split('_').collect(&:capitalize).join}Repository.java in #{package_to_path}/persistence/repositories"
+      puts "create #{name.capitalize}.java in #{package_to_path}/persistence/entities"
+      puts "create #{name.capitalize}Repository.java in #{package_to_path}/persistence/repositories"
     end
 
     def conversion
       persistence
       write_dto 'dto'
-      puts "create #{name.split('_').collect(&:capitalize).join}DTO.java in #{package_to_path}/business/dtos"
+      puts "create #{name.capitalize}DTO.java in #{package_to_path}/business/dtos"
     end
 
     def business
       conversion
       write_service 'service'
       write_service_impl 'serviceimpl'
-      puts "create #{name.split('_').collect(&:capitalize).join}Service.java in #{package_to_path}/business/services"
-      puts "create #{name.split('_').collect(&:capitalize).join}ServiceImpl.java in #{package_to_path}/business/services/impl"
+      puts "create #{name.capitalize}Service.java in #{package_to_path}/business/services"
+      puts "create #{name.capitalize}ServiceImpl.java in #{package_to_path}/business/services/impl"
     end
 
     def backend
       business
       write_controller 'controller'
-      puts "create #{name.split('_').collect(&:capitalize).join}Controller.java in #{package_to_path}/web/controllers"
+      puts "create #{name.capitalize}Controller.java in #{package_to_path}/web/controllers"
     end
 
     def fullstack
@@ -73,21 +73,21 @@ module Sboot
 
     def write entity, path, type
       create_missing_folders path
-      File.open("#{path}/#{@name.split('_').collect(&:capitalize).join}.java", 'w') do |f|
+      File.open("#{path}/#{@name}.java", 'w') do |f|
         f.write ERB.new(getTemplate(type),nil,'-').result(binding)
       end
     end
 
     def write_entity(template)
       create_missing_folders "persistence/entities"
-      File.open("#{basic_path}/#{package_to_path}/persistence/entities/#{@name.split('_').collect(&:capitalize).join}.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/persistence/entities/#{@name}.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
 
     def write_repository(template)
       create_missing_folders "persistence/repositories"
-      File.open("#{basic_path}/#{package_to_path}/persistence/repositories/#{@name.split('_').collect(&:capitalize).join}Repository.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/persistence/repositories/#{@name}Repository.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
@@ -101,7 +101,7 @@ module Sboot
 
     def write_dto(template)
       create_missing_folders "business/dtos"
-      File.open("#{basic_path}/#{package_to_path}/business/dtos/#{@name.split('_').collect(&:capitalize).join}DTO.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/business/dtos/#{@name}DTO.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
@@ -115,28 +115,28 @@ module Sboot
 
     def write_service template
       create_missing_folders "business/services"
-      File.open("#{basic_path}/#{package_to_path}/business/services/#{@name.split('_').collect(&:capitalize).join}Service.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/business/services/#{@name}Service.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
 
     def write_service_impl template
       create_missing_folders "business/services/impl"
-      File.open("#{basic_path}/#{package_to_path}/business/services/impl/#{@name.split('_').collect(&:capitalize).join}ServiceImpl.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/business/services/impl/#{@name}ServiceImpl.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
 
     def write_controller template
       create_missing_folders "web/controllers"
-      File.open("#{basic_path}/#{package_to_path}/web/controllers/#{@name.split('_').collect(&:capitalize).join}Controller.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/web/controllers/#{@name}Controller.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
 
     def write_controller_rest template
       create_missing_folders "web/controllers/api"
-      File.open("#{basic_path}/#{package_to_path}/web/controllers/api/#{@name.split('_').collect(&:capitalize).join}Controller.java", 'w') do |f|
+      File.open("#{basic_path}/#{package_to_path}/web/controllers/api/#{@name}Controller.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
@@ -172,7 +172,7 @@ module Sboot
     def write_controller_test template
       create_test_folders
       FileUtils.mkdir_p "#{test_basic_path}/#{package_to_path}/web/controllers"
-      File.open("#{test_basic_path}/#{package_to_path}/web/controllers/#{@name.split('_').collect(&:capitalize).join}ControllerTest.java", 'w') do |f|
+      File.open("#{test_basic_path}/#{package_to_path}/web/controllers/#{@name}ControllerTest.java", 'w') do |f|
         f.write ERB.new(getTemplate(template),nil,'-').result(binding)
       end
     end
