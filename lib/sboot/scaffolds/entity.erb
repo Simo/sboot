@@ -8,7 +8,7 @@ import org.hibernate.annotations.Type;<% end -%>
 
 @Entity
 @Table(name = "T_<%= @entity.name.upcase %>")
-public class <%= @entity.name.capitalize %> {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
 
 	@Id
 <% if @entity.primary_key.is_uuid? -%>
@@ -26,17 +26,17 @@ public class <%= @entity.name.capitalize %> {
 	<% @entity.properties.each do |property| -%>
 		<% unless property[:constraint] == 'pk' -%>
 	@Column(name = "<%= property[:name].upcase %>")
-	private <%= property[:type] %> <%= property[:name] %>;
+	private <%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
 		<% end -%>
 	<% end -%>
 
 	<% @entity.properties.each do |property| -%>
-	public <%= property[:type] %> get<%= property[:name].capitalize %>() {
-			return <%= property[:name] %>;
+	public <%= property[:type] %> get<%= property[:name].split('_').collect(&:capitalize).join %>() {
+			return <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
 	}
 
-	public void set<%= property[:name].capitalize %>(<%= property[:type] %> <%= property[:name] %>) {
-			this.<%= property[:name] %> = <%= property[:name] %>;
+	public void set<%= property[:name].split('_').collect(&:capitalize).join %>(<%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>) {
+			this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase}%> = <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
 	}
 	<% end -%>
 }

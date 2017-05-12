@@ -1,7 +1,7 @@
 package <%= @package %>.web.controllers;
 
-import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
-import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
+import <%= @package %>.business.dtos.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
+import <%= @package %>.business.services.<%= @entity.name.split('_').collect(&:capitalize).join %>Service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,22 +29,22 @@ import static org.mockito.Mockito.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class <%= @entity.name.capitalize %>ControllerTest {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>ControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private <%= @entity.name.capitalize %>Service mockService;
+    private <%= @entity.name.split('_').collect(&:capitalize).join %>Service mockService;
     @Autowired
     private WebApplicationContext webApplicationContext;
 
-    private List<<%= @entity.name.capitalize %>DTO> lista = new ArrayList<<%= @entity.name.capitalize %>DTO>();
+    private List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> lista = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
 
-    <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>1;
+    <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>1;
 
     @Before
     public void setUp() throws Exception {
-        <%= @entity.name.downcase %>1 = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <%= @entity.name.downcase %>1.setId(1L);
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>1.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
@@ -101,16 +101,16 @@ public class <%= @entity.name.capitalize %>ControllerTest {
     @Test
     public void salvaPost() throws Exception {
         assertThat(this.mockService).isNotNull();
-        <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>New = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>New = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>New.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
         <% end -%>
-        <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>New2 = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>New2 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <%= @entity.name.downcase %>New2.setId(2L);
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>New2.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
         <% end -%>
-        when(mockService.salva(any(<%= @entity.name.capitalize %>DTO.class))).thenReturn(<%= @entity.name.downcase %>New2);
+        when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.name.downcase %>New2);
         this.mockMvc.perform(MockMvcRequestBuilders.post("/casa").contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("id","").param("indirizzo",<%= @entity.name.downcase %>New.getIndirizzo()).param("civico",<%= @entity.name.downcase %>New.getCivico().toString()))
                 .andExpect(status().is3xxRedirection())
@@ -121,12 +121,12 @@ public class <%= @entity.name.capitalize %>ControllerTest {
     @Test
     public void salvaPut() throws Exception {
         assertThat(this.mockService).isNotNull();
-        <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>Update = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Update = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <%= @entity.name.downcase %>Update.setId(1L);
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>Update.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
         <% end -%>
-        when(mockService.salva(any(<%= @entity.name.capitalize %>DTO.class))).thenReturn(<%= @entity.name.downcase %>Update);
+        when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.name.downcase %>Update);
         this.mockMvc.perform(MockMvcRequestBuilders.put("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>Update.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("id",<%= @entity.name.downcase %>Update.getId().toString()).param("indirizzo",<%= @entity.name.downcase %>Update.getIndirizzo()).param("civico",<%= @entity.name.downcase %>Update.getCivico().toString()))
                 .andExpect(status().is3xxRedirection())
@@ -137,7 +137,7 @@ public class <%= @entity.name.capitalize %>ControllerTest {
     @Test
     public void deleteRest() throws Exception {
         assertThat(this.mockService).isNotNull();
-        <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <%= @entity.name.downcase %>Delete.setId(1L);
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>Delete.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
@@ -152,7 +152,7 @@ public class <%= @entity.name.capitalize %>ControllerTest {
     @Test
     public void delete() throws Exception {
         assertThat(this.mockService).isNotNull();
-        <%= @entity.name.capitalize %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.capitalize %>DTO();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <%= @entity.name.downcase %>Delete.setId(1L);
         <% @entity.properties.each do |property| -%>
         <%= @entity.name.downcase %>Delete.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);

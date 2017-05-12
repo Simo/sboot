@@ -13,6 +13,7 @@ module Sboot
       @fullstack = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
 
       @html = [:layout, :index, :show, :new, :edit, :form]
+      @ng = [:component_elenco, :component_dettaglio, :service, :interface]
 
       @fulltest = [:controller_test, :service_test]
       @apitest = [:controller_rest_test, :service_test]
@@ -32,11 +33,15 @@ module Sboot
     private
 
     def create_code_stack env
+      #environment = env.to_sym unless env == 'ng'
+      #environment = :api if env == 'ng'
       {files: create_filetype_array(env.to_sym), path: config['main_path'], active: true }
     end
 
     def create_html_stack env
-      {files: create_filetype_array(:html), path: config['html_path'], active: html_needed?(env) }
+      stack = {files: create_filetype_array(:html), path: config['html_path'], active: html_needed?(env) } unless env == 'ng'
+      stack = {files: create_filetype_array(:ng), path: config['ng_path'], active: html_needed?(env) } if env == 'ng'
+      stack
     end
 
     def create_test_stack env
@@ -55,7 +60,7 @@ module Sboot
     end
 
     def html_needed? env
-      env == 'fullstack'
+      env == 'fullstack' || env == 'ng'
     end
 
     def test_needed? env

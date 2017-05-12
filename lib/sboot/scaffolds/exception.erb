@@ -2,12 +2,12 @@ package <%= @package %>.business.exceptions;
 
 <% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 
-public class <%= @entity.name.capitalize %>EntityNotFoundException extends RuntimeException {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException extends RuntimeException {
 
   private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
   private String klass;
 
-  public <%= @entity.name.capitalize %>EntityNotFoundException(String klass, <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
+  public <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException(String klass, <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
     this.klass = klass;
     this.<%= @entity.primary_key[:name] %> = <%= @entity.primary_key[:name] %>;
   }

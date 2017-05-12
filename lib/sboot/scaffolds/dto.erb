@@ -7,45 +7,45 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 <% end -%>
-import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
+import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
 <% if @entity.primary_key.is_uuid?-%>import java.util.UUID;<% end -%>
 
-public class <%= @entity.name.capitalize %>DTO {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 
     <% @entity.properties.each do |property| %>
-    private <%= property.dto_type %> <%= property[:name] %>;
+    private <%= property.dto_type %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
     <% end %>
 
-    public <%= @entity.name.capitalize %>DTO(){}
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(){}
 
-	public <%= @entity.name.capitalize %>DTO(<%= @entity.name.capitalize %> entity){
+	public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
 		<% @entity.properties.each do |property| -%>
 		<% unless property.peculiar_type? -%>
-		this.<%= property[:name] %> = entity.get<%= property[:name].capitalize %>();
+		this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> = entity.get<%= property[:name].split('_').collect(&:capitalize).join %>();
 		<% else -%>
-		this.<%= property[:name] %> = this.toString(entity.get<%= property[:name].capitalize %>());
+		this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> = this.toString(entity.get<%= property[:name].split('_').collect(&:capitalize).join %>());
 		<% end -%>
 		<% end -%>
 	}
 
-    public <%= @entity.name.capitalize %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
-      <%= @entity.name.capitalize %> entity = new <%= @entity.name.capitalize %>();
+    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
+      <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
 			<% @entity.properties.each do |property| -%>
 <% unless property.peculiar_type? -%>
-			entity.set<%= property[:name].capitalize %>(this.<%= property[:name] %>);
-<% else -%>entity.set<%= property[:name].capitalize %>(toDate(this.<%= property[:name] %>));
+			entity.set<%= property[:name].split('_').collect(&:capitalize).join %>(this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>);
+<% else -%>entity.set<%= property[:name].split('_').collect(&:capitalize).join %>(toDate(this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>));
 		<% end -%>
 <% end -%>
     	return entity;
     }
 
 <% @entity.properties.each do |property| -%>
-  public <%= property.dto_type %> get<%= property[:name].capitalize %>() {
-		return <%= property[:name] %>;
+  public <%= property.dto_type %> get<%= property[:name].split('_').collect(&:capitalize).join %>() {
+		return <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
   }
 
-  public void set<%= property[:name].capitalize %>(<%= property.dto_type %> <%= property[:name] %>) {
-    this.<%= property[:name] %> = <%= property[:name] %>;
+  public void set<%= property[:name].split('_').collect(&:capitalize).join %>(<%= property.dto_type %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>) {
+    this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> = <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
   }
 <% end -%>
 

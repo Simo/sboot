@@ -1,7 +1,7 @@
 package <%= @package %>.web.controllers;
 
-import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
-import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
+import <%= @package %>.business.dtos.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
+import <%= @package %>.business.services.<%= @entity.name.split('_').collect(&:capitalize).join %>Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +14,10 @@ import java.util.List;
 <% end -%>
 
 @Controller
-public class <%= @entity.name.capitalize %>Controller {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller {
 
     @Autowired
-    private <%= @entity.name.capitalize %>Service service;
+    private <%= @entity.name.split('_').collect(&:capitalize).join %>Service service;
 
     @RequestMapping(value = "/<%= @entity.collection.downcase %>", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView index(){
@@ -40,7 +40,7 @@ public class <%= @entity.name.capitalize %>Controller {
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView nuovo(){
         ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/new");
-				mav.addObject("<%= @entity.name.downcase %>",new <%= @entity.name.capitalize %>DTO());
+				mav.addObject("<%= @entity.name.downcase %>",new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO());
 				return mav;
     }
 
@@ -52,14 +52,14 @@ public class <%= @entity.name.capitalize %>Controller {
     }
 
     @RequestMapping(value = "/<%= @entity.collection.downcase %>",method = RequestMethod.POST)
-    public String salva(@ModelAttribute <%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
-				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
+    public String salva(@ModelAttribute <%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
+				<%= @entity.name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
         return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = {RequestMethod.POST, RequestMethod.PUT})
-    public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
-				<%= @entity.name.capitalize %>DTO newModel = service.salva(model);
+    public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
+				<%= @entity.name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
         return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
@@ -77,13 +77,13 @@ public class <%= @entity.name.capitalize %>Controller {
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>", method = RequestMethod.GET, produces = ("application/json"))
 		@ResponseBody
-    public List<<%= @entity.name.capitalize %>DTO> indexJson(){
+    public List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> indexJson(){
         return service.trovaTutti();
     }
 
 		@RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("application/json"))
 		@ResponseBody
-    public <%= @entity.name.capitalize %>DTO dettaglioJson(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dettaglioJson(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
 				return service.trova(<%= @entity.primary_key[:name] %>);
     }
 

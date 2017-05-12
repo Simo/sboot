@@ -1,10 +1,10 @@
 package <%= @package %>.business.services.impl;
 
-import <%= @package %>.business.dtos.<%= @entity.name.capitalize %>DTO;
-import <%= @package %>.business.services.<%= @entity.name.capitalize %>Service;
-import <%= @package %>.business.exceptions.<%= @entity.name.capitalize %>EntityNotFoundException;
-import <%= @package %>.persistence.entities.<%= @entity.name.capitalize %>;
-import <%= @package %>.persistence.repositories.<%= @entity.name.capitalize %>Repository;
+import <%= @package %>.business.dtos.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
+import <%= @package %>.business.services.<%= @entity.name.split('_').collect(&:capitalize).join %>Service;
+import <%= @package %>.business.exceptions.<%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException;
+import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
+import <%= @package %>.persistence.repositories.<%= @entity.name.split('_').collect(&:capitalize).join %>Repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,48 +18,48 @@ import java.util.List;
 
 
 @Service
-public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.name.capitalize %>Service {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImpl implements <%= @entity.name.split('_').collect(&:capitalize).join %>Service {
 
-    private <%= @entity.name.capitalize %>Repository repository;
+    private <%= @entity.name.split('_').collect(&:capitalize).join %>Repository repository;
 
 		@Autowired
-		public <%= @entity.name.capitalize %>ServiceImpl(<%= @entity.name.capitalize %>Repository repo){
+		public <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImpl(<%= @entity.name.split('_').collect(&:capitalize).join %>Repository repo){
 			this.repository = repo;
 		}
 
     @Override
-    public List<<%= @entity.name.capitalize %>DTO> trovaTutti() {
-        List<<%= @entity.name.capitalize %>> source = repository.findAll();
-        List<<%= @entity.name.capitalize %>DTO> dtos = new ArrayList<<%= @entity.name.capitalize %>DTO>();
-        for (<%= @entity.name.capitalize %> entity : source){
-            <%= @entity.name.capitalize %>DTO dto = new <%= @entity.name.capitalize %>DTO(entity);
+    public List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> trovaTutti() {
+        List<<%= @entity.name.split('_').collect(&:capitalize).join %>> source = repository.findAll();
+        List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> dtos = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
+        for (<%= @entity.name.split('_').collect(&:capitalize).join %> entity : source){
+            <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(entity);
             dtos.add(dto);
         }
         return dtos;
     }
 
     @Override
-    public <%= @entity.name.capitalize %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
-        return new <%= @entity.name.capitalize %>DTO(this.findOneSafe(<%= @entity.primary_key.name %>));
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
+        return new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(this.findOneSafe(<%= @entity.primary_key.name %>));
     }
 
     @Override
-    public <%= @entity.name.capitalize %>DTO salva(<%= @entity.name.capitalize %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
-        return new <%= @entity.name.capitalize %>DTO(repository.save(model.convert()));
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO salva(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
+        return new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(repository.save(model.convert()));
     }
 
 		@Override
-		public List<<%= @entity.name.capitalize %>DTO> salvaLista(List<<%= @entity.name.capitalize %>DTO> models) <% if @entity.datetype -%>throws ParseException <% end -%>{
+		public List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> salvaLista(List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> models) <% if @entity.datetype -%>throws ParseException <% end -%>{
 
-			List<<%= @entity.name.capitalize %>> entities = new ArrayList<<%= @entity.name.capitalize %>>();
-			for (<%= @entity.name.capitalize %>DTO model : models){
-				<%= @entity.name.capitalize %> entity = model.convert();
+			List<<%= @entity.name.split('_').collect(&:capitalize).join %>> entities = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>>();
+			for (<%= @entity.name.split('_').collect(&:capitalize).join %>DTO model : models){
+				<%= @entity.name.split('_').collect(&:capitalize).join %> entity = model.convert();
 				entities.add(entity);
 			}
 
-			List<<%= @entity.name.capitalize %>DTO> dtos = new ArrayList<<%= @entity.name.capitalize %>DTO>();
-			for (<%= @entity.name.capitalize %> entity : repository.save(entities)){
-				<%= @entity.name.capitalize %>DTO dto = new <%= @entity.name.capitalize %>DTO(entity);
+			List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> dtos = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
+			for (<%= @entity.name.split('_').collect(&:capitalize).join %> entity : repository.save(entities)){
+				<%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(entity);
 				dtos.add(dto);
 			}
 
@@ -69,13 +69,13 @@ public class <%= @entity.name.capitalize %>ServiceImpl implements <%= @entity.na
     @Override
     @Transactional
     public Long cancella(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
-        return repository.deleteBy<%= @entity.primary_key.name.capitalize %>(<%= @entity.primary_key.name %>);
+        return repository.deleteBy<%= @entity.primary_key.name.split('_').collect(&:capitalize).join %>(<%= @entity.primary_key.name %>);
     }
 
-    private <%= @entity.name.capitalize %> findOneSafe(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
-        <%= @entity.name.capitalize %> entity = repository.findOne(<%= @entity.primary_key.name %>);
+    private <%= @entity.name.split('_').collect(&:capitalize).join %> findOneSafe(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>) {
+        <%= @entity.name.split('_').collect(&:capitalize).join %> entity = repository.findOne(<%= @entity.primary_key.name %>);
         if (entity == null) {
-            throw new <%= @entity.name.capitalize %>EntityNotFoundException(<%= @entity.name.capitalize %>.class.toString(),<%= @entity.primary_key.name %>);
+            throw new <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException(<%= @entity.name.split('_').collect(&:capitalize).join %>.class.toString(),<%= @entity.primary_key.name %>);
         } else {
             return entity;
         }
