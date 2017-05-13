@@ -1,13 +1,15 @@
 require 'erb'
 require 'fileutils'
+require 'sboot/source_writer'
 
 module Sboot
-  class HtmlWriter
+  class HtmlWriter<SourceWriter
     include Sboot::HtmlHelper
 
     attr_accessor :entity
 
     def initialize options={}
+      super
       @entity = options[:entity]
     end
 
@@ -15,20 +17,14 @@ module Sboot
       create_package_json unless package_json_exists?
       stack[:files].each do |file|
         path = "#{stack[:path]}/#{create_path file}"
-        create_missing_folders path
-        File.open "#{path}/#{file.ext}.html", 'w' do |f|
-          f.write ERB.new(getTemplate(file.key),nil,'-').result(binding)
-        end
+        write_file "#{path}/#{file.ext}.html", ERB.new(getTemplate(file.key),nil,'-').result(binding)
       end
     end
 
     private
 
     def create_package_json
-      create_missing_folders 'src/main/webapp/resources'
-      File.open "src/main/webapp/resources/package.json", 'w' do |f|
-        f.write ERB.new(getPackageJson,nil,'-').result(binding)
-      end
+        write_file "src/main/webapp/resources/package.json", ERB.new(getPackageJson,nil,'-').result(binding)
     end
 
     def package_json_exists?
@@ -41,10 +37,6 @@ module Sboot
       else
         "#{file.ref}"
       end
-    end
-
-    def create_missing_folders path
-      FileUtils.mkdir_p path
     end
 
     def getTemplate template_name
