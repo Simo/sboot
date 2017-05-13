@@ -1,23 +1,22 @@
 require 'erb'
 require 'fileutils'
+require 'sboot/source_writer'
 
 module Sboot
-  class CodeWriter
+    class CodeWriter<SourceWriter
 
     attr_accessor :package, :entity
 
     def initialize options={}
+      super
       @package = options[:package]
-      @entity = options[:entity]
+      @entity  = options[:entity]
     end
 
     def write stack
       stack[:files].each do |file|
-        path = "#{stack[:path]}/#{create_path file}"
-        create_missing_folders path
-        File.open "#{path}/#{ @entity.name.split('_').collect(&:capitalize).join unless file.key == :messagedto }#{file.ext}.java", 'w' do |f|
-          f.write ERB.new(getTemplate(file.key),nil,'-').result(binding)
-        end
+          path = "#{stack[:path]}/#{create_path file}"
+          write_file "#{path}/#{ @entity.name.split('_').collect(&:capitalize).join unless file.key == :messagedto }#{file.ext}.java", ERB.new(getTemplate(file.key),nil,'-').result(binding)
       end
     end
 
@@ -29,10 +28,6 @@ module Sboot
 
     def create_path file
       "#{package_to_path}/#{file.ref}"
-    end
-
-    def create_missing_folders path
-      FileUtils.mkdir_p path
     end
 
     def getTemplate template_name

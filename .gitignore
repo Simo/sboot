@@ -14,3 +14,4 @@ tags
 .DS_Store
 ng-app/
 node_modules/
+.directory
