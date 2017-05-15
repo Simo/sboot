@@ -25,6 +25,7 @@ module Sboot
 
     def create_package_json
         write_file "src/main/webapp/resources/package.json", ERB.new(getPackageJson,nil,'-').result(binding)
+
     end
 
     def package_json_exists?
