@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Sboot::TestWriter do
 
   subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil}], environment: 'fullstack' }
-  subject(:writer){ writer = Sboot::TestWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity }
+  subject(:writer){ writer = Sboot::TestWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity, sboot_repo_path: 'sboot-repo' }
 
   subject(:ft){{files: [FileType.new(key: :service_test, reference: 'business/services', extension: 'ServiceTest'),
                         FileType.new(key: :controller_test, reference: 'web/controllers', extension: 'ControllerTestIT')], path: 'src/test/java', active: true}}
@@ -38,7 +38,7 @@ describe Sboot::TestWriter do
       expect(File.exists? "#{stack[:path]}/#{writer.send('package_to_path')}/web/controllers/api/#{writer.entity.name.capitalize}ControllerTestIT.java").to be(true)
     end
 
-    after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
+    after(:each) { Dir.glob(['src','sboot-repo']).each { |f| FileUtils.rm_rf f } }
 
   end
 
@@ -61,7 +61,7 @@ describe Sboot::TestWriter do
       expect(File.exists? "#{at[:path]}/#{writer.send('package_to_path')}/web/controllers/api/#{writer.entity.name.capitalize}ControllerTestIT.java").to be(true)
     end
 
-    after(:each) { Dir.glob(['src']).each { |f| FileUtils.rm_rf f } }
+    after(:each) { Dir.glob(['src','sboot-repo']).each { |f| FileUtils.rm_rf f } }
 
   end
 
