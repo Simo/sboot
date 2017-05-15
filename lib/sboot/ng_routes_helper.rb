@@ -1,16 +1,5 @@
 module Sboot
-  class NgWriter
-    #include Sboot::NgRoutesHelper
-
-    attr_accessor :entity
-
-    def initialize options={}
-      @entity = options[:entity]
-    end
-
-    def matches? string, regex
-      !!string.match(regex)
-    end
+  module NgRoutesHelper
 
     def insert_new_route_object
       "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: #{entity.collection_downcase}, component: #{entity.collection_downcase}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key}', component: #{entity.single_downcase}DettaglioComponent }\n];\n\n@NgModule"
@@ -43,6 +32,5 @@ module Sboot
       reduced_string.scan /\n\s+\{[\s\w\:\'\/\,]+\}[,]?/
       #=> ["\n  { path: '', redirectTo: 'persone', pathMatch: 'full'},", "\n  { path: 'persone', component: ListaPersoneComponent },", "\n  { path: 'persone/:id', component: DettaglioPersonaComponent }"]
     end
-
   end
 end
