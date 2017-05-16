@@ -40,6 +40,7 @@ module Sboot
         private
         
         def write_repo_file(filename, text)
+            puts "#{filename}"
             FileUtils.mkdir_p "#{File.dirname(repo_file filename)}"
             File.write "#{repo_file filename}", text
         end

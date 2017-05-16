@@ -25,7 +25,7 @@ describe Sboot::Editor do
 
   end
 
-  describe 'should publish the stack' do
+  xdescribe 'should publish the stack' do
 
     it 'should publish fullstack' do
       editor.publish

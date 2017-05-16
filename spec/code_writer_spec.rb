@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sboot::CodeWriter do
+xdescribe Sboot::CodeWriter do
 
   subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String',constraint: 'pk'), Sboot::Property.new(name: 'dataInizio',type: 'Date',constraint: nil)], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::CodeWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity }
@@ -45,7 +45,7 @@ describe Sboot::CodeWriter do
     end
   end
 
-  describe 'writing files' do
+  xdescribe 'writing files' do
 
     it 'write entity' do
       stack = {files: [FileType.new(key: :entity, reference: 'persistence/entities', extension: '')], path: 'src/main/java'}

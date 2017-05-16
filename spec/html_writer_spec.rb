@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sboot::HtmlWriter do
+xdescribe Sboot::HtmlWriter do
 
   subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String',constraint: 'pk'),Sboot::Property.new(name: 'civico',type: 'Long', constraint: nil)], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::HtmlWriter.new entity: domain_entity }
