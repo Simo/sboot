@@ -21,26 +21,26 @@ describe Sboot::SourceWriter do
         expect(File.read 'sboot-repo/src/WriterTest.java').to eql(file_contents)
     end
     
-    xit 'patch existing file' do
+    it 'patch existing file' do
         # Creo il file nel repository
         FileUtils.mkdir_p 'sboot-repo/src'
         File.write 'sboot-repo/src/WriterTest.java', File.read("#{File.dirname __FILE__}/assets/source_v1.java")
 
-        # Creo il file sorgent pre-modifica (sorgente modificato)       
+        # Creo il file sorgente pre-modifica (sorgente modificato)       
         FileUtils.mkdir_p 'sboot-repo/src'
-        File.write 'sboot-repo/src/WriterTest.java', File.read("#{File.dirname __FILE__}/assets/source_edited.java")
+        File.write 'src/WriterTest.java', File.read("#{File.dirname __FILE__}/assets/source_edited.java")
         
         # Salvo il nuovo file
         file_v2 = File.read("#{File.dirname __FILE__}/assets/source_v2.java")
         writer.write_file 'src/WriterTest.java', file_v2
         
         # Il file nel repository deve essere stato aggiornato
-        expect(File.read 'sboot-repo/src/WriterTest.java').to eql(file_v2)
+        expect(File.read 'sboot-repo/src/WriterTest.java').to eq(file_v2)
 
         # Verifico che le modifiche non siano andate perse
-        expect(File.read 'src/WriterTest.java').to eql(File.read("#{File.dirname __FILE__}/assets/source_patched.java"))
+        expect(File.read 'src/WriterTest.java').to eq(File.read("#{File.dirname __FILE__}/assets/source_patched.java"))
     end
     
-    after(:each) { Dir.glob(['src','sboot-repo']).each { |f| FileUtils.rm_rf f } }
+    #after(:each) { Dir.glob(['src','sboot-repo']).each { |f| FileUtils.rm_rf f } }
   end
 end

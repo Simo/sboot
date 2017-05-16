@@ -1,18 +1,46 @@
-package it.insiel.myproject;
+package tex.software.prova.business.dtos;
 
-/* commento di classe */
-public class WriterTest {
-    @Annotazione
-    private int id; /* commento campo */
+import tex.software.prova.persistence.entities.Actor;
 
-    @Override
-    @Nonnull /* inserimento in mezzo */
-    public String toString() {
-        return "<<WriterTest>>";
+public class ActorDTO {
+
+    
+    private Integer id;
+    
+    private String name;
+    
+
+    public ActorDTO(){}
+
+	public ActorDTO(Actor entity){
+	    this.id = entity.getId();
+	    this.name = entity.getName();
+	}
+
+    /* Un commento */
+    public Actor convert() {
+      Actor entity = new Actor();
+						entity.setId(this.id);
+			entity.setName(this.name);
+    	return entity;
     }
 
-    /* nuovo metodo */
-    public int getId() {
-        return id;
-    }
+  public Integer getId() {
+		return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+  public String getName() {
+		return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+  
+  private void metodoPrivato() {
+  }
+
 }
