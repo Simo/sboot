@@ -24,6 +24,8 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency 'thor'
+  spec.add_dependency 'diff_match_patch_native'
   spec.add_development_dependency 'rspec'
+  spec.add_development_dependency 'simplecov'
   spec.add_development_dependency 'rake'
 end

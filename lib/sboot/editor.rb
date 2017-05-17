@@ -7,9 +7,9 @@ module Sboot
       @domain_entity = entity
       @config = Sboot::Config.new conf_file
       @stack = Sboot::Stack.new config: config
-      @code_writer = Sboot::CodeWriter.new package: @config['package'], entity: domain_entity
-      @html_writer = Sboot::HtmlWriter.new entity: domain_entity
-      @test_writer = Sboot::TestWriter.new package: @config['package'], entity: domain_entity
+      @code_writer = Sboot::CodeWriter.new package: @config['package'], entity: domain_entity, sboot_repo_path: @config['sboot_repo_path']
+      @html_writer = Sboot::HtmlWriter.new entity: domain_entity, sboot_repo_path: @config['sboot_repo_path']
+      @test_writer = Sboot::TestWriter.new package: @config['package'], entity: domain_entity, sboot_repo_path: @config['sboot_repo_path']
     end
 
     def publish

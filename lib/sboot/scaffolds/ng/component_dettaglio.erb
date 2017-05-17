@@ -1,0 +1,22 @@
+import { Component, OnInit } from '@angular/core';
+import { <%= @entity.single_capitalize  -%> } from "./models/<%= @entity.single_downcase  -%>";
+import { <%= @entity.single_capitalize  -%>Service } from "./services/<%= @entity.single_downcase  -%>.service";
+
+@Component({
+selector: 'app-dettaglio-<%= @entity.single_downcase  -%>',
+templateUrl: './dettaglio-<%= @entity.single_downcase  -%>.component.html',
+styleUrls: ['./dettaglio-<%= @entity.single_downcase  -%>.component.css']
+})
+export class Dettaglio<%= @entity.single_capitalize  -%>Component implements OnInit {
+
+<%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize  -%>();
+
+constructor(private service: <%= @entity.single_capitalize  -%>Service) { }
+
+ngOnInit() {
+this.service.<%= @entity.single_downcase  -%>.subscribe(<%= @entity.single_downcase  -%> => {
+this.<%= @entity.single_downcase  -%> = <%= @entity.single_downcase  -%>;
+});
+}
+
+}
