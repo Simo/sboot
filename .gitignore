@@ -15,4 +15,5 @@ tags
 ng-app/
 node_modules/
 .directory
+.sboot-repo
 coverage
