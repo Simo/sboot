@@ -1,0 +1,38 @@
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
+import { Subject } from 'rxjs';
+import 'rxjs/add/operator/toPromise';
+import { <%= @entity.single_capitalize  -%> } from './models/<%= @entity.single_downcase  -%>';
+
+@Injectable()
+export class <%= @entity.single_capitalize  -%>Service {
+
+<%= @entity.collection_downcase  -%> = new Subject<<%= @entity.single_capitalize  -%>[]>();
+<%= @entity.single_downcase  -%> = new Subject<<%= @entity.single_capitalize  -%>>();
+
+  endpoint: string = 'http://localhost:8080/api/<%= @entity.collection_downcase  -%>';
+
+  constructor(private _http:Http) { }
+
+  get<%= @entity.collection_capitalize  -%>(){
+  return this._http.get(this.endpoint).toPromise().then(res => { return res.json() as <%= @entity.single_capitalize  -%>[];})
+  }
+
+  /*
+  get<%= @entity.single_capitalize  -%>(id: number){
+  return this._http.get(`${this.endpoint}/${id}`).toPromise().then(res => { return res.json() as <%= @entity.single_capitalize  -%>;})
+  }
+  */
+
+  get<%= @entity.single_capitalize  -%>(id: number){
+  return this._http.get(`${this.endpoint}/${id}`).subscribe(res => {
+  let <%= @entity.single_downcase  -%> = res.json() as <%= @entity.single_capitalize  -%>;
+  this.<%= @entity.single_downcase  -%>.next(<%= @entity.single_downcase  -%>);
+  });
+  }
+
+  save<%= @entity.single_capitalize  -%>(p: <%= @entity.single_capitalize  -%>){
+  return this._http.post(this.endpoint, p).toPromise().then(res => {});
+  }
+
+  }

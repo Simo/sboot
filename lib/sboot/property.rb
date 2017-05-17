@@ -27,10 +27,23 @@ module Sboot
       end
     end
 
+    def is_pk?
+      if @constraint == 'pk'
+        true
+      end
+    end
+
     def is_uuid?
       if @type == 'UUID'
         true
       end
     end
+
+    def ts_type
+      typ = 'string' if @type == 'String' || @type == 'Date'
+      typ = 'number' if @type == 'Long' || @type == 'Integer' || @type == 'Double'
+      typ
+    end
+
   end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-xdescribe Sboot::CodeWriter do
+describe Sboot::CodeWriter do
 
   subject(:domain_entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [Sboot::Property.new(name: 'indirizzo',type: 'String',constraint: 'pk'), Sboot::Property.new(name: 'dataInizio',type: 'Date',constraint: nil)], environment: 'fullstack' }
   subject(:writer){ writer = Sboot::CodeWriter.new package: 'it.insiel.gcs.progetto', entity: domain_entity }
@@ -111,7 +111,7 @@ xdescribe Sboot::CodeWriter do
 
   end
 
-  describe 'writing complete stack' do
+  xdescribe 'writing complete stack' do
 
     it 'should write the persistence stack' do
       writer.write ps
