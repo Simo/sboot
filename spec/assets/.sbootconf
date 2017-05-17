@@ -1,6 +1,7 @@
 main_path = "src/main/java"
 test_path = "src/test/java"
 html_path = "src/main/webapp/WEB-INF/views"
+sboot_repo_path = "sboot-repo"
 package = "it.insiel.gcs.progetto"
 entity.path = "persistence/entities"
 entity.extension = ""

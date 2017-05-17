@@ -6,8 +6,7 @@ module Sboot
         
         def initialize(options={})
             @repository_path = options[:sboot_repo_path]
-            #@src_path        = "."
-            @src_path        = Dir.pwd
+            @src_path        = "."
         end
         
         def write_file(filename, text)

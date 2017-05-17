@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layouts/layout">
+    <head>
+        <meta charset="utf-8">
+        <title>Lista Casa</title>
+    </head>
+    <body>
+    <div layout:fragment="content">
+      <h1>Elenco</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Id</th>
+      			<th>Indirizzo</th>
+      			<th>Civico</th>
+      			<th colspan="3"></th>
+          </tr>
+        </thead>
+        <tbody>
+                <tr th:each="casa : ${case}">
+              <td th:text="${casa.id}">Id</td>
+              <td th:text="${casa.indirizzo}">Indirizzo</td>
+              <td th:text="${casa.civico}">Civico</td>
+              <td><a th:href="@{'/case/'+${casa.id}}">Mostra</a>
+              <a th:href="@{'/case/'+${casa.id}+'/edit'}">Modifica</a>
+              <a th:href="@{'/case/'+${casa.id}+'/delete'}">Cancella</a></td>
+            </tr>
+                </tbody>
+      </table>
+      <br>
+      <a th:href="@{'/case/new'}">Inserisci</a>
+    </div>
+    <div layout:fragment="scripting">
+      <script type="text/javascript">
+          $(document).ready(function() {
+              $('table').DataTable();
+          });
+      </script>
+    </div>
+    </body>
+</html>
