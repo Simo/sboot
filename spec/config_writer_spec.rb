@@ -27,7 +27,7 @@ describe Sboot::ConfigWriter do
       expect(File.exists? '.sbootconf').to be(true)
     end
 
-    after(:each) { Dir.glob(['.sbootconf']).each { |f| FileUtils.rm f } }
+    #after(:each) { Dir.glob(['.sbootconf']).each { |f| FileUtils.rm f } }
 
   end
 
