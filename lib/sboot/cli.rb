@@ -10,7 +10,8 @@ module Sboot
     desc "init [package]",
          "il comando init genera il file di configurazione per il generatore sboot"
     def init(package)
-      writer = Sboot::ConfigWriter.new :package => package
+      project_name = File.basename(Dir.pwd)
+      writer = Sboot::ConfigWriter.new :project_name => project_name,:package => package
       writer.write
     end
 
@@ -19,6 +20,7 @@ module Sboot
       "la flag [ENV] accetta come parametri: fullstack(default),api,backend,business,conversion,persistence"
     method_options :env => "fullstack"
     def generate(name, *args)
+      begin
       environment = options[:env] || 'fullstack'
       navigator = Sboot::Navigator.new
       navigator.nav_to_root_folder Dir.pwd
@@ -28,6 +30,9 @@ module Sboot
       editor.publish
       npm_dependecies_chain if environment == 'fullstack'
       navigator.set_original_path_back
+      rescue ArgumentError => e
+        puts e.message
+      end
     end
 
     private

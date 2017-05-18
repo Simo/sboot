@@ -44,6 +44,18 @@ describe Sboot::Navigator do
       expect(Dir.pwd).to eql origin
     end
 
+    it 'should raise an exception if doesnt find any .sbootconf' do
+      Dir.chdir('../../../')
+      puts Dir.pwd
+      expect {navigator.nav_to_root_folder Dir.pwd}.to raise_error ArgumentError
+    end
+
+    it 'should give a specific message as error raised' do
+      Dir.chdir('../../../')
+      puts Dir.pwd
+      expect {navigator.nav_to_root_folder Dir.pwd}.to raise_error 
+ 'Naviga all\'interno di un progetto per utilizzare i comandi di sboot'
+    end
   end
 
 end

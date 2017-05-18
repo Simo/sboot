@@ -22,17 +22,17 @@ module Sboot
     private
 
     def set_root_folder starting_point
-      unless Dir['.sbootconf'].empty?
-        return
-      else
-        Dir.chdir '..'
-        here = Dir.pwd
-        unless here == starting_point
-          set_root_folder here
-        else
+        unless Dir['.sbootconf'].empty?
           return
+        else
+          Dir.chdir '..'
+          here = Dir.pwd
+          unless here == starting_point
+            set_root_folder here
+          else
+            raise ArgumentError, "Naviga all'interno di un progetto per utilizzare i comandi di sboot"
+          end
         end
-      end
     end
 
   end

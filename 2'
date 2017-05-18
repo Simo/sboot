@@ -81,7 +81,7 @@ describe Sboot::CLI do
 
     it 'should put the error message for not being inside the right folder' do
       Dir.chdir '../../../'
-        expect {subject.generate 'casa:case', 'indirizzo', 'civico:number'}.to output( /Naviga/).to_stdout
+        expect {subject.generate 'casa:case', 'indirizzo', 'civico:number'}.to output(/Naviga/).to_stdout
     end
 
   end

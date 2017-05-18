@@ -2,10 +2,11 @@ require 'erb'
 
 module Sboot
   class ConfigWriter
-    attr_accessor :package
+    attr_accessor :project_name, :package
 
     def initialize(options={})
       raise ArgumentError, ':package non presente' unless options.key? :package
+      @project_name = options[:project_name]
       @package = options[:package]
     end
 
