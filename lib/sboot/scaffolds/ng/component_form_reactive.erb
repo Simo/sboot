@@ -1,0 +1,44 @@
+import { <%= @entity.single_capitalize  -%>Service } from '../<%= @entity.single_downcase  -%>.service';
+import { <%= @entity.single_capitalize  -%> } from '../<%= @entity.single_downcase  -%>';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators} from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-consumer-detail-reactive',
+    templateUrl: './<%= @entity.single_downcase  -%>-form-reactive.component.html',
+      styleUrls: ['./<%= @entity.single_downcase  -%>-form-reactive.component.css']
+      })
+export class <%= @entity.single_capitalize  -%>FormReactiveComponent implements OnInit {
+
+  <%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize -%>();
+  form: FormGroup;
+
+  constructor(private service: <%= @entity.single_capitalize  -%>Service, private fb: FormBuilder, private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.loadForm();
+
+    this.service.<%= @entity.single_downcase -%>.subscribe(c => {
+      this.<%= @entity.single_downcase  -%> = c;
+      this.loadForm();
+    });
+  }
+
+  onSubmit(form: FormGroup) {
+  
+    <% @entity.properties.each do |property| -%>
+      this.<%= @entity.single_capitalize -%>.<%= property.name  %> = this.form.controls['<%= property.name  %>'].value;
+    <% end -%>
+    this.service.save<%= @entity.single_capitalize -%>(this.<%= @entity.single_downcase  -%>);
+  }
+
+  private loadForm() {
+    this.form = this.fb.group({
+    // dichiariamo proprieta': [valore iniziale, [Validatori]]
+    <% @entity.properties.each_with_index do |property,index| -%>
+      <%= property.name  %>: [this.<%= @entity.single_capitalize -%>.<%= property.name  %>, Validators.required]<% unless index == @entity.property.size - 1 %>,<% end %>
+    <% end -%>
+    });
+  }
+}

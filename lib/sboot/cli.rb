@@ -60,7 +60,6 @@ module Sboot
     end
 
     def npm_dependecies_chain
-      # spostiamo nella cartella del file package.json
       Dir.chdir('src/main/webapp/resources')
       run 'npm install'
     end

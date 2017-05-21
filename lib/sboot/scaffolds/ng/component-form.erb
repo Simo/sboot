@@ -1,0 +1,44 @@
+import { Subscription } from 'rxjs';
+import { <%= @entity.single_capitalize  -%>Service } from '../<%= @entity.single_downcase  -%>.service';
+import { <%= @entity.single_capitalize  -%> } from '../<%= @entity.single_downcase  -%>.model';
+import { Component, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-<%= @entity.single_downcase  -%>-detail',
+  templateUrl: './<%= @entity.single_downcase  -%>-form.component.html',
+  styleUrls: ['./<%= @entity.single_downcase  -%>-form.component.css']
+})
+export class <%= @entity.single_capitalize  -%>FormComponent implements OnInit, OnDestroy, OnChanges {
+
+  private paramsSubscription: Subscription;
+  <%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize  -%>();
+
+  loading: boolean = true;
+
+
+  constructor(private route: ActivatedRoute, private service: <%= @entity.single_capitalize  -%>Service) { }
+
+  ngOnInit() {
+    this.paramsSubscription = this.route.params.subscribe(p => {
+      let <%= @entity.single_downcase  -%>Id = p['id'];
+      this.service.get<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>Id).then(c => {
+        this.<%= @entity.single_downcase  -%> = c;
+        this.loading = false;
+      });
+    });
+  }
+
+  ngOnDestroy() {
+    this.paramsSubscription.unsubscribe();
+  }
+
+  ngOnChanges(s: SimpleChanges){
+
+  }
+
+  save<%= @entity.single_capitalize  -%>(){
+    this.service.save<%= @entity.single_capitalize  -%>(this.<%= @entity.single_downcase  -%>).then(r => alert('salvato!'));
+  }
+
+}
