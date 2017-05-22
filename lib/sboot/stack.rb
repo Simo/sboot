@@ -13,7 +13,7 @@ module Sboot
       @fullstack = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
 
       @html = [:layout, :index, :show, :new, :edit, :form]
-      @ng = [:component_elenco, :component_dettaglio, :service, :interface]
+      @ng = [:ng_component_elenco, :ng_component_dettaglio, :ng_service, :ng_interface]
 
       @fulltest = [:controller_test, :service_test]
       @apitest = [:controller_rest_test, :service_test]
@@ -33,8 +33,8 @@ module Sboot
     private
 
     def create_code_stack env
-      #environment = env.to_sym unless env == 'ng'
-      #environment = :api if env == 'ng'
+      environment = env.to_sym unless env == 'ng'
+      environment = :api if env == 'ng'
       {files: create_filetype_array(env.to_sym), path: config['main_path'], active: true }
     end
 

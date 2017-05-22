@@ -15,9 +15,15 @@ module Sboot
 
     def write stack
       create_package_json unless package_json_exists?
-      stack[:files].each do |file|
-        path = "#{stack[:path]}/#{create_path file}"
-        write_file "#{path}/#{file.ext}.html", ERB.new(getTemplate(file.key),nil,'-').result(binding)
+      unless @entity.environment == 'ng'
+        stack[:files].each do |file|
+          path = "#{stack[:path]}/#{create_path file}"
+          write_file "#{path}/#{file.ext}.html", ERB.new(getTemplate(file.key),nil,'-').result(binding)
+        end
+      else
+        stack[:files].each do |file|
+          path = "#{stack[:path]}/src/app/#{create_path_ng file}"
+          File.write path, ERB.new(getTemplateNg(file.key),nil,'-').result(binding)
       end
     end
 
@@ -37,6 +43,21 @@ module Sboot
       else
         "#{file.ref}"
       end
+    end
+
+    def create_path_ng file
+      a = file.path.split '_'
+      if a.length == 2
+        if a[0] == 'entities'
+          file_path = "#{@entity.collection_downcase}/#{@entity.collection_downcase}-#{a[1]}/#{@entity.collection_downcase}-#{a[1]}.#{file.ext}"
+        else
+          file_path = "#{@entity.collection_downcase}/#{@entity.single_downcase}-#{a[1]}/#{@entity.single_downcase}-#{a[1]}.#{file.ext}"
+        end
+      end
+      if a.length == 1
+        file_path = "#{@entity.collection_downcase}/#{@entity.single_downcase}.#{file.ext}"
+      end
+      file_path
     end
 
     def getTemplate template_name
