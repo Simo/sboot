@@ -24,6 +24,7 @@ module Sboot
         stack[:files].each do |file|
           path = "#{stack[:path]}/src/app/#{create_path_ng file}"
           File.write path, ERB.new(getTemplateNg(file.key),nil,'-').result(binding)
+        end
       end
     end
 
