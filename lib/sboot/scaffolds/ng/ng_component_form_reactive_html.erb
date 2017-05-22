@@ -1,0 +1,7 @@
+<form [formGroup]="form" (submit)="onSubmit(form)" >
+  <% @entity.properties.each do |property| -%>
+  <input type="text" formControlName="<%= property.name  %>" />
+  <span *ngIf="form.controls['<%= property.name  %>'].touched && form.controls['<%= property.name  %>'].hasErrors('required')">obbligatorio</span>
+  <% end -%>
+  <button type="button">Salva</button>
+</form>

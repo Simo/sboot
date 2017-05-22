@@ -9,9 +9,9 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './<%= @entity.single_downcase  -%>-form-reactive.component.html',
       styleUrls: ['./<%= @entity.single_downcase  -%>-form-reactive.component.css']
       })
-export class <%= @entity.single_capitalize  -%>FormReactiveComponent implements OnInit {
+export class <%= @entity.single_capitalize  -%>FormreactiveComponent implements OnInit {
 
-  <%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize -%>();
+  <%= @entity.single_downcase  -%>: <%= @entity.single_capitalize -%>;
   form: FormGroup;
 
   constructor(private service: <%= @entity.single_capitalize  -%>Service, private fb: FormBuilder, private route: ActivatedRoute) { }
@@ -28,7 +28,7 @@ export class <%= @entity.single_capitalize  -%>FormReactiveComponent implements 
   onSubmit(form: FormGroup) {
   
     <% @entity.properties.each do |property| -%>
-      this.<%= @entity.single_capitalize -%>.<%= property.name  %> = this.form.controls['<%= property.name  %>'].value;
+      this.<%= @entity.single_downcase -%>.<%= property.name  %> = this.form.controls['<%= property.name  %>'].value;
     <% end -%>
     this.service.save<%= @entity.single_capitalize -%>(this.<%= @entity.single_downcase  -%>);
   }
@@ -37,7 +37,7 @@ export class <%= @entity.single_capitalize  -%>FormReactiveComponent implements 
     this.form = this.fb.group({
     // dichiariamo proprieta': [valore iniziale, [Validatori]]
     <% @entity.properties.each_with_index do |property,index| -%>
-      <%= property.name  %>: [this.<%= @entity.single_capitalize -%>.<%= property.name  %>, Validators.required]<% unless index == @entity.property.size - 1 %>,<% end %>
+      <%= property.name  %>: [this.<%= @entity.single_downcase -%>.<%= property.name  %>, Validators.required]<% unless index == @entity.properties.size - 1 %>,<% end %>
     <% end -%>
     });
   }

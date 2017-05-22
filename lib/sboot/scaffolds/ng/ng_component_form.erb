@@ -1,6 +1,6 @@
 import { Subscription } from 'rxjs';
 import { <%= @entity.single_capitalize  -%>Service } from '../<%= @entity.single_downcase  -%>.service';
-import { <%= @entity.single_capitalize  -%> } from '../<%= @entity.single_downcase  -%>.model';
+import { <%= @entity.single_capitalize  -%> } from '../<%= @entity.single_downcase  -%>';
 import { Component, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -12,7 +12,7 @@ import { ActivatedRoute } from '@angular/router';
 export class <%= @entity.single_capitalize  -%>FormComponent implements OnInit, OnDestroy, OnChanges {
 
   private paramsSubscription: Subscription;
-  <%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize  -%>();
+  <%= @entity.single_downcase  -%>: <%= @entity.single_capitalize  -%>;
 
   loading: boolean = true;
 

@@ -1,0 +1,3 @@
+<% @entity.properties.each do |property| -%>
+    <p>{{<%= @entity.single_downcase  -%>.<%= property.name  %>}}</p>
+<% end -%>

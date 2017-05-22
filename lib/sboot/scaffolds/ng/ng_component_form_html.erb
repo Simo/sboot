@@ -1,0 +1,17 @@
+<div *ngIf="!loading">
+  <form novalidate #form="ngForm" (submit)="save<%= @entity.single_capitalize  -%>()">
+    <% @entity.properties.each do |property| -%>
+      <p>
+        <input type="text" name="<%= property.name  %>" [(ngModel)]="<%= @entity.single_downcase  -%>.<%= property.name  %>" required>
+        <span *ngIf="<%= property.name  %>.hasError('required')">obbligatorio</span>
+      </p>
+    <% end -%>
+    <button type="submit">Salva</button>
+  </form>
+  <div>
+    <button routerLink="/home">Indietro</button>
+  </div>
+</div>
+<div *ngIf="loading">
+  <img src="infinity.gif" >
+</div>

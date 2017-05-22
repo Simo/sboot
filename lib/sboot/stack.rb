@@ -13,7 +13,7 @@ module Sboot
       @fullstack = [:entity, :repository, :dto, :exception, :service, :service_impl, :controller]
 
       @html = [:layout, :index, :show, :new, :edit, :form]
-      @ng = [:ng_component_elenco, :ng_component_dettaglio, :ng_service, :ng_interface]
+      @ng = [:ng_component_elenco, :ng_component_elenco_html, :ng_component_dettaglio, :ng_component_dettaglio_html,:ng_component_form, :ng_component_form_html, :ng_component_form_reactive, :ng_component_form_reactive_html, :ng_service, :ng_interface]
 
       @fulltest = [:controller_test, :service_test]
       @apitest = [:controller_rest_test, :service_test]

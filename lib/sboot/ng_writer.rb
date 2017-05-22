@@ -13,7 +13,7 @@ module Sboot
     end
 
     def insert_new_route_object
-      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: #{entity.collection_downcase}, component: #{entity.collection_downcase}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key}', component: #{entity.single_downcase}DettaglioComponent }\n];\n\n@NgModule"
+      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: #{entity.collection_downcase}, component: #{entity.collection_capitalize}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent }\n];\n\n@NgModule"
     end
 
     def insert_home_route entity
@@ -21,11 +21,11 @@ module Sboot
     end
 
     def insert_collection_route entity
-      "\n  { path: #{entity.collection_downcase}, component: #{entity.collection_downcase}ElencoComponent}"
+      "\n  { path: #{entity.collection_downcase}, component: #{entity.collection_capitalize}ElencoComponent}"
     end
 
     def insert_detail_route entity
-      "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key}', component: #{entity.single_downcase}DettaglioComponent }"
+      "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent }"
     end
 
     def open_module_file file
@@ -40,7 +40,7 @@ module Sboot
     end
 
     def routes_to_array reduced_string
-      reduced_string.scan /\n\s+\{[\s\w\:\'\/\,]+\}[,]?/
+      reduced_string.scan /(\n\s+\{[\s\w\:\'\/\,]+\})[,]?/
       #=> ["\n  { path: '', redirectTo: 'persone', pathMatch: 'full'},", "\n  { path: 'persone', component: ListaPersoneComponent },", "\n  { path: 'persone/:id', component: DettaglioPersonaComponent }"]
     end
 

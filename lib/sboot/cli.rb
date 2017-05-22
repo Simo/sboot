@@ -7,6 +7,13 @@ module Sboot
 
     source_root "#{File.dirname __FILE__}/scaffolds/"
 
+    desc "archetype [package] [progetto]", "il comando genera un nuovo progetto a partire dall'archetype maven"
+    def archetype(package, progetto)
+      run "mvn archetype:generate --batch-mode -DarchetypeGroupId=it.insiel -DarchetypeArtifactId=sboot-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=#{package} -DartifactId=#{progetto} -Dversion=1.0.0-SNAPSHOT -Dlibrary-name=dummyLibrary -Dresource-name=info"
+      Dir.chdir "#{progetto}"
+      init(package)
+    end
+
     desc "init [package]",
          "il comando init genera il file di configurazione per il generatore sboot"
     def init(package)
@@ -34,6 +41,10 @@ module Sboot
         puts e.message
       end
     end
+
+    map "a" => "archetype"
+    map "i" => "init"
+    map "g" => "generate"
 
     private
 
@@ -72,6 +83,8 @@ module Sboot
       Dir.chdir('ng-app')
       run "ng g component #{entity.collection_downcase}/#{entity.collection_downcase}Elenco"
       run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Dettaglio"
+      run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Form"
+      run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Formreactive"
       run "ng g interface #{entity.collection_downcase}/#{entity.single_downcase}"
       run "ng g service #{entity.collection_downcase}/#{entity.single_downcase}"
       Dir.chdir started_from
