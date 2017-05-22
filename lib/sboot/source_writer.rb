@@ -1,4 +1,4 @@
-require 'diff_match_patch_native'
+require 'diff_match_patch'
 
 module Sboot
     class SourceWriter
