@@ -66,12 +66,14 @@ module Sboot
 
     def ng_generation_chain entity
       started_from = Dir.pwd
+      FileUtils.mkdir_p "src/main/webapp/resources"
       Dir.chdir('src/main/webapp/resources')
-      run 'ng new ng-app' if Dir['ng-app']
-      run 'ng g component #{entity.collection_downcase}/#{entity.collection_downcase}Elenco'
-      run 'ng g component #{entity.collection_downcase}/#{entity.single_downcase}Dettaglio'
-      run 'ng g interface #{entity.collection_downcase}/#{entity.single_downcase}'
-      run 'ng g service #{entity.collection_downcase}/#{entity.single_downcase}'
+      run 'ng new ng-app' if Dir['ng-app'].empty?
+      Dir.chdir('ng-app')
+      run "ng g component #{entity.collection_downcase}/#{entity.collection_downcase}Elenco"
+      run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Dettaglio"
+      run "ng g interface #{entity.collection_downcase}/#{entity.single_downcase}"
+      run "ng g service #{entity.collection_downcase}/#{entity.single_downcase}"
       Dir.chdir started_from
     end
   end

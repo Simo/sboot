@@ -47,7 +47,7 @@ module Sboot
     end
 
     def create_path_ng file
-      a = file.path.split '_'
+      a = file.ref.split '_'
       if a.length == 2
         if a[0] == 'entities'
           file_path = "#{@entity.collection_downcase}/#{@entity.collection_downcase}-#{a[1]}/#{@entity.collection_downcase}-#{a[1]}.#{file.ext}"
@@ -63,6 +63,10 @@ module Sboot
 
     def getTemplate template_name
       File.read "#{File.dirname __FILE__}/scaffolds/html/#{template_name}.erb"
+    end
+
+    def getTemplateNg template_name
+      File.read "#{File.dirname __FILE__}/scaffolds/ng/#{template_name}.erb"
     end
 
     def getPackageJson

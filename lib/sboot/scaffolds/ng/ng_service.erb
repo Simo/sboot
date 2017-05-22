@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Subject } from 'rxjs';
 import 'rxjs/add/operator/toPromise';
-import { <%= @entity.single_capitalize  -%> } from './models/<%= @entity.single_downcase  -%>';
+import { <%= @entity.single_capitalize  -%> } from './<%= @entity.single_downcase  -%>';
 
 @Injectable()
 export class <%= @entity.single_capitalize  -%>Service {

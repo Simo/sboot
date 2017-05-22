@@ -1,7 +1,7 @@
 module Sboot
   class Stack
 
-    attr_accessor :config, :persistence, :conversion, :business, :backend, :api, :fullstack, :html, :fulltest, :apitest, :servicetest
+    attr_accessor :config, :persistence, :conversion, :business, :backend, :api, :fullstack, :html, :ng, :fulltest, :apitest, :servicetest
 
     def initialize options={}
       @config = options[:config]
@@ -35,7 +35,7 @@ module Sboot
     def create_code_stack env
       environment = env.to_sym unless env == 'ng'
       environment = :api if env == 'ng'
-      {files: create_filetype_array(env.to_sym), path: config['main_path'], active: true }
+      {files: create_filetype_array(environment), path: config['main_path'], active: true }
     end
 
     def create_html_stack env
