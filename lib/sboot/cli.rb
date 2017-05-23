@@ -7,8 +7,8 @@ module Sboot
 
     source_root "#{File.dirname __FILE__}/scaffolds/"
 
-    desc "archetype [package] [progetto]", "il comando genera un nuovo progetto a partire dall'archetype maven"
-    def archetype(package, progetto)
+    desc "new [package] [progetto]", "il comando genera un nuovo progetto a partire dall'archetype maven"
+    def new(package, progetto)
       run "mvn archetype:generate --batch-mode -DarchetypeGroupId=it.insiel -DarchetypeArtifactId=sboot-archetype -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=#{package} -DartifactId=#{progetto} -Dversion=1.0.0-SNAPSHOT -Dlibrary-name=dummyLibrary -Dresource-name=info"
       Dir.chdir "#{progetto}"
       init(package)
@@ -42,7 +42,7 @@ module Sboot
       end
     end
 
-    map "a" => "archetype"
+    map "archetype" => "new"
     map "i" => "init"
     map "g" => "generate"
 

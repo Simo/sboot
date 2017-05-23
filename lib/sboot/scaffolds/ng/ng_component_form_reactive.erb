@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
       })
 export class <%= @entity.single_capitalize  -%>FormreactiveComponent implements OnInit {
 
-  <%= @entity.single_downcase  -%>: <%= @entity.single_capitalize -%>;
+  <%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize -%>();
   form: FormGroup;
 
   constructor(private service: <%= @entity.single_capitalize  -%>Service, private fb: FormBuilder, private route: ActivatedRoute) { }

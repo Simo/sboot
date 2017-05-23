@@ -1,0 +1,30 @@
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { RouterModule, Routes } from '@angular/router';
+
+import { AppComponent } from './app.component';
+
+const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full'},
+  { path: 'home', component: HomeComponent },
+  { path: '<%= @entity.collection_downcase %>', component: <%= @entity.single_capitalize %>ElencoComponent },
+  { path: '<%= @entity.collection_downcase %>/:id', component: <%= @entity.single_capitalize %>DettaglioComponent },
+  { path: '<%= @entity.collection_downcase %>/:id/form', component: <%= @entity.single_capitalize %>FormComponent },
+  { path: '<%= @entity.collection_downcase %>/:id/formreactive', component: <%= @entity.single_capitalize %>FormreactiveComponent },
+];
+
+@NgModule({
+declarations: [
+AppComponent
+],
+imports: [
+BrowserModule,
+FormsModule,
+HttpModule
+],
+providers: [],
+bootstrap: [AppComponent]
+})
+export class AppModule { }

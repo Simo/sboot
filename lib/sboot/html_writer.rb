@@ -5,7 +5,7 @@ require 'sboot/source_writer'
 module Sboot
   class HtmlWriter<SourceWriter
     include Sboot::HtmlHelper
-    #include Sboot::NgWriter
+    include Sboot::NgWriter
 
     attr_accessor :entity
 
@@ -27,6 +27,7 @@ module Sboot
           File.write path, ERB.new(getTemplateNg(file.key),nil,'-').result(binding)
         end
         # riscrivere le Routes nel app.module.ts
+        write_routes
       end
     end
 

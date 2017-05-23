@@ -4,23 +4,23 @@ import { Router } from "@angular/router";
 import { <%= @entity.single_capitalize  -%>Service } from "../<%= @entity.single_downcase  -%>.service";
 
 @Component({
-selector: 'app-lista-<%= @entity.collection_downcase  -%>}',
-templateUrl: './lista-<%= @entity.collection_downcase  -%>.component.html',
-styleUrls: ['./lista-<%= @entity.collection_downcase  -%>.component.css']
+  selector: 'app-<%= @entity.collection_downcase  -%>-elenco',
+  templateUrl: './<%= @entity.collection_downcase  -%>-elenco.component.html',
+  styleUrls: ['./<%= @entity.collection_downcase  -%>-elenco.component.css']
 })
 export class <%= @entity.collection_capitalize  -%>ElencoComponent implements OnInit {
 
-<%= @entity.collection_downcase  -%>: <%= @entity.single_capitalize  -%>[];
+  <%= @entity.collection_downcase  -%>: <%= @entity.single_capitalize  -%>[];
 
-constructor(private router: Router, private service: <%= @entity.single_capitalize  -%>Service) { }
+  constructor(private router: Router, private service: <%= @entity.single_capitalize  -%>Service) { }
 
-ngOnInit() {
-this.service.get<%= @entity.collection_capitalize  -%>().then(list => { this.<%= @entity.collection_downcase  -%> = list;});
-}
+  ngOnInit() {
+    this.service.get<%= @entity.collection_capitalize  -%>().then(list => { this.<%= @entity.collection_downcase  -%> = list;});
+  }
 
-mostra<%= @entity.single_capitalize  -%>(id: number){
-this.service.get<%= @entity.single_capitalize  -%>(id);
-this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+id);
-}
+  mostra<%= @entity.single_capitalize  -%>(id: number){
+    this.service.get<%= @entity.single_capitalize  -%>(id);
+    this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+id);
+  }
 
 }

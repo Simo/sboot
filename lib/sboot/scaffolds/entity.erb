@@ -10,33 +10,33 @@ import org.hibernate.annotations.Type;<% end -%>
 @Table(name = "T_<%= @entity.name.upcase %>")
 public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
 
-	@Id
+  @Id
 <% if @entity.primary_key.is_uuid? -%>
-	@Type(type="uuid-binary")
-	@GeneratedValue(generator="myUUID")
-	@GenericGenerator(name="myUUID", strategy="uuid2")
+  @Type(type="uuid-binary")
+  @GeneratedValue(generator="myUUID")
+  @GenericGenerator(name="myUUID", strategy="uuid2")
 <% end -%>
 <% unless @entity.primary_key.is_uuid? -%>
-	@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
-	@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
+  @GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
+  @SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
 <% end -%>
-	@Column(name = "<%= @entity.primary_key[:name].upcase %>")
+  @Column(name = "<%= @entity.primary_key[:name].upcase %>")
 
-	private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
-	<% @entity.properties.each do |property| -%>
-		<% unless property[:constraint] == 'pk' -%>
-	@Column(name = "<%= property[:name].upcase %>")
-	private <%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
-		<% end -%>
-	<% end -%>
+  private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+  <% @entity.properties.each do |property| -%>
+  <% unless property[:constraint] == 'pk' -%>
+  @Column(name = "<%= property[:name].upcase %>")
+  private <%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
+  <% end -%>
+  <% end -%>
 
-	<% @entity.properties.each do |property| -%>
-	public <%= property[:type] %> get<%= property[:name].split('_').collect(&:capitalize).join %>() {
-			return <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
-	}
+  <% @entity.properties.each do |property| -%>
+  public <%= property[:type] %> get<%= property[:name].split('_').collect(&:capitalize).join %>() {
+    return <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
+  }
 
-	public void set<%= property[:name].split('_').collect(&:capitalize).join %>(<%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>) {
-			this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase}%> = <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
-	}
-	<% end -%>
+  public void set<%= property[:name].split('_').collect(&:capitalize).join %>(<%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>) {
+  this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase}%> = <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase} %>;
+  }
+  <% end -%>
 }

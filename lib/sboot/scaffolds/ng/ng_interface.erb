@@ -1,4 +1,4 @@
-export interface <%= @entity.single_capitalize  -%> {
+export class <%= @entity.single_capitalize  -%> {
 <% @entity.properties.each do |property| -%>
 <%= property.name  %>: <%= property.ts_type %>;
 <% end -%>
