@@ -49,8 +49,8 @@ module Sboot
     def schema file
       environment = options[:env] || "fullstack"
       run "schema2script sboot --env=#{environment} #{file}"
-      cmd = File.open("sboot_generate.sh", "r+"){ |file| file.read }
-      run cmd
+      lines = File.open("sboot_generate.sh", "r+"){ |file| file.read }
+      lines.scan(/sboot[\s]+.+/){ |command| run command}
       FileUtils.rm_rf "sboot_generate.sh"
     end
 
