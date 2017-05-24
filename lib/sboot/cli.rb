@@ -1,5 +1,6 @@
 require "thor"
 require "sboot"
+require "fileutils"
 
 module Sboot
   class CLI < Thor
@@ -46,9 +47,11 @@ module Sboot
          "genera lo stack di sboot a partire da un diagramma di draw.io"
     method_options :env => "fullstack"
     def schema file
-      run "schema2script #{file}, #{options[:env]}"
+      environment = options[:env] || "fullstack"
+      run "schema2script sboot --env=#{environment} #{file}"
       cmd = File.open("sboot_generate.sh", "r+"){ |file| file.read }
       run cmd
+      FileUtils.rm_rf "sboot_generate.sh"
     end
 
 
