@@ -7,19 +7,23 @@ module Sboot
     end
 
     def write_routes
-      file = open_file
-      contents = search_contents file
+      #file = open_file
+      contents = search_contents open_file
       new_contents = elaborate_new_contents contents
-      write_above_module new_contents if contents.empty?
+      add_routes_to_app if contents.empty?
       write_inside_routes new_contents unless contents.empty?
     end
 
     def open_file
-      File.open('src/main/webapp/resources/ng-app/src/app/app.module.ts','r+')
+      file = File.open('src/main/webapp/resources/ng-app/src/app/app.module.ts','r+')
+      file.read
     end
 
-    def search_contents file
-      contents = file.read
+    def write_out_file new_file
+      File.write('src/main/webapp/resources/ng-app/src/app/app.module.ts', new_file)
+    end
+
+    def search_contents contents
       find_routes_defs contents
     end
 
@@ -30,7 +34,9 @@ module Sboot
     end
 
     def add_routes_to_app
-      insert_new_route_object @entity
+      write_import_modules
+      write_above_module insert_new_route_object @entity
+      write_import_route
     end
 
     def append_to_existing_object contents
@@ -51,21 +57,43 @@ module Sboot
     end
 
     def write_above_module new_contents
-      file = File.open('src/main/webapp/resources/ng-app/src/app/app.module.ts','r+')
-      str = file.read
+      str = open_file
       new_file = str.gsub(/@NgModule/,new_contents)
-      File.write('src/main/webapp/resources/ng-app/src/app/app.module.ts',new_file)
+      write_out_file new_file
     end
 
     def write_inside_routes new_contents
-      file = File.open('src/main/webapp/resources/ng-app/src/app/app.module.ts','r+')
-      str = file.read
+      str = open_file
       new_file = str.gsub(/(.+\:[\s+]Routes[\s+]=[\s+]\[)([\n\{\s\w\:\'\,\}\/]+)(\];)/, "\\1#{new_contents}\\3")
-      File.write('src/main/webapp/resources/ng-app/src/app/app.module.ts', new_file)
+      write_out_file new_file
+    end
+
+    def write_import_route
+      str = open_file
+      import_array = str.scan /(imports: \[)([\w\,\.\(\)\n\r\s]+)(\])/
+      imported = import_array[0][1].split ','
+      imported.unshift insert_routes_import
+      new_file = str.gsub /(imports: \[)([\w\,\.\(\)\n\r\s]+)(\])/, "\\1#{imported.join ','}\\3"
+      write_out_file new_file
+    end
+
+    def write_import_modules
+      str = open_file
+      new_imports = insert_basic_modules
+      new_file = str.gsub /import { FormsModule } from '@angular\/forms';/, new_imports
+      write_out_file new_file
+    end
+
+    def insert_basic_modules
+      "import { FormsModule, ReactiveFormsModule } from '@angular/forms';\nimport { RouterModule, Routes } from '@angular/router';"
+    end
+
+    def insert_routes_import
+      "\n    RouterModule.forRoot(routes)"
     end
 
     def insert_new_route_object entity
-      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: '#{entity.collection_downcase}', component: #{entity.collection_capitalize}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent }\n];\n\n@NgModule"
+      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: '#{entity.collection_downcase}', component: #{entity.collection_capitalize}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/form', component: #{entity.single_capitalize}FormComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/formreactive', component: #{entity.single_capitalize}FormreactiveComponent }\n];\n\n@NgModule"
     end
 
     def insert_home_route entity
@@ -85,7 +113,7 @@ module Sboot
     end
 
     def insert_form_reactive_route entity
-      "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/form', component: #{entity.single_capitalize}FormreactiveComponent }"
+      "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/formreactive', component: #{entity.single_capitalize}FormreactiveComponent }"
     end
 
     def open_module_file file
