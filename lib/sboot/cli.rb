@@ -42,9 +42,20 @@ module Sboot
       end
     end
 
+    desc "schema {file[svg|xml}",
+         "genera lo stack di sboot a partire da un diagramma di draw.io"
+    method_options :env => "fullstack"
+    def schema file
+      run "schema2script #{file}, #{options[:env]}"
+      cmd = File.open("sboot_generate.sh", "r+"){ |file| file.read }
+      run cmd
+    end
+
+
     map "archetype" => "new"
     map "i" => "init"
     map "g" => "generate"
+    map "s" => "schema"
 
     private
 
@@ -79,7 +90,7 @@ module Sboot
       started_from = Dir.pwd
       FileUtils.mkdir_p "src/main/webapp/resources"
       Dir.chdir('src/main/webapp/resources')
-      run 'ng new ng-app' if Dir['ng-app'].empty?
+      run 'ng new ng-app --skip-git' if Dir['ng-app'].empty?
       Dir.chdir('ng-app')
       run "ng g component #{entity.collection_downcase}/#{entity.collection_downcase}Elenco"
       run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Dettaglio"

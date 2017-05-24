@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/<%= @entity.name.downcase %>")
+@RequestMapping("/api/<%= @entity.collection_downcase %>")
 @Api(value="/api/<%= @entity.name.downcase %>",tags={"<%= @entity.name.split('_').collect(&:capitalize).join %> Endpoint"})
 public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller {
 
