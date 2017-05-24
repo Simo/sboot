@@ -109,6 +109,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
     @ExceptionHandler(<%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException.class)
     public MessageDTO handleNotFoundException(<%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException ex) {
         Locale locale = LocaleContextHolder.getLocale();
+        String[] parameters={};
         return new MessageDTO(messageSource.getMessage("exception.EntityNotFound.description", parameters, locale));
     }
 }
