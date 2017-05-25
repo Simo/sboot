@@ -19,7 +19,7 @@ export class <%= @entity.collection_capitalize  -%>ElencoComponent implements On
   }
 
   mostra<%= @entity.single_capitalize  -%>(id: number){
-    this.service.get<%= @entity.single_capitalize  -%>(id);
+    this.service.get<%= @entity.single_capitalize  -%>Reactive(id);
     this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+id);
   }
 
