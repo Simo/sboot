@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Sboot::Property do
 
   subject(:property){ Sboot::Property.new name: 'dataNascita', type: 'Date', constraint: nil }
+  subject(:property2){ Sboot::Property.new name: 'nome_composto', type: 'String', constraint: nil }
 
   describe 'intialization' do
 
@@ -41,5 +42,24 @@ describe Sboot::Property do
       expect(property.is_uuid?).to be_falsey
     end
 
+  end
+
+  describe 'helper methods for erbs' do
+
+    it 'camelize first letter upcase' do
+      expect(property2.camel_rather_dash(firstLetter: 'upcase')).to eql 'NomeComposto'
+    end
+
+    it 'camelize first letter downcase' do
+      expect(property2.camel_rather_dash firstLetter: 'downcase').to eql 'nomeComposto'
+    end
+
+    it 'camelize first letter downcase automatically' do
+      expect(property2.camel_rather_dash).to eql 'nomeComposto'
+    end
+
+    xit 'raise an error for bad argument' do
+      expect(property2.camel_rather_dash firstLetter: 'non_so').to raise_error ArgumentError
+    end
   end
 end

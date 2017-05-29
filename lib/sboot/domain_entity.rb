@@ -20,7 +20,7 @@ class DomainEntity
   end
 
   def collection_name
-    collection_downcase
+    collection.downcase
   end
 
   def single_capitalize
@@ -28,8 +28,8 @@ class DomainEntity
   end
 
   def collection_capitalize options={}
-    res = collection.capitalize unless options.key? :dis
-    res = collection_disambiguous if options.key? :dis
+    res = collection.capitalize unless options.key? :collide
+    res = collection_disambiguous("capitalize") if options.key? :collide
     res
   end
 
@@ -38,8 +38,8 @@ class DomainEntity
   end
 
   def collection_downcase options={}
-    res = collection.downcase unless options.key? :dis
-    res = collection_disambiguous if options.key? :dis
+    res = collection.downcase unless options.key? :collide
+    res = collection_disambiguous("downcase") if options.key? :collide
     res
   end
 
@@ -48,7 +48,8 @@ class DomainEntity
   end
 
   def collection_save typing_case
-    send "collection.#{typing_case}"
+    collection.capitalize if typing_case == "capitalize"
+    collection.downcase if typing_case == "downcase"
   end
 
   def collection_defined?
