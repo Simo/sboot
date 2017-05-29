@@ -7,14 +7,14 @@ import { <%= @entity.single_capitalize  -%> } from './<%= @entity.single_downcas
 @Injectable()
 export class <%= @entity.single_capitalize  -%>Service {
 
-  <%= @entity.collection_downcase  -%> = new Subject<<%= @entity.single_capitalize  -%>[]>();
+  <%= @entity.collection_downcase collide: false -%> = new Subject<<%= @entity.single_capitalize  -%>[]>();
   <%= @entity.single_downcase  -%> = new Subject<<%= @entity.single_capitalize  -%>>();
 
   endpoint: string = 'http://localhost:8080/api/<%= @entity.collection_downcase  -%>';
 
   constructor(private _http:Http) { }
 
-  get<%= @entity.collection_capitalize  -%>(){
+  get<%= @entity.collection_downcase collide: false  -%>(){
     return this._http.get(this.endpoint).toPromise().then(res => { return res.json() as <%= @entity.single_capitalize  -%>[];})
   }
 
@@ -28,6 +28,14 @@ export class <%= @entity.single_capitalize  -%>Service {
   /**
     Implementazione attraverso RXJS del metodo get<%= @entity.single_capitalize  -%>
   */
+
+  get<%= @entity.collection_downcase collide: false  -%>Reactive(){
+    return this._http.get(this.endpoint).subscribe(res => {
+      let <%= @entity.collection_downcase collide: false  -%> = res.json() as Cane[];
+      this.<%= @entity.collection_downcase collide: false  -%>.next(<%= @entity.collection_downcase collide: false  -%>);
+    });
+  }
+
   get<%= @entity.single_capitalize  -%>Reactive(id: number){
     return this._http.get(`${this.endpoint}/${id}`).subscribe(res => {
       let <%= @entity.single_downcase  -%> = res.json() as <%= @entity.single_capitalize  -%>;
@@ -38,6 +46,14 @@ export class <%= @entity.single_capitalize  -%>Service {
 
   save<%= @entity.single_capitalize  -%>(p: <%= @entity.single_capitalize  -%>){
     return this._http.post(this.endpoint, p).toPromise().then(res => {});
+  }
+
+  update<%= @entity.single_capitalize  -%>(p: <%= @entity.single_capitalize  -%>){
+    return this._http.post(this.endpoint, p).toPromise().then(res => {});
+  }
+
+  delete<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+    return this._http.delete(this.endpoint, p).toPromise().then(res => {});
   }
 
 }

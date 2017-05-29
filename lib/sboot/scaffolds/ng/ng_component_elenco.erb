@@ -10,17 +10,28 @@ import { <%= @entity.single_capitalize  -%>Service } from "../<%= @entity.single
 })
 export class <%= @entity.collection_capitalize  -%>ElencoComponent implements OnInit {
 
-  <%= @entity.collection_downcase  -%>: <%= @entity.single_capitalize  -%>[];
+  <%= @entity.collection_downcase collide: false  -%>: <%= @entity.single_capitalize  -%>[];
 
   constructor(private router: Router, private service: <%= @entity.single_capitalize  -%>Service) { }
 
   ngOnInit() {
-    this.service.get<%= @entity.collection_capitalize  -%>().then(list => { this.<%= @entity.collection_downcase  -%> = list;});
+    this.service.get<%= @entity.collection_capitalize  -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
   }
 
-  mostra<%= @entity.single_capitalize  -%>(id: number){
-    this.service.get<%= @entity.single_capitalize  -%>Reactive(id);
-    this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+id);
+  mostra<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+    this.service.get<%= @entity.single_capitalize  -%>Reactive(<%= @entity.primary_key.name  -%>);
+    this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+<%= @entity.primary_key.name  -%>);
+  }
+
+  modifica<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+    this.service.get<%= @entity.single_capitalize  -%>Reactive(<%= @entity.primary_key.name  -%>);
+    this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+<%= @entity.primary_key.name  -%>+'/form');
+  }
+
+  cancella<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+    this.service.delete<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>).then(c => {
+      this.service.get<%= @entity.collection_downcase collide: false  -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
+    });
   }
 
 }

@@ -94,8 +94,10 @@ module Sboot
       started_from = Dir.pwd
       FileUtils.mkdir_p "src/main/webapp/resources"
       Dir.chdir('src/main/webapp/resources')
-      run 'ng new ng-app --skip-git' if Dir['ng-app'].empty?
+      new_app? = Dir['ng-app'].empty?
+      run 'ng new ng-app --skip-git' if new_app?
       Dir.chdir('ng-app')
+      run 'npm install jquery bootstrap --save' if new_app?
       run "ng g component #{entity.collection_downcase}/#{entity.collection_downcase}Elenco"
       run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Dettaglio"
       run "ng g component #{entity.collection_downcase}/#{entity.single_downcase}Form"

@@ -1,22 +1,25 @@
+require 'json'
+
 module Sboot
   module NgWriter
-    #include Sboot::NgRoutesHelper
 
     def matches? string, regex
       !!string.match(regex)
     end
 
     def write_routes
-      #file = open_file
       contents = search_contents open_file
-      new_contents = elaborate_new_contents contents
-      add_routes_to_app if contents.empty?
-      write_inside_routes new_contents unless contents.empty?
+      elaborate_new_contents contents
     end
 
     def open_file
       file = File.open('src/main/webapp/resources/ng-app/src/app/app.module.ts','r+')
       file.read
+    end
+
+    def package_json_file options={}
+      File.open('src/main/webapp/resources/ng-app/package.json','r+'){ |file| JSON.parse file.read } if options.key? :read
+      File.write('src/main/webapp/resources/ng-app/package.json', JSON.pretty_generate(options[:contents])) if options.key? :write
     end
 
     def write_out_file new_file
@@ -28,12 +31,12 @@ module Sboot
     end
 
     def elaborate_new_contents contents
-      nc = add_routes_to_app if contents.empty?
-      nc = append_to_existing_object(contents) unless contents.empty?
-      nc
+      first_time_editing if contents.empty?
+      write_inside routes(append_to_existing_object(contents)) unless contents.empty?
     end
 
-    def add_routes_to_app
+    def first_time_editing
+      #write_dependencies
       write_import_modules
       write_above_module insert_new_route_object @entity
       write_import_route
@@ -72,6 +75,7 @@ module Sboot
       str = open_file
       import_array = str.scan /(imports: \[)([\w\,\.\(\)\n\r\s]+)(\])/
       imported = import_array[0][1].split ','
+      imported.unshift insert_reactiveformsmodule_import
       imported.unshift insert_routes_import
       new_file = str.gsub /(imports: \[)([\w\,\.\(\)\n\r\s]+)(\])/, "\\1#{imported.join ','}\\3"
       write_out_file new_file
@@ -84,12 +88,27 @@ module Sboot
       write_out_file new_file
     end
 
+    def write_dependencies
+      json = package_json_file read: true
+      json['dependencies'].merge! insert_jquery_dependency
+      json['dependencies'].merge! insert_bootstrap_dependency
+      package_json_file write: true, contents: json
+    end
+
+    def insert_ngbootstrap_dependency
+      {"@ng-bootstrap/ng-bootstrap" => "^1.0.0-alpha.26"}
+    end
+
     def insert_basic_modules
       "import { FormsModule, ReactiveFormsModule } from '@angular/forms';\nimport { RouterModule, Routes } from '@angular/router';"
     end
 
     def insert_routes_import
       "\n    RouterModule.forRoot(routes)"
+    end
+
+    def insert_reactiveformsmodule_import
+      "\n    ReactiveFormsModule"
     end
 
     def insert_new_route_object entity
@@ -114,13 +133,6 @@ module Sboot
 
     def insert_form_reactive_route entity
       "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/formreactive', component: #{entity.single_capitalize}FormreactiveComponent }"
-    end
-
-    def open_module_file file
-      Dir.chdir 'src/app'
-      contents = File.open("app.module.ts", "r+"){ |file| file.read }
-      contents.read
-      #new_contents = contents.gsub(/imports: \[([\w\,\.\(\)\n\r\s]+)/, 'imports: [\1,')
     end
 
     def find_routes_defs file_string

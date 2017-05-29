@@ -1,16 +1,15 @@
-<p>
-  lista-persone works!
-</p>
-<table>
-  <head>
+<table class="table table-striped">
+  <thead>
     <tr>
       <% @entity.properties.each do |property| -%><th><%= property[:name].capitalize %></th>
-      <% end -%><th colspan="3"></th>
+      <% end -%>
+      <th></th>
     </tr>
-  </head>
-  <tr *ngFor="let <%= @entity.single_downcase  -%> of <%= @entity.collection_downcase  -%>">
+  </thead>
+  <tr *ngFor="let <%= @entity.single_downcase  -%> of <%= @entity.collection_downcase collide: false  -%>">
     <% @entity.properties.each do |property| -%>
-    <td><a <% if property.is_pk?  -%>(click)="mostra<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.id)"<% end -%>>{{<%= @entity.single_downcase  -%>.<%= property.name -%>}}</a></td>
+    <td><a (click)="mostra<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>)">Mostra</a> | <a (click)="modifica<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>">Modifica</a> | <a (click)="cancella<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>">Cancella</a></td>
     <% end  -%>
   </tr>
 </table>
+<button routerLink="<%= @entity.collection_downcase -%>/new"></button>

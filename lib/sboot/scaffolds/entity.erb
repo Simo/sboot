@@ -7,7 +7,7 @@ import org.hibernate.annotations.Type;<% end -%>
 <% if @entity.datetype -%>import java.util.Date;<% end -%>
 
 @Entity
-@Table(name = "T_<%= @entity.name.upcase %>")
+@Table(name = "<%= @entity.name.upcase %>")
 public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
 
   @Id
@@ -17,8 +17,8 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
   @GenericGenerator(name="myUUID", strategy="uuid2")
 <% end -%>
 <% unless @entity.primary_key.is_uuid? -%>
-  @GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
-  @SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
+  //@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
+  //@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
 <% end -%>
   @Column(name = "<%= @entity.primary_key[:name].upcase %>")
 
