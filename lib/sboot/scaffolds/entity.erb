@@ -17,6 +17,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
   @GenericGenerator(name="myUUID", strategy="uuid2")
 <% end -%>
 <% unless @entity.primary_key.is_uuid? -%>
+    @GeneratedValue(strategy= GenerationType.AUTO)
   //@GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
   //@SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
 <% end -%>

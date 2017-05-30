@@ -15,22 +15,22 @@ export class <%= @entity.collection_capitalize  -%>ElencoComponent implements On
   constructor(private router: Router, private service: <%= @entity.single_capitalize  -%>Service) { }
 
   ngOnInit() {
-    this.service.get<%= @entity.collection_capitalize  -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
+    this.service.get<%= @entity.collection_capitalize collide: false -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
   }
 
-  mostra<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+  mostra<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.ts_type  -%>){
     this.service.get<%= @entity.single_capitalize  -%>Reactive(<%= @entity.primary_key.name  -%>);
     this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+<%= @entity.primary_key.name  -%>);
   }
 
-  modifica<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+  modifica<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.ts_type  -%>){
     this.service.get<%= @entity.single_capitalize  -%>Reactive(<%= @entity.primary_key.name  -%>);
     this.router.navigateByUrl('<%= @entity.collection_downcase  -%>/'+<%= @entity.primary_key.name  -%>+'/form');
   }
 
-  cancella<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
+  cancella<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.ts_type  -%>){
     this.service.delete<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>).then(c => {
-      this.service.get<%= @entity.collection_downcase collide: false  -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
+      this.service.get<%= @entity.collection_capitalize collide: false  -%>().then(list => { this.<%= @entity.collection_downcase collide: false  -%> = list;});
     });
   }
 

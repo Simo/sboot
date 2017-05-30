@@ -28,7 +28,7 @@ export class <%= @entity.single_capitalize  -%>FormComponent implements OnInit, 
           this.loading = false;
         });
         } else {
-          this.cane = new Cane();
+          this.<%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize  -%>();
         }
     });
   }

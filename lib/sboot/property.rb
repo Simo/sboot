@@ -27,6 +27,12 @@ module Sboot
       end
     end
 
+    def date_type?
+      if @type == 'Date'
+        true
+      end
+    end
+
     def binary_type?
       if @type == 'byte[]'
         true

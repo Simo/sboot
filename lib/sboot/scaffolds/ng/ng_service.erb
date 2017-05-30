@@ -14,7 +14,7 @@ export class <%= @entity.single_capitalize  -%>Service {
 
   constructor(private _http:Http) { }
 
-  get<%= @entity.collection_downcase collide: false  -%>(){
+  get<%= @entity.collection_capitalize collide: false  -%>(){
     return this._http.get(this.endpoint).toPromise().then(res => { return res.json() as <%= @entity.single_capitalize  -%>[];})
   }
 
@@ -29,9 +29,9 @@ export class <%= @entity.single_capitalize  -%>Service {
     Implementazione attraverso RXJS del metodo get<%= @entity.single_capitalize  -%>
   */
 
-  get<%= @entity.collection_downcase collide: false  -%>Reactive(){
+  get<%= @entity.collection_capitalize collide: false  -%>Reactive(){
     return this._http.get(this.endpoint).subscribe(res => {
-      let <%= @entity.collection_downcase collide: false  -%> = res.json() as Cane[];
+      let <%= @entity.collection_downcase collide: false  -%> = res.json() as <%= @entity.single_capitalize  -%>[];
       this.<%= @entity.collection_downcase collide: false  -%>.next(<%= @entity.collection_downcase collide: false  -%>);
     });
   }
@@ -52,8 +52,8 @@ export class <%= @entity.single_capitalize  -%>Service {
     return this._http.post(this.endpoint, p).toPromise().then(res => {});
   }
 
-  delete<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.type  -%>){
-    return this._http.delete(this.endpoint, p).toPromise().then(res => {});
+  delete<%= @entity.single_capitalize  -%>(<%= @entity.primary_key.name  -%>: <%= @entity.primary_key.ts_type  -%>){
+    return this._http.delete(this.endpoint, <%= @entity.primary_key.name  -%>).toPromise().then(res => {});
   }
 
 }

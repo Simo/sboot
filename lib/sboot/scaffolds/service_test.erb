@@ -1,8 +1,9 @@
-package <%= @package %>.business.services.impl;
+package <%= @package %>.business.services;
 
 import <%= @package %>.business.dtos.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
 import <%= @package %>.business.exceptions.<%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException;
 import <%= @package %>.business.services.<%= @entity.name.split('_').collect(&:capitalize).join %>Service;
+import <%= @package %>.business.services.impl.<%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImpl;
 import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
 import <%= @package %>.persistence.repositories.<%= @entity.name.split('_').collect(&:capitalize).join %>Repository;
 import org.junit.Before;

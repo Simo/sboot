@@ -52,7 +52,7 @@ module Sboot
       lines = File.open("sboot_generate.sh", "r+"){ |file| file.read }
       lines.scan(/sboot[\s]+.+/){ |command| run command}
       run "schema2script ddl #{file}"
-      FileUtils.rm_rf "sboot_generate.sh"
+      #FileUtils.rm_rf "sboot_generate.sh"
     end
 
 

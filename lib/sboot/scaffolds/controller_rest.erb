@@ -27,10 +27,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;
+<% end -%>
+import java.util.List;
+<% if @entity.datetype -%>import java.text.ParseException;
+<% end -%>
+
 @RestController
 @RequestMapping("/api/<%= @entity.collection_downcase %>")
 @Api(value="/api/<%= @entity.name.downcase %>",tags={"<%= @entity.name.split('_').collect(&:capitalize).join %> Endpoint"})
-public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>RestController {
 
     @Autowired
     private <%= @entity.name.split('_').collect(&:capitalize).join %>Service service;
@@ -49,25 +55,25 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Crea nuova <%= @entity.name.split('_').collect(&:capitalize).join %>", notes = "Crea una nuova <%= @entity.name.split('_').collect(&:capitalize).join %>", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class),
+        @ApiResponse(code = 201, message = "Success", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class),
         @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class)
     })
-    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO create(
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO create (
             @ApiParam(required = true, name = "<%= @entity.name.downcase %>", value = "New <%= @entity.name.downcase %>")
-            @Valid @RequestBody <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto) {
+            @Valid @RequestBody <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto) throws ParseException {
         return service.salva(dto);
     }
 
     @RequestMapping(value = "/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Esegui update <%= @entity.name.split('_').collect(&:capitalize).join %>", notes = "Aggiorna una <%= @entity.name.split('_').collect(&:capitalize).join %> esistente", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class)
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Success", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class),
+        @ApiResponse(code = 201, message = "Success", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class),
         @ApiResponse(code = 400, message = "Bad request", response = MessageDTO.class),
         @ApiResponse(code = 404, message = "Not found", response = MessageDTO.class)
     })
-    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO update(
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO update (
             @ApiParam(required = true, name = "<%= @entity.name.downcase %>", value = "")
-            @Valid @RequestBody <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto) {
+            @Valid @RequestBody <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dto) throws ParseException {
         return service.salva(dto);
     }
 
