@@ -51,7 +51,7 @@ module Sboot
       run "schema2script sboot --env=#{environment} #{file}"
       lines = File.open("sboot_generate.sh", "r+"){ |file| file.read }
       lines.scan(/sboot[\s]+.+/){ |command| run command}
-      run "schema2script dll --env=#{environment} #{file}"
+      run "schema2script ddl #{file}"
       FileUtils.rm_rf "sboot_generate.sh"
     end
 
