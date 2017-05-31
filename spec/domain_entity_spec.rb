@@ -4,6 +4,8 @@ describe DomainEntity do
 
   subject(:entity){ DomainEntity.new name: 'Casa', name_pluralized: 'Case', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil},{name: 'dataInizio',type: 'Date',constraint: nil}], environment: 'fullstack' }
 
+  subject(:entity2){ DomainEntity.new name: 'Casa', name_pluralized: 'Casa', properties: [{name: 'indirizzo',type: 'String',constraint: 'pk'},{name: 'civico',type: 'Long', constraint: nil},{name: 'dataInizio',type: 'Date',constraint: nil}], environment: 'fullstack' }
+
   describe 'initialize' do
 
     it "should be correctly initialized" do
@@ -69,6 +71,16 @@ describe DomainEntity do
       expect(entity.datetype).to be true
     end
 
+  end
+
+  describe 'helper methods' do
+    it "should return casaLista" do
+      expect(entity2.collection_downcase collide: false).to eql 'casaLista'
+    end
+
+    it "should return case" do
+      expect(entity.collection_downcase collide: false).to eql 'case'
+    end
   end
 
 end

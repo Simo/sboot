@@ -1,17 +1,16 @@
-<div *ngIf="!loading">
+<div class="jumbotron">
+  <h2><%= @entity.single_capitalize -%> Form:</h2>
   <form novalidate #form="ngForm" (submit)="save<%= @entity.single_capitalize  -%>()">
     <% @entity.properties.each do |property| -%>
-      <p>
-        <input type="text" name="<%= property.name  %>" [(ngModel)]="<%= @entity.single_downcase  -%>.<%= property.name  %>" required>
+      <div class="form-group">
+        <label for="<%= property.name %>-id"><%= property.name %></label>
+        <input type="text" id="<%= property.name %>-id" name="<%= property.name  %>" [(ngModel)]="<%= @entity.single_downcase  -%>.<%= property.name  %>" required #<%= property.name  %>="ngModel">
         <span *ngIf="<%= property.name  %>.hasError('required')">obbligatorio</span>
-      </p>
+      </div>
     <% end -%>
-    <button type="submit">Salva</button>
+    <div class="form-group">
+      <button class="btn btn-default" type="submit">Salva</button>
+      <button class="btn btn-default" routerLink="/<%= @entity.collection_downcase -%>">Indietro</button>
+    </div>
   </form>
-  <div>
-    <button routerLink="/home">Indietro</button>
-  </div>
-</div>
-<div *ngIf="loading">
-  <img src="infinity.gif" >
 </div>

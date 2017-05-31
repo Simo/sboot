@@ -4,6 +4,13 @@ package <%= @package %>.business.dtos;
 import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+<% if @entity.datetype -%>
+		import java.text.ParseException;
+		import java.text.DateFormat;
+		import java.text.SimpleDateFormat;
+		import java.util.Calendar;
+		import java.util.Date;
+<% end -%>
 
 @ApiModel(value = "<%= @entity.name.split('_').collect(&:capitalize).join %>", description = "Un oggetto <%= @entity.name.split('_').collect(&:capitalize).join %>")
 public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
@@ -11,37 +18,58 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
     <% @entity.properties.each do |property| %>
 		<% if property[:constraint] == 'pk'-%>
 		@ApiModelProperty(value = "Identificativo univoco per un entita' <%= @entity.name.split('_').collect(&:capitalize).join %>")
-		private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+		private <%= @entity.primary_key.type %> <%= @entity.primary_key.name %>;
 		<% else -%>
-		@ApiModelProperty(value = "<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> di <%= @entity.name.split('_').collect(&:capitalize).join %>")
-    private <%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
+		@ApiModelProperty(value = "<%= property.camel_rather_dash firstLetter: 'downcase' %> di <%= @entity.name.split('_').collect(&:capitalize).join %>")
+    private <%= property.dto_type %> <%= property.camel_rather_dash firstLetter: 'downcase' %>;
 		<% end -%>
     <% end %>
 
     public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(){}
 
     public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
-				<% @entity.properties.each do |property| -%>
-		    this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> = entity.get<%= property[:name].split('_').collect(&:capitalize).join %>();
-		    <% end -%>
+		<% @entity.properties.each do |property| -%>
+		<% unless property.date_type? -%>
+				this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>();
+		<% else -%>
+				this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = this.toString(entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>());
+		<% end -%>
+		<% end -%>
     }
 
-    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert(){
+    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
         <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
 				<% @entity.properties.each do |property| -%>
-		    entity.set<%= property[:name].split('_').collect(&:capitalize).join %>(this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>);
-		    <% end -%>
+				<% unless property.peculiar_type? -%>
+				entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>);
+				<% else -%>
+				entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(toDate(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>));
+				<% end -%>
+				<% end -%>
         return entity;
     }
 
     <% @entity.properties.each do |property| -%>
-    public <%= property[:type] %> get<%= property[:name].split('_').collect(&:capitalize).join %>() {
-        return <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
+    public <%= property.dto_type %> get<%= property.camel_rather_dash firstLetter: 'upcase' %>() {
+        return <%= property.camel_rather_dash firstLetter: 'downcase' %>;
     }
 
-    public void set<%= property[:name].split('_').collect(&:capitalize).join %>(<%= property[:type] %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>) {
-        this.<%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%> = <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
+    public void set<%= property.camel_rather_dash firstLetter: 'upcase' %>(<%= property.dto_type %> <%= property.camel_rather_dash firstLetter: 'downcase' %>) {
+        this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = <%= property.camel_rather_dash firstLetter: 'downcase' %>;
     }
-
 		<% end -%>
+
+<% if @entity.datetype -%>
+		public Date toDate(String dateString) throws ParseException {
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		Date dateToBeReturned = formatter.parse(dateString);
+		return dateToBeReturned;
+		}
+
+		public String toString(Date dateDate){
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		String dateToBeReturned = formatter.format(dateDate);
+		return dateToBeReturned;
+		}
+<% end -%>
 }

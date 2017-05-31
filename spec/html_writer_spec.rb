@@ -60,4 +60,12 @@ describe Sboot::HtmlWriter do
     after(:each) { Dir.glob(['src','.sboot-repo']).each { |f| FileUtils.rm_rf f } }
 
   end
+
+  describe 'extends ng_writer' do
+
+    it 'respond_to write_dependencies' do
+      expect(writer.respond_to?('write_dependencies')).to be true
+    end
+
+  end
 end

@@ -21,11 +21,15 @@ export class <%= @entity.single_capitalize  -%>FormComponent implements OnInit, 
 
   ngOnInit() {
     this.paramsSubscription = this.route.params.subscribe(p => {
-      let <%= @entity.single_downcase  -%>Id = p['id'];
-      this.service.get<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>Id).then(c => {
-        this.<%= @entity.single_downcase  -%> = c;
-        this.loading = false;
-      });
+      if(p['<%= @entity.primary_key.name -%>'] != undefined){
+        let <%= @entity.single_downcase  -%>Id = p['<%= @entity.primary_key.name -%>'];
+        this.service.get<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>Id).then(c => {
+          this.<%= @entity.single_downcase  -%> = c;
+          this.loading = false;
+        });
+        } else {
+          this.<%= @entity.single_downcase  -%> = new <%= @entity.single_capitalize  -%>();
+        }
     });
   }
 

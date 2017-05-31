@@ -27,6 +27,18 @@ module Sboot
       end
     end
 
+    def date_type?
+      if @type == 'Date'
+        true
+      end
+    end
+
+    def binary_type?
+      if @type == 'byte[]'
+        true
+      end
+    end
+
     def is_pk?
       if @constraint == 'pk'
         true
@@ -37,6 +49,14 @@ module Sboot
       if @type == 'UUID'
         true
       end
+    end
+
+    def camel_rather_dash options={}
+      #raise ArgumentError, "firstLetter consente solo valori 'upcase' o 'downcase'" if options.key? :firstLetter && (options[:firstLetter] != 'upcase' || options[:firstLetter] != 'downcase')
+      ret = @name.split('_').collect(&:capitalize).join if options[:firstLetter] == 'upcase'
+      ret = @name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } if options[:firstLetter] == 'downcase'
+      ret = @name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } unless options.key? :firstLetter
+      ret
     end
 
     def ts_type
