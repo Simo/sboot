@@ -43,7 +43,7 @@ module Sboot
 
     def create_path file
       if file.ref == file.ext
-        "#{@entity.name.downcase}"
+        "#{@entity.collection_downcase}"
       else
         "#{file.ref}"
       end

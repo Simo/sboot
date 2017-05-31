@@ -54,6 +54,8 @@ module Sboot
       originalArray << detail_route
       form_route = insert_form_route @entity
       originalArray << form_route
+      new_route = insert_new_route @entity
+      originalArray << new_route
       form_reactive_route= insert_form_reactive_route @entity
       originalArray << form_reactive_route
       originalArray.join(',')
@@ -112,7 +114,7 @@ module Sboot
     end
 
     def insert_new_route_object entity
-      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: '#{entity.collection_downcase}', component: #{entity.collection_capitalize}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/form', component: #{entity.single_capitalize}FormComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/formreactive', component: #{entity.single_capitalize}FormreactiveComponent }\n];\n\n@NgModule"
+      "\nconst routes: Routes = [\n  { path: '', redirectTo: '#{entity.collection_downcase}', pathMatch: 'full'},\n  { path: '#{entity.collection_downcase}', component: #{entity.collection_capitalize}ElencoComponent},\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}', component: #{entity.single_capitalize}DettaglioComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/form', component: #{entity.single_capitalize}FormComponent },\n  { path: '#{entity.collection_downcase}/new', component: #{entity.single_capitalize}FormComponent },\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/formreactive', component: #{entity.single_capitalize}FormreactiveComponent }\n];\n\n@NgModule"
     end
 
     def insert_home_route entity
@@ -129,6 +131,10 @@ module Sboot
 
     def insert_form_route entity
       "\n  { path: '#{entity.collection_downcase}/:#{entity.primary_key.name}/form', component: #{entity.single_capitalize}FormComponent }"
+    end
+
+    def insert_new_route entity
+      "\n  { path: '#{entity.collection_downcase}/new', component: #{entity.single_capitalize}FormComponent }"
     end
 
     def insert_form_reactive_route entity

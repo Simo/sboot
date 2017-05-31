@@ -8,8 +8,9 @@
   </thead>
   <tr *ngFor="let <%= @entity.single_downcase  -%> of <%= @entity.collection_downcase collide: false  -%>">
     <% @entity.properties.each do |property| -%>
-    <td><a (click)="mostra<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>)">Mostra</a> | <a (click)="modifica<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>">Modifica</a> | <a (click)="cancella<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>">Cancella</a></td>
+    <td>{{<%= @entity.single_downcase %>.<%= property.name  -%>}}</td>
+    <td><a (click)="mostra<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>)">Mostra</a> | <a (click)="modifica<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>)">Modifica</a> | <a (click)="cancella<%= @entity.single_capitalize  -%>(<%= @entity.single_downcase  -%>.<%= @entity.primary_key.name%>)">Cancella</a></td>
     <% end  -%>
   </tr>
 </table>
-<button routerLink="<%= @entity.collection_downcase -%>/new"></button>
+<button routerLink="/<%= @entity.collection_downcase -%>/new">Inserisci nuovo</button>

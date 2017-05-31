@@ -65,5 +65,13 @@ module Sboot
       typ
     end
 
+    def fixture
+      ret = '"testo"' if @type == 'String'
+      ret = '"31/12/2000"' if @type == 'Date'
+      ret = '1L' if @type == 'Long'
+      ret = 'new Double(10)' if @type == 'Double'
+      ret = 'new Integer(10)' if @type == 'Integer'
+      ret
+    end
   end
 end
