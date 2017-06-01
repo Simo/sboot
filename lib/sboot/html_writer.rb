@@ -15,8 +15,8 @@ module Sboot
     end
 
     def write stack
-      create_package_json unless package_json_exists?
       unless @entity.environment == 'ng'
+        create_package_json unless package_json_exists?
         stack[:files].each do |file|
           path = "#{stack[:path]}/#{create_path file}"
           write_file "#{path}/#{file.ext}.html", ERB.new(getTemplate(file.key),nil,'-').result(binding)
