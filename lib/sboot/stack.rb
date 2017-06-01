@@ -64,13 +64,14 @@ module Sboot
     end
 
     def test_needed? env
-      env == 'fullstack' || env == 'api' || env == 'backend' || env == 'business'
+      env == 'fullstack' || env == 'api' || env == 'backend' || env == 'business' || env == 'ng'
     end
 
     def determine_test_level env
       result = Symbol
       result = :fulltest if env == 'fullstack' || env == 'backend'
       result = :apitest if env == 'api'
+      result = :apitest if env == 'ng'
       result = :servicetest if env == 'business'
       result
     end
