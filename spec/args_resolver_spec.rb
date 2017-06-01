@@ -158,5 +158,4 @@ describe Sboot::ArgsResolver do
 
   end
 
-
 end

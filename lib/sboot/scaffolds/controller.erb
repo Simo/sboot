@@ -19,9 +19,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
     @Autowired
     private <%= @entity.name.split('_').collect(&:capitalize).join %>Service service;
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>", method = RequestMethod.GET, produces = ("text/html"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView index(){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/index");
+        ModelAndView mav = new ModelAndView("<%= @entity.collection_downcase %>/index");
         <% unless @entity.collection_defined? -%>
         mav.addObject("<%= @entity.name.downcase %>Lista",service.trovaTutti());
         <% else -%>
@@ -30,58 +30,58 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         return mav;
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("text/html"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView dettaglio(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/show");
+        ModelAndView mav = new ModelAndView("<%= @entity.collection_downcase %>/show");
       mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
       return mav;
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/new", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView nuovo(){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/new");
+        ModelAndView mav = new ModelAndView("<%= @entity.collection_downcase %>/new");
         mav.addObject("<%= @entity.name.downcase %>",new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO());
         return mav;
       }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}/edit", method = RequestMethod.GET, produces = ("text/html"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}/edit", method = RequestMethod.GET, produces = ("text/html"))
     public ModelAndView modifica(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
-        ModelAndView mav = new ModelAndView("<%= @entity.name.downcase %>/edit");
+        ModelAndView mav = new ModelAndView("<%= @entity.collection_downcase %>/edit");
         mav.addObject("<%= @entity.name.downcase %>",service.trova(<%= @entity.primary_key[:name] %>));
         return mav;
       }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>",method = RequestMethod.POST)
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>",method = RequestMethod.POST)
     public String salva(@ModelAttribute <%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
+        return "redirect:/<%= @entity.collection_downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
       }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = {RequestMethod.POST, RequestMethod.PUT})
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}",method = {RequestMethod.POST, RequestMethod.PUT})
     public String salva(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>, @ModelAttribute <%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>{
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO newModel = service.salva(model);
-        return "redirect:/<%= @entity.collection.downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
+        return "redirect:/<%= @entity.collection_downcase %>/"+newModel.get<%= @entity.primary_key[:name].capitalize %>();
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}",method = RequestMethod.DELETE)
     public String deleteRest(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
         Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
-        return "redirect:/<%= @entity.collection.downcase %>";
+        return "redirect:/<%= @entity.collection_downcase %>";
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}/delete",method = RequestMethod.GET)
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}/delete",method = RequestMethod.GET)
     public String delete(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
         Long numberOfDeletions = service.cancella(<%= @entity.primary_key[:name] %>);
-        return "redirect:/<%= @entity.collection.downcase %>";
+        return "redirect:/<%= @entity.collection_downcase %>";
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>", method = RequestMethod.GET, produces = ("application/json"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>", method = RequestMethod.GET, produces = ("application/json"))
     @ResponseBody
     public List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> indexJson(){
         return service.trovaTutti();
     }
 
-    @RequestMapping(value = "/<%= @entity.collection.downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("application/json"))
+    @RequestMapping(value = "/<%= @entity.collection_downcase %>/{<%= @entity.primary_key[:name] %>}", method = RequestMethod.GET, produces = ("application/json"))
     @ResponseBody
     public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO dettaglioJson(@PathVariable <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>){
         return service.trova(<%= @entity.primary_key[:name] %>);

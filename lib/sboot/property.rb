@@ -60,14 +60,15 @@ module Sboot
     end
 
     def ts_type
-      typ = 'string' if @type == 'String' || @type == 'Date'
+      typ = 'string' if @type == 'String' || @type == 'Date' || @type == 'UUID'
       typ = 'number' if @type == 'Long' || @type == 'Integer' || @type == 'Double'
       typ
     end
 
-    def fixture
+    def fixture options={}
       ret = '"testo"' if @type == 'String'
-      ret = '"31/12/2000"' if @type == 'Date'
+      ret = '"31/12/2000"' if @type == 'Date' && !(options.key? :reference)
+      ret = 'new Date()' if @type == 'Date' && (options.key? :reference) && options[:reference] == 'entity'
       ret = '1L' if @type == 'Long'
       ret = 'new Double(10)' if @type == 'Double'
       ret = 'new Integer(10)' if @type == 'Integer'

@@ -62,4 +62,22 @@ describe Sboot::Property do
       expect(property2.camel_rather_dash firstLetter: 'non_so').to raise_error ArgumentError
     end
   end
+
+
+  describe 'produce test fixtures' do
+
+    it 'should output "testo"' do
+      expect(property2.fixture(reference: 'entity')).to eql '"testo"'
+    end
+
+    it 'should output new Date()' do
+      expect(property.fixture(reference: 'entity')).to eql 'new Date()'
+    end
+
+    it 'should output "31/12/2000"' do
+      expect(property.fixture).to eql '"31/12/2000"'
+    end
+  end
+
+
 end

@@ -9,10 +9,10 @@
 
     <h1>Modifica <%= @entity.name.capitalize %></h1>
 
-    <div th:include="<%= @entity.name.downcase %>/form:: form('/<%= @entity.collection %>/'+${<%= @entity.name.downcase %>.id})"></div>
+    <div th:include="<%= @entity.collection_downcase %>/form:: form('/<%= @entity.collection_downcase %>/'+${<%= @entity.single_downcase %>.<%= @entity.primary_key.name %>})"></div>
 
-    <a th:href="@{'/<%= @entity.collection %>/'+${<%= @entity.name.downcase %>.id}}">Dettaglio</a>
-    <a th:href="@{'/<%= @entity.collection %>'}">Indietro</a>
+    <a th:href="@{'/<%= @entity.collection_downcase %>/'+${<%= @entity.single_downcase %>.<%= @entity.primary_key.name %>}}">Dettaglio</a>
+    <a th:href="@{'/<%= @entity.collection_downcase %>'}">Indietro</a>
 
 </body>
 </html>

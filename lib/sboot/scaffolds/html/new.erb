@@ -9,9 +9,9 @@
 
     <h1>Inserisci <%= @entity.name.capitalize %></h1>
 
-    <div th:include="<%= @entity.name.downcase %>/form:: form('/<%= @entity.collection.downcase %>')"></div>
+    <div th:include="<%= @entity.collection_downcase %>/form:: form('/<%= @entity.collection.downcase %>')"></div>
 
-    <a th:href="@{'/<%= @entity.collection.downcase %>'}">Indietro</a>
+    <a th:href="@{'/<%= @entity.collection_downcase %>'}">Indietro</a>
 
 </body>
 </html>

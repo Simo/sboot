@@ -16,17 +16,21 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.datetype -%>import java.util.Date;<% end -%>
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImplTest {
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceTest {
 
     @MockBean
     private <%= @entity.name.split('_').collect(&:capitalize).join %>Repository repository;
 
     private <%= @entity.name.split('_').collect(&:capitalize).join %>Service service;
+
+    private <%= @entity.primary_key.type %> primary_key;
 
     private List<<%= @entity.name.split('_').collect(&:capitalize).join %>> lista = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>>();
 
@@ -35,11 +39,16 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImp
     @Before
     public void setUp() throws Exception {
         this.service = new <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImpl(this.repository);
-        <%= @entity.name.downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
-        <%= @entity.name.downcase %>1.setId(1L);
-        <%= @entity.name.downcase %>1.setIndirizzo("via pazza");
-        <%= @entity.name.downcase %>1.setCivico(34L);
-        lista.add(casa1);
+        this.primary_key = <%= @entity.fixture_pk %>;
+        <%= @entity.single_downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
+        <% @entity.properties.each do |property| -%>
+          <% if property[:constraint] == 'pk' -%>
+          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(primary_key);
+          <% else -%>
+          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(<%= property.fixture(reference: 'entity') %>);
+          <% end -%>
+        <% end -%>
+        lista.add(<%= @entity.single_downcase %>1);
     }
 
     @Test
@@ -53,31 +62,31 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceImp
     @Test
     public void trova() throws Exception {
         assertThat(this.repository).isNotNull();
-        when(this.repository.findOne(1L)).thenReturn(this.casa1);
-        assertThat(this.service.trova(1L)).isInstanceOf(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class);
+        when(this.repository.findOne(primary_key)).thenReturn(this.<%= @entity.single_downcase %>1);
+        assertThat(this.service.trova(primary_key)).isInstanceOf(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class);
     }
 
     @Test(expected = <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException.class)
     public void nonTrova() throws Exception {
         assertThat(this.repository).isNotNull();
-        when(this.repository.findOne(1L)).thenReturn(null);
-        assertThat(this.service.trova(1L));
+        when(this.repository.findOne(primary_key)).thenReturn(null);
+        assertThat(this.service.trova(primary_key));
     }
 
 
     @Test
     public void salva() throws Exception {
         assertThat(this.repository).isNotNull();
-        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO new<%= @entity.name.split('_').collect(&:capitalize).join %>Dto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(casa1);
-        when(this.repository.save(any(<%= @entity.name.split('_').collect(&:capitalize).join %>.class))).thenReturn(this.casa1);
-        assertThat(this.service.salva(new<%= @entity.name.split('_').collect(&:capitalize).join %>Dto).getId()).isEqualTo(1L);
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO new<%= @entity.name.split('_').collect(&:capitalize).join %>Dto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.single_downcase %>1);
+        when(this.repository.save(any(<%= @entity.name.split('_').collect(&:capitalize).join %>.class))).thenReturn(this.<%= @entity.single_downcase %>1);
+        assertThat(this.service.salva(new<%= @entity.name.split('_').collect(&:capitalize).join %>Dto).get<%= @entity.primary_key.name.capitalize %>()).isEqualTo(primary_key);
     }
 
     @Test
     public void cancella() throws Exception {
         assertThat(this.repository).isNotNull();
-        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO casaDto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(casa1);
-        when(this.repository.deleteById(1L)).thenReturn(1L);
-        assertThat(this.service.cancella(casaDto.getId())).isEqualTo(1L);
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Dto = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.single_downcase %>1);
+        when(this.repository.deleteBy<%= @entity.primary_key.name.capitalize %>(primary_key)).thenReturn(1L);
+        assertThat(this.service.cancella(<%= @entity.single_downcase %>Dto.get<%= @entity.primary_key.name.capitalize %>())).isEqualTo(1L);
     }
 }

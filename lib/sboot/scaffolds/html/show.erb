@@ -7,15 +7,15 @@
         <title>Dettaglio <%= @entity.name.capitalize %></title>
     </head>
     <body layout:fragment="content">
-			<% @entity.properties.each do |property| -%>
-				<p>
-				  <strong><%= property[:name].capitalize %>:</strong>
-				  <span th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"></span>
-				</p>
-			<% end -%>
+      <% @entity.properties.each do |property| -%>
+        <p>
+          <strong><%= property[:name].capitalize %>:</strong>
+          <span th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"></span>
+        </p>
+      <% end -%>
 
-			<a th:href="@{'/<%= @entity.collection.downcase %>/'+${<%= @entity.name.downcase %>.id}+'/edit'}">Modifica</a>
-			<a th:href="@{'/<%= @entity.collection.downcase %>'}">Indietro</a>
+      <a th:href="@{'/<%= @entity.collection.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a>
+      <a th:href="@{'/<%= @entity.collection.downcase %>'}">Indietro</a>
 
   </body>
 </html>
