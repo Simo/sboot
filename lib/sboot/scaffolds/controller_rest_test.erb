@@ -14,10 +14,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
+<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.primary_key.type == 'String' -%>import java.util.UUID;<% end -%>
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,142 +28,124 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import static org.hamcrest.Matchers.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class <%= @entity.name.split('_').collect(&:capitalize).join %>ControllerTest {
 
-@Autowired
-private MockMvc mockMvc;
-@MockBean
-private <%= @entity.name.split('_').collect(&:capitalize).join %>Service mockService;
-@Autowired
-private WebApplicationContext webApplicationContext;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    private <%= @entity.name.split('_').collect(&:capitalize).join %>Service mockService;
 
-private List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> lista = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
+    private <%= @entity.primary_key.type %> primary_key;
 
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>1;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-  @Before
-  public void setUp() throws Exception {
-  <%= @entity.name.downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <%= @entity.name.downcase %>1.setId(1L);
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>1.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  lista.add(<%= @entity.name.downcase %>1);
-  }
+    @Autowired
+    private WebApplicationContext webApplicationContext;
 
-  @Test
-  public void index() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  when(mockService.trovaTutti()).thenReturn(lista);
-  this.mockMvc.perform(MockMvcRequestBuilders.get("/casa").accept(MediaType.TEXT_HTML_VALUE))
-  .andExpect(status().isOk())
-  .andExpect(view().name("<%= @entity.name.downcase %>/index"))
-  .andExpect(MockMvcResultMatchers.model().attributeExists("<%= @entity.name.downcase %>Lista"))
-  .andExpect(MockMvcResultMatchers.model().attribute("<%= @entity.name.downcase %>Lista", lista))
-  .andDo(print());
-  }
+    private List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> lista = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
 
-  @Test
-  public void dettaglio() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  when(mockService.trova(1L)).thenReturn(this.<%= @entity.name.downcase %>1);
-  this.mockMvc.perform(MockMvcRequestBuilders.get("/<%= @entity.name.downcase %>/1").accept(MediaType.TEXT_HTML_VALUE))
-  .andExpect(status().isOk())
-  .andExpect(view().name("<%= @entity.name.downcase %>/dettaglio"))
-  .andExpect(MockMvcResultMatchers.model().attributeExists("<%= @entity.name.downcase %>"))
-  .andExpect(MockMvcResultMatchers.model().attribute("<%= @entity.name.downcase %>", <%= @entity.name.downcase %>1))
-  .andDo(print());
-  }
+    <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>1;
 
-  @Test
-  public void nuovo() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  this.mockMvc.perform(MockMvcRequestBuilders.get("/<%= @entity.name.downcase %>/new").accept(MediaType.TEXT_HTML_VALUE))
-  .andExpect(status().isOk())
-  .andExpect(view().name("<%= @entity.name.downcase %>/nuovo"))
-  .andExpect(MockMvcResultMatchers.model().attributeExists("<%= @entity.name.downcase %>"))
-  .andDo(print());
-  }
+    @Before
+    public void setUp() throws Exception {
+        this.primary_key = <%= @entity.fixture_pk %>;
+        <%= @entity.single_downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
+        <% @entity.properties.each do |property| -%>
+          <% if property[:constraint] == 'pk' -%>
+          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(primary_key);
+          <% else -%>
+          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <% end -%>
+        <% end -%>
+        lista.add(<%= @entity.single_downcase %>1);
+    }
 
-  @Test
-  public void modifica() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  when(mockService.trova(1L)).thenReturn(this.<%= @entity.name.downcase %>1);
-  this.mockMvc.perform(MockMvcRequestBuilders.get("/<%= @entity.name.downcase %>/1/edit").accept(MediaType.TEXT_HTML_VALUE))
-  .andExpect(status().isOk())
-  .andExpect(view().name("<%= @entity.name.downcase %>/modifica"))
-  .andExpect(MockMvcResultMatchers.model().attributeExists("<%= @entity.name.downcase %>"))
-  .andExpect(MockMvcResultMatchers.model().attribute("<%= @entity.name.downcase %>", <%= @entity.name.downcase %>1))
-  .andDo(print());
-  }
+    @Test
+    public void findAll() throws Exception {
+      assertThat(this.mockService).isNotNull();
+      when(mockService.trovaTutti()).thenReturn(lista);
+      this.mockMvc.perform(MockMvcRequestBuilders.get("/api/<%= @entity.collection_downcase %>")
+        .accept(MediaType.APPLICATION_JSON_UTF8)
+        .header("Access-Control-Request-Method", "GET")
+        .header("Origin", "http://localhost:8080"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(jsonPath("$.length()", is(1)))
+        <% @entity.properties.each do |property| -%>
+          .andExpect(jsonPath("$[0].<%= property.name %>", is(<%= @entity.single_downcase %>1.get<%= property[:name].capitalize %>()<% if property.type == 'Long' -%>.intValue()<% end -%>)))
+        <% end -%>
+        .andDo(print());
+    }
 
-  @Test
-  public void salvaPost() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>New = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>New.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>New2 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <%= @entity.name.downcase %>New2.setId(2L);
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>New2.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.name.downcase %>New2);
-  this.mockMvc.perform(MockMvcRequestBuilders.post("/casa").contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  .param("id","").param("indirizzo",<%= @entity.name.downcase %>New.getIndirizzo()).param("civico",<%= @entity.name.downcase %>New.getCivico().toString()))
-  .andExpect(status().is3xxRedirection())
-  .andExpect(MockMvcResultMatchers.redirectedUrl("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>New2.getId()))
-  .andDo(print());
-  }
+    @Test
+    public void show() throws Exception {
+      assertThat(this.mockService).isNotNull();
+      when(mockService.trova(primary_key)).thenReturn(this.<%= @entity.single_downcase %>1);
+      this.mockMvc.perform(MockMvcRequestBuilders.get("/api/<%= @entity.collection_downcase %>/"+<%= @entity.single_downcase %>1.get<%= @entity.primary_key.name.capitalize %>().toString())
+        .header("Access-Control-Request-Method", "GET")
+        .header("Origin", "http://localhost:8080")
+        .accept(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().isOk())
+        <% @entity.properties.each do |property| -%>
+        .andExpect(jsonPath("$.<%= property.name %>", is(<%= @entity.single_downcase %>1.get<%= property[:name].capitalize %>()<% if property.type == 'Long' %>.intValue()<% end -%>)))
+        <% end -%>
+        .andDo(print());
+    }
 
-  @Test
-  public void salvaPut() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Update = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <%= @entity.name.downcase %>Update.setId(1L);
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>Update.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.name.downcase %>Update);
-  this.mockMvc.perform(MockMvcRequestBuilders.put("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>Update.getId()).contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-  .param("id",<%= @entity.name.downcase %>Update.getId().toString()).param("indirizzo",<%= @entity.name.downcase %>Update.getIndirizzo()).param("civico",<%= @entity.name.downcase %>Update.getCivico().toString()))
-  .andExpect(status().is3xxRedirection())
-  .andExpect(MockMvcResultMatchers.redirectedUrl("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>Update.getId()))
-  .andDo(print());
-  }
+    @Test
+    public void delete() throws Exception {
+        assertThat(this.mockService).isNotNull();
+        <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
+        <% @entity.properties.each do |property| -%>
+          <% if property[:constraint] == 'pk' -%>
+          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(primary_key);
+          <% else -%>
+          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <% end -%>
+        <% end -%>
+        when(mockService.cancella(<%= @entity.single_downcase %>Delete.get<%= @entity.primary_key.name.capitalize %>())).thenReturn(null);
+        this.mockMvc.perform(MockMvcRequestBuilders.delete("/api/<%= @entity.collection_downcase %>/"+<%= @entity.single_downcase %>Delete.get<%= @entity.primary_key.name.capitalize %>().toString())
+        .header("Access-Control-Request-Method", "DELETE")
+        .header("Origin", "http://localhost:8080")
+        .accept(MediaType.APPLICATION_JSON_UTF8))
+        .andExpect(status().is(204))
+        .andDo(print());
+    }
 
-  @Test
-  public void deleteRest() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <%= @entity.name.downcase %>Delete.setId(1L);
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>Delete.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  when(mockService.cancella(<%= @entity.name.downcase %>Delete.getId())).thenReturn(1L);
-  this.mockMvc.perform(MockMvcRequestBuilders.delete("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>Delete.getId()))
-  .andExpect(status().is3xxRedirection())
-  .andExpect(MockMvcResultMatchers.redirectedUrl("/<%= @entity.name.downcase %>"))
-  .andDo(print());
-  }
+    @Test
+    public void create() throws Exception {
+      assertThat(this.mockService).isNotNull();
+      when(mockService.salva(any())).thenReturn(<%= @entity.single_downcase %>1);
+      this.mockMvc.perform(MockMvcRequestBuilders.post("/api/<%= @entity.collection_downcase %>")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsBytes(<%= @entity.single_downcase %>1))
+        .accept(MediaType.APPLICATION_JSON_UTF8)
+        .header("Access-Control-Request-Method", "POST")
+        .header("Origin", "http://localhost:8080"))
+        .andExpect(status().isCreated())
+        .andDo(print());
+    }
 
-  @Test
-  public void delete() throws Exception {
-  assertThat(this.mockService).isNotNull();
-  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.name.downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
-  <%= @entity.name.downcase %>Delete.setId(1L);
-  <% @entity.properties.each do |property| -%>
-      <%= @entity.name.downcase %>Delete.set<%= property[:name].capitalize %>(<% if property[:type] == 'String' %>"stringa di testo"<% end -%><% if property[:type] == 'Long' %>1L<% end -%><% if property[:type] == 'Integer' %>1<% end -%>);
-  <% end -%>
-  when(mockService.cancella(<%= @entity.name.downcase %>Delete.getId())).thenReturn(1L);
-  this.mockMvc.perform(MockMvcRequestBuilders.get("/<%= @entity.name.downcase %>/"+<%= @entity.name.downcase %>Delete.getId()+"/delete"))
-  .andExpect(status().is3xxRedirection())
-  .andExpect(MockMvcResultMatchers.redirectedUrl("/<%= @entity.name.downcase %>"))
-  .andDo(print());
-  }
-  }
+    @Test
+    public void update() throws Exception {
+    assertThat(this.mockService).isNotNull();
+      when(mockService.salva(any())).thenReturn(<%= @entity.single_downcase %>1);
+      this.mockMvc.perform(MockMvcRequestBuilders.put("/api/<%= @entity.collection_downcase %>/"+<%= @entity.single_downcase %>1.get<%= @entity.primary_key.name.capitalize %>().toString())
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(objectMapper.writeValueAsBytes(<%= @entity.single_downcase %>1))
+        .accept(MediaType.APPLICATION_JSON_UTF8)
+        .header("Access-Control-Request-Method", "PUT")
+        .header("Origin", "http://localhost:8080"))
+        .andExpect(status().isOk())
+        .andDo(print());
+    }
+}

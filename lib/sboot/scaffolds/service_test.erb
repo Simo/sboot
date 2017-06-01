@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 <% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.primary_key.type == 'String' -%>import java.util.UUID;<% end -%>
 <% if @entity.datetype -%>import java.util.Date;<% end -%>
 
 import static org.assertj.core.api.Assertions.*;

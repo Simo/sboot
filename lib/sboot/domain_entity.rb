@@ -68,7 +68,7 @@ class DomainEntity
   end
 
   def fixture_pk
-    fixture = '"aaaa"' if @primary_key.type == 'String'
+    fixture = 'UUID.randomUUID().toString()' if @primary_key.type == 'String'
     fixture = '1L' if @primary_key.type == 'Long'
     fixture = 'UUID.randomUUID()' if @primary_key.type == 'UUID'
     fixture = 'new Integer(1)' if @primary_key.type == 'Integer'

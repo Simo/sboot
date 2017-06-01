@@ -1,5 +1,6 @@
 package <%= @package %>.web.controllers.api;
 
+import java.text.ParseException;
 <% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +54,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>RestContro
     }
 
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
     @ApiOperation(value = "Crea nuova <%= @entity.name.split('_').collect(&:capitalize).join %>", notes = "Crea una nuova <%= @entity.name.split('_').collect(&:capitalize).join %>", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class)
     @ApiResponses({
         @ApiResponse(code = 201, message = "Success", response = <%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class),
