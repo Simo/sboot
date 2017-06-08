@@ -61,9 +61,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.single_downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         lista.add(<%= @entity.single_downcase %>1);
@@ -81,7 +81,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(jsonPath("$.length()", is(1)))
         <% @entity.properties.each do |property| -%>
-          .andExpect(jsonPath("$[0].<%= property.name %>", is(<%= @entity.single_downcase %>1.get<%= property[:name].capitalize %>()<% if property.type == 'Long' -%>.intValue()<% end -%>)))
+          .andExpect(jsonPath("$[0].<%= property.camel_rather_dash %>", is(<%= @entity.single_downcase %>1.get<%= property.camel_rather_dash firstLetter: 'upcase' %>()<% if property.type == 'Long' -%>.intValue()<% end -%>)))
         <% end -%>
         .andDo(print());
     }
@@ -96,7 +96,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         .accept(MediaType.APPLICATION_JSON_UTF8))
         .andExpect(status().isOk())
         <% @entity.properties.each do |property| -%>
-        .andExpect(jsonPath("$.<%= property.name %>", is(<%= @entity.single_downcase %>1.get<%= property[:name].capitalize %>()<% if property.type == 'Long' %>.intValue()<% end -%>)))
+        .andExpect(jsonPath("$.<%= property.camel_rather_dash %>", is(<%= @entity.single_downcase %>1.get<%= property.camel_rather_dash firstLetter: 'upcase' %>()<% if property.type == 'Long' %>.intValue()<% end -%>)))
         <% end -%>
         .andDo(print());
     }
@@ -107,9 +107,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         when(mockService.cancella(<%= @entity.single_downcase %>Delete.get<%= @entity.primary_key.name.capitalize %>())).thenReturn(null);

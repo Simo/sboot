@@ -18,13 +18,13 @@
         </thead>
         <tbody>
         <% unless @entity.collection_defined? -%><tr th:each="<%= @entity.name.downcase %>Elemento : ${<%= @entity.name.downcase %>Lista}">
-      	      <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>Elemento.<%= property[:name] %>}"><%= property[:name].capitalize %></td>
+      	      <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>Elemento.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
               <% end -%><td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}}">Mostra</a></td>
       				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a></td>
       				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>
       		</tr><% end -%>
         <% if @entity.collection_defined?-%><tr th:each="<%= @entity.name.downcase %> : ${<%= @entity.name_pluralized.downcase %>}">
-              <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"><%= property[:name].capitalize %></td>
+              <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
               <% end -%><td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}}">Mostra</a>
               <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a>
               <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>

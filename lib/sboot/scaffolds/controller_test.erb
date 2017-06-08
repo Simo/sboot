@@ -52,9 +52,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.single_downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         lista.add(<%= @entity.single_downcase %>1);
@@ -123,17 +123,17 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>New = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>New.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>New.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>New.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>New.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>New2 = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>New2.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>New2.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>New2.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>New2.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.single_downcase %>New2);
@@ -155,9 +155,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Update = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>Update.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>Update.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>Update.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>Update.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         when(mockService.salva(any(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO.class))).thenReturn(<%= @entity.single_downcase %>Update);
@@ -179,9 +179,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         when(mockService.cancella(<%= @entity.single_downcase %>Delete.get<%= @entity.primary_key.name.capitalize %>())).thenReturn(1L);
@@ -199,9 +199,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>Controller
         <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Delete = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>Delete.set<%= property[:name].capitalize %>(<%= property.fixture %>);
+          <%= @entity.single_downcase %>Delete.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture %>);
           <% end -%>
         <% end -%>
         when(mockService.cancella(<%= @entity.single_downcase %>Delete.get<%= @entity.primary_key.name.capitalize %>())).thenReturn(1L);

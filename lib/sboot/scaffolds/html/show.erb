@@ -10,7 +10,7 @@
       <% @entity.properties.each do |property| -%>
         <p>
           <strong><%= property[:name].capitalize %>:</strong>
-          <span th:text="${<%= @entity.name.downcase %>.<%= property[:name] %>}"></span>
+          <span th:text="${<%= @entity.name.downcase %>.<%= property.camel_rather_dash %>}"></span>
         </p>
       <% end -%>
 

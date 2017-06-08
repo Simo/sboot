@@ -44,9 +44,9 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>ServiceTes
         <%= @entity.single_downcase %>1 = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
         <% @entity.properties.each do |property| -%>
           <% if property[:constraint] == 'pk' -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(primary_key);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(primary_key);
           <% else -%>
-          <%= @entity.single_downcase %>1.set<%= property[:name].capitalize %>(<%= property.fixture(reference: 'entity') %>);
+          <%= @entity.single_downcase %>1.set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.fixture(reference: 'entity') %>);
           <% end -%>
         <% end -%>
         lista.add(<%= @entity.single_downcase %>1);

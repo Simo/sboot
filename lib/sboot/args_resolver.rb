@@ -29,13 +29,13 @@ module Sboot
     end
 
     def format2 array
-      ret = Sboot::Property.new name: array[0].downcase,type: detect_type(array[1]), constraint: nil if is_a_type? array[1]
-      ret = Sboot::Property.new name: array[0].downcase,type: detect_constraint_type(array[1]), constraint: detect_constraint(array[1]) if is_a_constraint? array[1]
+      ret = Sboot::Property.new name: array[0].downcase,type: detect_type(array[1].downcase), constraint: nil if is_a_type? array[1].downcase
+      ret = Sboot::Property.new name: array[0].downcase,type: detect_constraint_type(array[1].downcase), constraint: detect_constraint(array[1].downcase) if is_a_constraint? array[1].downcase
       ret
     end
 
     def format3 array
-      Sboot::Property.new name: array[0].downcase,type: detect_type(array[1]), constraint: detect_constraint(array[2]) if is_a_constraint? array[2]
+      Sboot::Property.new name: array[0].downcase,type: detect_type(array[1].downcase), constraint: detect_constraint(array[2].downcase) if is_a_constraint? array[2].downcase
     end
 
     def is_a_type? value
