@@ -1,6 +1,8 @@
 class DomainEntity
 
   attr_accessor :name, :name_pluralized, :properties, :pk, :environment, :primary_key, :datetype
+  # Supporto per la generazione di relazioni
+  attr_accessor :masters, :details
 
   def initialize options={}
     @name = options[:name] if options.key? :name
@@ -8,9 +10,29 @@ class DomainEntity
     @properties = options[:properties] if options.key? :properties
     @pk = options[:pk] if options.key? :pk
     @environment = options[:environment] if options.key? :environment
+    @join_column = options[:join_column] if options.key? :join_column
+    @details = []
+    @masters = []
     send('define_key_properties') unless options.empty?
   end
-
+  
+  def define_attributes attributes
+      attributes.each do |a|
+          idx = @properties.index {|p| p[:name] == a[:name] }
+          
+          @properties[idx] = a if idx     # Sostituisco l'elemento senza cambiare l'ordine
+          @properties << a     unless idx # Elemento non presente, lo aggiungo
+      end
+  end
+  
+  def one_to_many detail, key
+      details << { detail: detail, key: key }
+  end
+  
+  def many_to_one master, key
+      masters << { master: master, key: key }
+  end
+  
   def class_name
     single_capitalize
   end
@@ -66,6 +88,10 @@ class DomainEntity
       @datetype = true if property[:type] == 'Date'
     end
   end
+  
+  def java_class_name
+      @name.split('_').collect(&:capitalize).join
+  end
 
   def fixture_pk
     fixture = 'UUID.randomUUID().toString()' if @primary_key.type == 'String'
@@ -75,4 +101,12 @@ class DomainEntity
     fixture
   end
 
+  # TODO: unificare con l'omonima in property
+  def camel_rather_dash name,options={}
+      ret = name.split('_').collect(&:capitalize).join if options[:firstLetter] == 'upcase'
+      ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } if options[:firstLetter] == 'downcase'
+      ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } unless options.key? :firstLetter
+      ret
+  end
+  
 end

@@ -1,0 +1,14 @@
+--- !ruby/object:DomainEntity
+name: casa
+name_pluralized: case
+properties:
+- &1 !ruby/object:Sboot::Property
+  name: casa_id
+  type: Integer
+  constraint: pk
+- !ruby/object:Sboot::Property
+  name: indirizzo
+  type: String
+  constraint: 
+environment: fullstack
+primary_key: *1

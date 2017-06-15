@@ -1,4 +1,5 @@
 require 'diff_match_patch'
+require 'fileutils'
 
 module Sboot
     class SourceWriter
@@ -27,7 +28,7 @@ module Sboot
             
             # Verifico che tutte le patch siano state applicate
             unless result[1].all?
-                STDERR.puts "WARNING: Patch del file '#{filename}' non completa"
+                STDERR.puts "WARNING: Patch del file '#{filename}' non completa, confrontare con il file '#{filename}.orig'"
                 backup_file filename
             end
             
@@ -37,6 +38,10 @@ module Sboot
             write_repo_file   filename, text
         end
         
+        def backup_file(filename)
+            File.write "#{filename}.orig", File.read(filename)
+        end
+
         private
         
         def write_repo_file(filename, text)
@@ -52,10 +57,6 @@ module Sboot
         
         def repo_file(filename)
             "#{@repository_path}/#{filename}"
-        end
-        
-        def backup_file(filename)
-            File.write "#{filename}.orig", File.read(filename)
         end
     end
 end

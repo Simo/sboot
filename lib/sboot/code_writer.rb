@@ -21,7 +21,7 @@ module Sboot
     end
 
     private
-
+    
     def package_to_path
       @package.gsub(/\./,"/")
     end

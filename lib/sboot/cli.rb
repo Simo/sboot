@@ -29,15 +29,29 @@ module Sboot
     method_options :env => "fullstack"
     def generate(name, *args)
       begin
-      environment = options[:env] || 'fullstack'
-      navigator = Sboot::Navigator.new
-      navigator.nav_to_root_folder Dir.pwd
-      entity = domain_entity(name, generate_attributes(args), environment)
-      ng_generation_chain entity if environment == 'ng'
-      editor = Sboot::Editor.new entity, "#{ Dir.pwd }/.sbootconf"
-      editor.publish
-      npm_dependecies_chain if environment == 'fullstack'
-      navigator.set_original_path_back
+        environment = options[:env] || 'fullstack'
+#         navigator = Sboot::Navigator.new
+#         navigator.nav_to_root_folder Dir.pwd
+        # Inizializzo il repository di sboot, utile per ricarica le entità (o altro)
+        repo = Sboot::ConfigRepository.new config: Sboot::Config.new("#{ Dir.pwd }/.sbootconf")
+        # Provo a vedere se l'entità era stata definita in precedenza
+        entity = repo.load_entity(domain_names(name)[:name])
+        
+        if entity.nil?
+            entity = domain_entity(name, generate_attributes(args), environment)
+        else
+            entity.define_attributes generate_attributes(args) # TODO: L'environment serve?
+        end
+
+        generate_code entity, environment
+#         ng_generation_chain entity if environment == 'ng'
+#         editor = Sboot::Editor.new entity, "#{ Dir.pwd }/.sbootconf"
+#         editor.publish
+#         npm_dependecies_chain if environment == 'fullstack'
+#         navigator.set_original_path_back
+        
+        # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
+        repo.save_entity entity
       rescue ArgumentError => e
         puts e.message
       end
@@ -51,10 +65,56 @@ module Sboot
       run "schema2script sboot --env=#{environment} #{file}"
       lines = File.open("sboot_generate.sh", "r+"){ |file| file.read }
       lines.scan(/sboot[\s]+.+/){ |command| run command}
-      run "schema2script ddl --env=#{environment} #{file}"
+      run "schema2script ddl #{file}"
       FileUtils.rm_rf "sboot_generate.sh"
     end
+    
+    desc "relation master:key relation detail:key", "definisce relazioni tra entità"
+    def relation(*args)
+        # configurazione
+#         navigator = Sboot::Navigator.new
+#         navigator.nav_to_root_folder Dir.pwd
+        config = Sboot::Config.new "#{ Dir.pwd }/.sbootconf"
 
+        master_def = parse_entity args[0]
+        detail_def = parse_entity args[2]
+        
+        # Inizializzo il repository di sboot, utile per ricarica le entità (o altro)
+        repo = Sboot::ConfigRepository.new config: config
+        # Provo a vedere se l'entità era stata definita in precedenza
+        master = repo.load_entity(master_def[:name])
+        detail = repo.load_entity(detail_def[:name])
+        
+        abort "Entità '#{master_def[:name]}' non definita: usare prima il comando 'generate'" if master.nil?
+        abort "Entità '#{detail_def[:name]}' non definita: usare prima il comando 'generate'" if detail.nil?
+        
+        relation = case args[1].downcase
+            when /one_?to_?one/
+                'Sboot::OneToOne'
+            when /one_?to_?many/
+                master.one_to_many detail, detail_def[:key]
+                detail.many_to_one master, master_def[:key]
+            when /many_?to_?one/
+                'Sboot::ManyToOne'
+            when /many_?to_?many/
+                'Sboot::ManyToMany'
+            else
+                abort "Tipo di relazione '#{args[1]}' non riconosciuta"
+        end
+        
+        # Generazione del codice
+        generate_code master, "fullstack"
+        generate_code detail, "fullstack"
+        
+        # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
+        repo.save_entity master
+        repo.save_entity detail
+        
+#         clazz = relation.split('::').inject(Object) {|o,c| o.const_get c}
+# 
+#         injector = clazz.new config: config, master: master, relation: relation, detail: detail
+#         injector.create_relation
+    end
 
     map "archetype" => "new"
     map "i" => "init"
@@ -62,6 +122,24 @@ module Sboot
     map "s" => "schema"
 
     private
+    
+    def parse_entity entity
+        parts = entity.split(':')
+        
+        { name: parts[0], key: parts[1] }
+        
+#         DomainEntity.new name: parts[0], name_pluralized: parts[1], join_column: parts[2], properties: [])]
+    end
+    
+    def generate_code entity, environment
+        navigator = Sboot::Navigator.new
+        navigator.nav_to_root_folder Dir.pwd
+        ng_generation_chain entity if environment == 'ng'
+        editor = Sboot::Editor.new entity, "#{ Dir.pwd }/.sbootconf"
+        editor.publish
+        npm_dependecies_chain if environment == 'fullstack'
+        navigator.set_original_path_back
+    end
 
     def domain_names name
       names = {}

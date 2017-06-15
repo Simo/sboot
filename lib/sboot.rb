@@ -18,4 +18,6 @@ require "sboot/navigator"
 require "sboot/ng_routes_helper"
 require "sboot/ng_helper"
 require "sboot/source_writer"
-
+require "sboot/code_injector"
+require "sboot/one_to_many"
+require "sboot/sboot_repo"

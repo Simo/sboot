@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Sboot::SourceWriter do
 
-    subject(:writer) { writer = Sboot::SourceWriter.new sboot_repo_path: '.sboot-repo'}
+  subject(:writer) { writer = Sboot::SourceWriter.new sboot_repo_path: '.sboot-repo'}
 
   describe 'initialize' do
 

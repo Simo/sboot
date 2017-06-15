@@ -72,6 +72,24 @@ describe DomainEntity do
     end
 
   end
+  
+  describe 'update methods' do
+      it 'should append new attributes' do
+          entity.define_attributes [Sboot::Property.new(name: 'camini', type: 'int', constraint: nil)]
+          expect(entity.properties.index {|p| p[:name] == 'camini'}).not_to be(nil)
+      end
+
+      it 'should replace existing attributes' do
+          # Verifico la situazione di partenza
+          idx = entity.properties.index {|p| p[:name] == 'civico'}
+          expect(idx).not_to be(nil)
+          expect(entity.properties[idx][:type]).to eql('Long')
+          # Aggiorno l'attributo
+          entity.define_attributes [Sboot::Property.new(name: 'civico', type: 'int', constraint: nil)]
+          expect(entity.properties.index {|p| p[:name] == 'civico'}).to be(idx)
+          expect(entity.properties[idx][:type]).to eql('int')
+      end
+  end
 
   describe 'helper methods' do
     it "should return casaLista" do
