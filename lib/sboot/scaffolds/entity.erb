@@ -39,19 +39,25 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
   private <%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
   <% end -%>
 <% end -%>
+<%# 
 
-<% @entity.details.each do |relation| -%>
-  @OneToMany(mappedBy="<%= relation[:key] %>", targetEntity=<%= relation[:detail].java_class_name %>.class, fetch=FetchType.LAZY)
+***** Proprietà di legame con la classe detail ***** 
+%><% @entity.details.each do |relation| -%>
+  @OneToMany(mappedBy="<%= @entity.java_class_name.sub(/^[A-Z]/) {|f| f.downcase } %>", targetEntity=<%= relation[:detail].java_class_name %>.class, fetch=FetchType.LAZY)
   private List<<%= relation[:detail].java_class_name %>> <%= relation[:detail].name_pluralized.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase } %>;
 <% end -%>
+<%# 
 
-<% @entity.masters.each do |relation| -%>
+***** Proprietà di legame con la classe master ***** 
+%><% @entity.masters.each do |relation| -%>
   @ManyToOne(fetch=FetchType.LAZY)
   @JoinColumn(name="<%= relation[:key].upcase %>")
   private <%= relation[:master].java_class_name %> <%= relation[:master].java_class_name.sub(/^[A-Z]/) {|f| f.downcase } %>;
 <% end -%>
+<%# 
 
-<% @entity.properties.each do |property| -%>
+***** Metodi per accedere alle proprietà ***** 
+%><% @entity.properties.each do |property| -%>
   public <%= property.type %> get<%= property.camel_rather_dash firstLetter: 'upcase'  %>() {
     return <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
   }
@@ -59,9 +65,10 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
   public void set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>) {
     this.<%= property.camel_rather_dash firstLetter: 'downcase'  %> = <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
   }
-<% end -%>
+<% end -%><%#
 
-<% @entity.details.each do |relation| -%>
+***** Metodi per accedere all'entità detail ***** 
+%><% @entity.details.each do |relation| -%>
   public List<<%= relation[:detail].java_class_name %>> get<%= @entity.camel_rather_dash relation[:detail].name_pluralized, firstLetter: 'upcase' %>() {
     return <%= relation[:detail].java_class_name.sub(/^[A-Z]/) {|f| f.downcase } %>;
   }
@@ -73,9 +80,10 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %> {
         <%= relation[:detail].java_class_name.sub(/^[A-Z]/) {|f| f.downcase } %>.set<%= relation[:key].sub(/^[a-z]/) {|f| f.upcase } %>(this);
     }
   }
-<% end -%>
+<% end -%><%# 
 
-<% @entity.masters.each do |relation| -%>
+***** Metodi per accedere all'entità master *****
+%><% @entity.masters.each do |relation| -%>
   public <%= relation[:master].java_class_name %> get<%= relation[:master].java_class_name %>() {
     return <%= relation[:key] %>;
   }

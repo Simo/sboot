@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "thor"
 require "sboot"
 require "fileutils"
@@ -30,25 +31,20 @@ module Sboot
     def generate(name, *args)
       begin
         environment = options[:env] || 'fullstack'
-#         navigator = Sboot::Navigator.new
-#         navigator.nav_to_root_folder Dir.pwd
-        # Inizializzo il repository di sboot, utile per ricarica le entità (o altro)
+        # Inizializzo il repository di sboot, utile per ricaricare le entità (o altro)
         repo = Sboot::ConfigRepository.new config: Sboot::Config.new("#{ Dir.pwd }/.sbootconf")
         # Provo a vedere se l'entità era stata definita in precedenza
         entity = repo.load_entity(domain_names(name)[:name])
         
         if entity.nil?
+            # Entità non trovata, suppongo sia nuova
             entity = domain_entity(name, generate_attributes(args), environment)
         else
+            # Entità trovata, aggiorno l'elenco degli attributi/proprietà
             entity.define_attributes generate_attributes(args) # TODO: L'environment serve?
         end
 
         generate_code entity, environment
-#         ng_generation_chain entity if environment == 'ng'
-#         editor = Sboot::Editor.new entity, "#{ Dir.pwd }/.sbootconf"
-#         editor.publish
-#         npm_dependecies_chain if environment == 'fullstack'
-#         navigator.set_original_path_back
         
         # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
         repo.save_entity entity
@@ -69,15 +65,16 @@ module Sboot
       FileUtils.rm_rf "sboot_generate.sh"
     end
     
-    desc "relation master:key relation detail:key", "definisce relazioni tra entità"
+    desc "relation [options] master:key relation detail:proprietà", "Definisce relazioni tra entità"
+    method_option :env,    :enum    => [ "fullstack", "api", "backend", "business", "conversion", "persistence" ],
+                           :default => "fullstack",
+                           :desc    => "tipo di stack da generare"
     def relation(*args)
         # configurazione
-#         navigator = Sboot::Navigator.new
-#         navigator.nav_to_root_folder Dir.pwd
         config = Sboot::Config.new "#{ Dir.pwd }/.sbootconf"
 
-        master_def = parse_entity args[0]
-        detail_def = parse_entity args[2]
+        master_def  = parse_entity args[0]
+        detail_def  = parse_entity args[2]
         
         # Inizializzo il repository di sboot, utile per ricarica le entità (o altro)
         repo = Sboot::ConfigRepository.new config: config
@@ -90,30 +87,28 @@ module Sboot
         
         relation = case args[1].downcase
             when /one_?to_?one/
-                'Sboot::OneToOne'
+                STDERR.puts "Non implementato"
+                return
             when /one_?to_?many/
                 master.one_to_many detail, detail_def[:key]
                 detail.many_to_one master, master_def[:key]
             when /many_?to_?one/
-                'Sboot::ManyToOne'
+                STDERR.puts "Non implementato"
+                return
             when /many_?to_?many/
-                'Sboot::ManyToMany'
+                STDERR.puts "Non implementato"
+                return
             else
                 abort "Tipo di relazione '#{args[1]}' non riconosciuta"
         end
         
         # Generazione del codice
-        generate_code master, "fullstack"
+        generate_code master, "fullstack" # FIXME: passare lo stack
         generate_code detail, "fullstack"
         
         # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
         repo.save_entity master
         repo.save_entity detail
-        
-#         clazz = relation.split('::').inject(Object) {|o,c| o.const_get c}
-# 
-#         injector = clazz.new config: config, master: master, relation: relation, detail: detail
-#         injector.create_relation
     end
 
     map "archetype" => "new"
@@ -127,8 +122,6 @@ module Sboot
         parts = entity.split(':')
         
         { name: parts[0], key: parts[1] }
-        
-#         DomainEntity.new name: parts[0], name_pluralized: parts[1], join_column: parts[2], properties: [])]
     end
     
     def generate_code entity, environment
