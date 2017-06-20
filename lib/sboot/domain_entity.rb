@@ -16,8 +16,8 @@ class DomainEntity
     send('define_key_properties') unless options.empty?
   end
   
-  def define_attributes attributes
-      attributes.each do |a|
+  def define_properties props
+      props.each do |a|
           idx = @properties.index {|p| p[:name] == a[:name] }
           
           @properties[idx] = a if idx     # Sostituisco l'elemento senza cambiare l'ordine
@@ -25,21 +25,31 @@ class DomainEntity
       end
   end
   
-  def one_to_many detail, key
-      details << { detail: detail, key: key }
+  def remove_property name
+      @properties.delete_if { |p| p.name == name }
   end
   
-  def many_to_one master, key
-      masters << { master: master, key: key }
+  def ignore_property name
+      @properties.select { |p| p.name == name }.each { |p| p.ignored = true }
   end
   
-  def class_name
-    single_capitalize
+  def one_to_many detail, key, name
+      details << { detail: detail, property: key, name: name }
+  end
+  
+  def many_to_one master, key, name
+      masters << { master: master, property: key, name: name }
   end
 
-  def instance_name
-    single.downcase
-  end
+# Non usata  
+#   def class_name
+#     single_capitalize
+#   end
+
+# Non usata
+#   def instance_name
+#     single.downcase
+#   end
 
   def collection_name
     collection.downcase
@@ -91,6 +101,10 @@ class DomainEntity
   
   def java_class_name
       @name.split('_').collect(&:capitalize).join
+  end
+  
+  def java_instance_name
+      java_class_name.sub(/^[A-Z]/) {|f| f.downcase }
   end
 
   def fixture_pk

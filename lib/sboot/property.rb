@@ -1,12 +1,13 @@
 module Sboot
   class Property
 
-    attr_accessor :name, :type, :constraint
+    attr_accessor :name, :type, :constraint, :ignored
 
     def initialize options={}
       @name = options[:name]
       @type = options[:type]
       @constraint = options[:constraint]
+      @ignored = false
     end
 
     def [](key)
