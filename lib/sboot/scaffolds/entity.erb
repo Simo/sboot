@@ -12,51 +12,55 @@ import org.hibernate.annotations.Type;
 <% if @entity.datetype -%>
 import java.util.Date;
 <% end -%>
+<% unless @entity.details.empty? -%>
+import java.util.List;
+import java.util.ArrayList;
+<% end -%>
 
 @Entity
 @Table(name = "<%= @entity.name.upcase %>")
 public class <%= @entity.java_class_name %> {
 
-  @Id
+    @Id
 <% if @entity.primary_key.is_uuid? -%>
-  @Type(type="uuid-binary")
-  @GeneratedValue(generator="myUUID")
-  @GenericGenerator(name="myUUID", strategy="uuid2")
+    @Type(type="uuid-binary")
+    @GeneratedValue(generator="myUUID")
+    @GenericGenerator(name="myUUID", strategy="uuid2")
 <% end -%>
 <% if @entity.primary_key.type == 'String' -%>
-  @GeneratedValue(generator="myUUID")
-  @GenericGenerator(name="myUUID", strategy="uuid2")
+    @GeneratedValue(generator="myUUID")
+    @GenericGenerator(name="myUUID", strategy="uuid2")
 <% end -%>
 <% unless @entity.primary_key.is_uuid? -%>
-  @GeneratedValue(strategy= GenerationType.AUTO)
-//  @GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
-//  @SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
+    @GeneratedValue(strategy= GenerationType.AUTO)
+//    @GeneratedValue(strategy= GenerationType.AUTO, generator="<%= @entity.name.downcase %>_seq_gen")
+//    @SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
 <% end -%>
-  @Column(name = "<%= @entity.primary_key[:name].upcase %>")
-  private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+    @Column(name = "<%= @entity.primary_key[:name].upcase %>")
+    private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
 <%#
 
-***** Proprietà dell'entità
+***** Proprietà dell'entità *****
 %><% @entity.properties.each do |property| -%>
 <%   unless property[:constraint] == 'pk' or property[:ignored] -%>
-  @Column(name = "<%= property[:name].upcase %>")
-  private <%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
+    @Column(name = "<%= property[:name].upcase %>")
+    private <%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
 <%   end -%>
 <% end -%>
 <%# 
 
 ***** Proprietà di legame con la classe detail ***** 
 %><% @entity.details.each do |relation| -%>
-  @OneToMany(mappedBy="<%= @entity.java_instance_name %>", targetEntity=<%= relation[:detail].java_class_name %>.class, fetch=FetchType.LAZY)
-  private List<<%= relation[:detail].java_class_name %>> <%= relation[:detail].name_pluralized.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase } %>;
+    @OneToMany(mappedBy="<%= relation.java_instance_name %>", targetEntity=<%= relation.detail.java_class_name %>.class, fetch=FetchType.LAZY)
+    private List<<%= relation.detail.java_class_name %>> <%= relation.collection_name %> = new ArrayList<<%= relation.detail.java_class_name %>>();
 <% end -%>
 <%# 
 
 ***** Proprietà di legame con la classe master ***** 
 %><% @entity.masters.each do |relation| -%>
-  @ManyToOne(fetch=FetchType.LAZY)
-  @JoinColumn(name="<%= relation[:property].upcase %>")
-  private <%= relation[:master].java_class_name %> <%= relation[:name].sub(/^[A-Z]/) {|f| f.downcase } %>;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="<%= relation.property.upcase %>")
+    private <%= relation.master.java_class_name %> <%= relation.java_instance_name %>;
 <% end -%>
 <%# 
 
@@ -64,41 +68,41 @@ public class <%= @entity.java_class_name %> {
 %><% @entity.properties.each do |property| -%>
 <%   unless property[:ignored] -%>
 
-  public <%= property.type %> get<%= property.camel_rather_dash firstLetter: 'upcase'  %>() {
-    return <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
-  }
+    public <%= property.type %> get<%= property.camel_rather_dash firstLetter: 'upcase'  %>() {
+        return <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
+    }
 
-  public void set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>) {
-    this.<%= property.camel_rather_dash firstLetter: 'downcase'  %> = <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
-  }
+    public void set<%= property.camel_rather_dash firstLetter: 'upcase'  %>(<%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>) {
+        this.<%= property.camel_rather_dash firstLetter: 'downcase'  %> = <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
+    }
 <%  end -%>
 <% end -%><%#
 
 ***** Metodi per accedere all'entità detail ***** 
 %><% @entity.details.each do |relation| -%>
 
-  public List<<%= relation[:detail].java_class_name %>> get<%= @entity.camel_rather_dash relation[:detail].name_pluralized, firstLetter: 'upcase' %>() {
-    return <%= relation[:detail].name_pluralized.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase } %>;
-  }
-
-  public void add<%= relation[:detail].java_class_name %>(<%= relation[:detail].java_class_name %> <%= relation[:detail].java_instance_name %>) {
-    this.<%= relation[:detail].name_pluralized.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase } %>.add(<%= relation[:detail].java_instance_name %>);
-    
-    if (<%= relation[:detail].java_instance_name %>.get<%= relation[:name].capitalize %>() != this) {
-        <%= relation[:detail].java_instance_name %>.set<%= relation[:name].capitalize %>(this);
+    public List<<%= relation.detail.java_class_name %>> get<%= relation.collection_name.sub(/^[a-z]/) {|f| f.upcase } %>() {
+        return <%= relation.collection_name %>;
     }
-  }
+
+    public void add<%= relation.item_in_collection %>(<%= relation.detail.java_class_name %> <%= relation.detail.java_instance_name %>) {
+        this.<%= relation.collection_name %>.add(<%= relation.detail.java_instance_name %>);
+    
+        if (<%= relation.detail.java_instance_name %>.get<%= relation.java_class_name %>() != this) {
+            <%= relation.detail.java_instance_name %>.set<%= relation.java_class_name %>(this);
+        }
+    }
 <% end -%><%# 
 
 ***** Metodi per accedere all'entità master *****
 %><% @entity.masters.each do |relation| -%>
 
-  public <%= relation[:master].java_class_name %> get<%= relation[:master].java_class_name %>() {
-    return <%= relation[:name].sub(/^[A-Z]/) {|f| f.downcase } %>;
-  }
+    public <%= relation.master.java_class_name %> get<%= relation.java_class_name %>() {
+        return <%= relation.java_instance_name %>;
+    }
   
-  public void set<%= relation[:master].java_class_name %>(<%= relation[:master].java_class_name %> <%= relation[:name].sub(/^[A-Z]/) {|f| f.downcase } %>) {
-    this.<%= relation[:name].sub(/^[A-Z]/) {|f| f.downcase } %> = <%= relation[:name].sub(/^[A-Z]/) {|f| f.downcase } %>;
-  }
+    public void set<%= relation.java_class_name %>(<%= relation.master.java_class_name %> <%= relation.java_instance_name %>) {
+        this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
+    }
 <% end -%>
 }

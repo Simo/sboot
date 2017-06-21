@@ -1,6 +1,10 @@
-class DomainEntity
+# encoding: utf-8
+require 'sboot/source_item'
+require 'sboot/relation'
 
-  attr_accessor :name, :name_pluralized, :properties, :pk, :environment, :primary_key, :datetype
+class DomainEntity<Sboot::SourceItem
+
+  attr_accessor :name_pluralized, :properties, :pk, :environment, :primary_key, :datetype
   # Supporto per la generazione di relazioni
   attr_accessor :masters, :details
 
@@ -33,12 +37,13 @@ class DomainEntity
       @properties.select { |p| p.name == name }.each { |p| p.ignored = true }
   end
   
+  # entity, property_name, relation_name
   def one_to_many detail, key, name
-      details << { detail: detail, property: key, name: name }
+      details << Sboot::Relation.new(entity: detail, property: key, name: name)
   end
   
   def many_to_one master, key, name
-      masters << { master: master, property: key, name: name }
+      masters << Sboot::Relation.new(entity: master, property: key, name: name)
   end
 
 # Non usata  
@@ -99,13 +104,13 @@ class DomainEntity
     end
   end
   
-  def java_class_name
-      @name.split('_').collect(&:capitalize).join
-  end
+#   def java_class_name
+#       @name.split('_').collect(&:capitalize).join
+#   end
   
-  def java_instance_name
-      java_class_name.sub(/^[A-Z]/) {|f| f.downcase }
-  end
+#   def java_instance_name
+#       java_class_name.sub(/^[A-Z]/) {|f| f.downcase }
+#   end
 
   def fixture_pk
     fixture = 'UUID.randomUUID().toString()' if @primary_key.type == 'String'
@@ -116,11 +121,11 @@ class DomainEntity
   end
 
   # TODO: unificare con l'omonima in property
-  def camel_rather_dash name,options={}
-      ret = name.split('_').collect(&:capitalize).join if options[:firstLetter] == 'upcase'
-      ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } if options[:firstLetter] == 'downcase'
-      ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } unless options.key? :firstLetter
-      ret
-  end
+#   def camel_rather_dash name,options={}
+#       ret = name.split('_').collect(&:capitalize).join if options[:firstLetter] == 'upcase'
+#       ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } if options[:firstLetter] == 'downcase'
+#       ret = name.split('_').collect(&:capitalize).join().tap { |e| e[0] = e[0].downcase } unless options.key? :firstLetter
+#       ret
+#   end
   
 end

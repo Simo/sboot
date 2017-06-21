@@ -45,6 +45,7 @@ module Sboot
         end
 
         generate_code entity, environment
+        generate_npm environment
         
         # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
         repo.save_entity entity
@@ -72,19 +73,14 @@ module Sboot
     def relation(*args)
       # configurazione
       config = Sboot::Config.new "#{ Dir.pwd }/.sbootconf"
-      # Inizializzo il repository di sboot, utile per ricarica le entità (o altro)
+      # Inizializzo il repository di sboot, utile per ricaricare le entità (o altro)
       repo = Sboot::ConfigRepository.new config: config
-      # Provo a vedere se l'entità era stata definita in precedenza
+      # Carico le precedenti definizioni delle entità, se esistono
       master_def = parse_entity repo, args[0]
       detail_def = parse_entity repo, args[2]
         
       master = master_def[:entity]
       detail = detail_def[:entity]
-#       master = repo.load_entity(master_def[:entity])
-#       detail = repo.load_entity(detail_def[:entity])
-        
-#       abort "Entità '#{master_def[:entity]}' non definita: usare prima il comando 'generate'" if master.nil?
-#       abort "Entità '#{detail_def[:entity]}' non definita: usare prima il comando 'generate'" if detail.nil?
         
       relation = case args[1].downcase
         when /one_?to_?one/
@@ -93,12 +89,16 @@ module Sboot
         when /one_?to_?many/
           # La proprietà deve essere ignorata durante la generazione, viene generata come join
           detail.ignore_property detail_def[:property]
-          master.one_to_many detail, detail_def[:property], master_def[:name]
+          master.one_to_many detail, detail_def[:property], detail_def[:name] || master.name
           # Il legame è dato dal campo del detail
-          detail.many_to_one master, detail_def[:property], master_def[:name]
+          detail.many_to_one master, detail_def[:property], detail_def[:name]
         when /many_?to_?one/
-          STDERR.puts "Non implementato"
-          return
+          master_def, detail_def = detail_def, master_def
+          # La proprietà deve essere ignorata durante la generazione, viene generata come join
+          detail.ignore_property detail_def[:property]
+          master.one_to_many detail, detail_def[:property], master_def[:name] || master.name
+          # Il legame è dato dal campo del detail
+          detail.many_to_one master, detail_def[:property], detail_def[:name] || master.name
         when /many_?to_?many/
           STDERR.puts "Non implementato"
           return
@@ -107,8 +107,8 @@ module Sboot
       end
         
       # Generazione del codice
-      generate_code master, "fullstack" # FIXME: passare lo stack
-      generate_code detail, "fullstack"
+      generate_code master, options[:env]
+      generate_code detail, options[:env]
        
       # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
       repo.save_entity master
@@ -128,10 +128,10 @@ module Sboot
       entity   = repo.load_entity(parts[0])
       abort "Entità '#{parts[0]}' non definita: usare prima il comando 'generate'" if entity.nil?
       property = if parts.length > 1 then parts[1] else entity.pk end
-      name     = if parts.length > 2 then parts[2] else entity.java_class_name end
+#       name     = if parts.length > 2 then parts[2] else entity.java_class_name end
+      name     = parts[2] if parts.length > 2
       
       { entity: entity, property: property, name: name }
-#       { entity: parts[0], property: parts[1], name: parts[2] }
     end
     
     def generate_code entity, environment
@@ -140,8 +140,15 @@ module Sboot
       ng_generation_chain entity if environment == 'ng'
       editor = Sboot::Editor.new entity, "#{ Dir.pwd }/.sbootconf"
       editor.publish
-      npm_dependecies_chain if environment == 'fullstack'
+#       npm_dependecies_chain if environment == 'fullstack'
       navigator.set_original_path_back
+    end
+    
+    def generate_npm environment
+        navigator = Sboot::Navigator.new
+        navigator.nav_to_root_folder Dir.pwd
+        npm_dependecies_chain if environment == 'fullstack'
+        navigator.set_original_path_back
     end
 
     def domain_names name

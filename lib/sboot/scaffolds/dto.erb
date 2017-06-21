@@ -7,60 +7,168 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 <% end -%>
-import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
 <% if @entity.primary_key.is_uuid?-%>import java.util.UUID;<% end -%>
+<% unless @entity.details.empty?  -%>
+import java.util.List;
+import java.util.ArrayList;
+<% end -%>
+import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
+<% @entity.details.map {|r| r.detail}.uniq.each do |relation| -%>
+import <%= @package %>.persistence.entities.<%= relation.detail.java_class_name %>;
+<% end -%>
+<% @entity.masters.map {|r| r.master}.uniq.each do |relation| -%>
+import <%= @package %>.persistence.entities.<%= relation.master.java_class_name %>;
+<% end -%>
 
 public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 
-    <% @entity.properties.each do |property| %>
+<%#
+
+***** Proprietà dell'entità *****
+%><% @entity.properties.each do |property| -%>
+<%   unless property[:constraint] == 'pk' or property[:ignored] -%>
     private <%= property.dto_type %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
-    <% end %>
+<%   end -%>
+<% end -%>
+<%# 
 
+***** Proprietà di legame con la classe detail ***** 
+%><% @entity.details.each do |relation| -%>
+    private List<<%= relation.detail.java_class_name %>DTO> <%= relation.collection_name %> = new ArrayList<<%= relation.detail.java_class_name %>DTO>();
+<% end -%>
+<%# 
+
+***** Proprietà di legame con la classe master ***** 
+%><% @entity.masters.each do |relation| -%>
+    private <%= relation.master.java_class_name %>DTO <%= relation.java_instance_name %>;
+<% end -%>
+<%# 
+
+***** COSTRUTTORE VUOTO ***** %>
     public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(){}
+<%#
 
-	public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
-		<% @entity.properties.each do |property| -%>
-		<% unless property.date_type? -%>
-		this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>();
-		<% else -%>
-		this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = this.toString(entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>());
-		<% end -%>
-		<% end -%>
-	}
+***** COSTRUTTORE ***** %>
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
+<% @entity.properties.each do |property| -%>
+<%   unless property[:ignored] -%>
+<%     unless property.date_type? -%>
+        this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>();
+<%     else -%>
+        this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = this.toString(entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>());
+<%     end -%>
+<%   end -%>
+<% end -%>
+<%#
 
-    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
-      <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
-			<% @entity.properties.each do |property| -%>
-			<% unless property.date_type? -%>
-			entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>);
-			<% else -%>
-			entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(toDate(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>));
-			<% end -%>
-			<% end -%>
-    	return entity;
+     ***** Creazione dei DTO dei master *****
+%><% @entity.masters.each do |relation| -%>
+
+        if(entity.get<%= relation.java_class_name %>() != null) {
+            this.<%= relation.java_instance_name %> = new <%= relation.master.java_class_name %>DTO(entity.get<%= relation.java_class_name %>());
+        }
+<% end -%>
+<%#
+     ***** Creazione DTO dei detail *****
+%><% @entity.details.each do |relation| -%>
+
+        for(<%= relation.detail.java_class_name %> detail: entity.get<%= relation.collection_name.sub(/^[a-z]/) {|f| f.upcase} %>()) {
+            add<%= relation.detail.java_class_name %>(new <%= relation.detail.java_class_name %>DTO(detail));
+        }
+<% end -%>
     }
 
-<% @entity.properties.each do |property| -%>
-  public <%= property.dto_type %> get<%= property.camel_rather_dash firstLetter: 'upcase' %>() {
-		return <%= property.camel_rather_dash firstLetter: 'downcase' %>;
-  }
+<%# ***** CONVERTER ***** %>
+    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
+        <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
 
-  public void set<%= property.camel_rather_dash firstLetter: 'upcase' %>(<%= property.dto_type %> <%= property.camel_rather_dash firstLetter: 'downcase' %>) {
-    this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = <%= property.camel_rather_dash firstLetter: 'downcase' %>;
-  }
+<% @entity.properties.each do |property| -%>
+<%   unless property[:ignored] -%>
+<%     unless property.date_type? -%>
+        entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>);
+<%     else -%>
+        entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(toDate(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>));
+<%     end -%>
+<%   end -%>
+<% end -%>
+<%#
+
+    ***** conversione del DTO master *****
+%><% @entity.masters.each do |relation| -%>
+
+        if(this.<%= relation.java_instance_name %> != null) {
+            entity.set<%= relation.java_class_name %>(this.<%= relation.java_instance_name %>.convert());
+        }
+<% end -%>
+<% @entity.details.each do |relation| -%>
+
+        for(<%= relation.detail.java_class_name %>DTO detail: this.<%= relation.collection_name %>) {
+            entity.add<%= relation.item_in_collection %>(detail.convert());
+        }
 <% end -%>
 
-<% if @entity.datetype -%>
-	public Date toDate(String dateString) throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		Date dateToBeReturned = formatter.parse(dateString);
-		return dateToBeReturned;
-	}
+        return entity;
+    }
+<%#
 
-	public String toString(Date dateDate){
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-		String dateToBeReturned = formatter.format(dateDate);
-		return dateToBeReturned;
-	}
+***** ACCESSORS ***** 
+%><% @entity.properties.each do |property| -%>
+<%   unless property[:ignored] -%>
+
+    public <%= property.dto_type %> get<%= property.camel_rather_dash firstLetter: 'upcase' %>() {
+        return <%= property.camel_rather_dash firstLetter: 'downcase' %>;
+    }
+
+    public void set<%= property.camel_rather_dash firstLetter: 'upcase' %>(<%= property.dto_type %> <%= property.camel_rather_dash firstLetter: 'downcase' %>) {
+        this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = <%= property.camel_rather_dash firstLetter: 'downcase' %>;
+    }
+<%   end -%>
+<% end -%><%#
+
+***** Metodi per accedere al DTO detail ***** 
+%><% @entity.details.each do |relation| -%>
+
+    public List<<%= relation.detail.java_class_name %>DTO> get<%= relation.collection_name.sub(/^[a-z]/) {|f| f.upcase } %>() {
+        return <%= relation.collection_name %>;
+    }
+
+    public void add<%= relation.item_in_collection %>(<%= relation.detail.java_class_name %>DTO <%= relation.detail.java_instance_name %>) {
+        this.<%= relation.collection_name %>.add(<%= relation.detail.java_instance_name %>);
+    
+        if (<%= relation.detail.java_instance_name %>.get<%= relation.java_class_name %>() != this) {
+            <%= relation.detail.java_instance_name %>.set<%= relation.java_class_name %>(this);
+        }
+    }
+<% end -%><%# 
+
+***** Metodi per accedere al DTO master *****
+%><% @entity.masters.each do |relation| -%>
+
+    public <%= relation.master.java_class_name %>DTO get<%= relation.java_class_name %>() {
+        return <%= relation.java_instance_name %>;
+    }
+  
+    public void set<%= relation.java_class_name %>(<%= relation.master.java_class_name %>DTO <%= relation.java_instance_name %>) {
+        this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
+    }
+<% end -%>
+<%#
+
+***** Routine per la conversione date *****
+%><% if @entity.datetype -%>
+
+    public Date toDate(String dateString) throws ParseException {
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date dateToBeReturned = formatter.parse(dateString);
+
+        return dateToBeReturned;
+    }
+
+    public String toString(Date dateDate){
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String dateToBeReturned = formatter.format(dateDate);
+
+        return dateToBeReturned;
+    }
 <% end -%>
 }
