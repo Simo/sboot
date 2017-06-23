@@ -37,12 +37,12 @@ public class <%= @entity.java_class_name %> {
 //    @SequenceGenerator(name="<%= @entity.name.downcase %>_seq_gen", sequenceName="SEQ_T_<%= @entity.name.upcase %>_ID")
 <% end -%>
     @Column(name = "<%= @entity.primary_key[:name].upcase %>")
-    private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+    private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name].split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase} %>;
 <%#
 
 ***** Proprietà dell'entità *****
 %><% @entity.properties.each do |property| -%>
-<%   unless property[:constraint] == 'pk' or property[:ignored] -%>
+<%   unless property[:constraint] == 'pk' or property.is_fk? -%>
     @Column(name = "<%= property[:name].upcase %>")
     private <%= property.type %> <%= property.camel_rather_dash firstLetter: 'downcase'  %>;
 <%   end -%>
@@ -66,7 +66,7 @@ public class <%= @entity.java_class_name %> {
 
 ***** Metodi per accedere alle proprietà ***** 
 %><% @entity.properties.each do |property| -%>
-<%   unless property[:ignored] -%>
+<%   unless property.is_fk? -%>
 
     public <%= property.type %> get<%= property.camel_rather_dash firstLetter: 'upcase'  %>() {
         return <%= property.camel_rather_dash firstLetter: 'downcase'  %>;

@@ -3,13 +3,14 @@ require 'sboot/source_item'
 module Sboot
   class Property<Sboot::SourceItem
 
-    attr_accessor :name, :type, :constraint, :ignored
+    attr_accessor :name, :type, :constraint, :fk
+    alias_method :is_fk?, :fk
 
     def initialize options={}
       @name = options[:name]
       @type = options[:type]
       @constraint = options[:constraint]
-      @ignored = false
+#       @ignored = false
     end
 
     def [](key)
@@ -47,6 +48,10 @@ module Sboot
         true
       end
     end
+    
+#     def is_fk?
+#       @ignored
+#     end
 
     def is_uuid?
       if @type == 'UUID'
@@ -54,6 +59,7 @@ module Sboot
       end
     end
 
+    # Spostata in SourceItem
 #     def camel_rather_dash options={}
 #       #raise ArgumentError, "firstLetter consente solo valori 'upcase' o 'downcase'" if options.key? :firstLetter && (options[:firstLetter] != 'upcase' || options[:firstLetter] != 'downcase')
 #       ret = @name.split('_').collect(&:capitalize).join if options[:firstLetter] == 'upcase'

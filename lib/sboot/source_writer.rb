@@ -1,5 +1,6 @@
 require 'diff_match_patch'
 require 'fileutils'
+require 'colorize'
 
 module Sboot
     class SourceWriter
@@ -21,15 +22,24 @@ module Sboot
             abort "File '#{repo_file filename}' not found" unless File.exists? "#{repo_file filename}"
             
             dmp         = DiffMatchPatch.new
+            dmp.diff_timeout = 0
+#             dmp.diff_editCost = 8
+            dmp.match_threshold = 0.2
+#             dmp.match_distance = 1000
+#             dmp.patch_deleteThreshold = 0.9
+            dmp.patch_margin = 3
             refFile     = File.read(repo_file filename)
             fileToPatch = File.read(filename)
-            patches     = dmp.patch_make(refFile, text) 
+            diff        = dmp.diff_main(refFile, text) 
+            patches     = dmp.patch_make(diff)
             result      = dmp.patch_apply(patches, fileToPatch)
             
             # Verifico che tutte le patch siano state applicate
             unless result[1].all?
-                STDERR.puts "WARNING: Patch del file '#{filename}' non completa, confrontare con il file '#{filename}.orig'"
+                STDERR.puts "WARNING: Patch del file '#{filename}' non completa, il file originale è stato salvato in '#{filename}.orig'".light_yellow
                 backup_file filename
+                # Genero anche un file HTML per evidenziare meglio le modifiche che si voleva apportare
+                File.write "#{filename}.diff.html", "<pre><code>#{dmp.diff_prettyHtml(diff).gsub(/\n/, '<br/>')}</code></pre>"
             end
             
             # Salvo il sorgente modificato

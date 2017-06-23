@@ -7,14 +7,22 @@ module Sboot
       
     # Restituisce un nome classe in stile Java
     def java_class_name
-      name.split('_').collect(&:capitalize).join
+      as_class_name name
     end
 
     # Restituisce un nome variabile in stile Java
     def java_instance_name
-      java_class_name.sub(/^[A-Z]/) {|f| f.downcase }
+        as_variable_name name
+    end
+    
+    def as_class_name value
+      value.split('_').collect(&:capitalize).join
     end
 
+    def as_variable_name value
+        as_class_name(value).sub(/^[A-Z]/) {|f| f.downcase }
+    end
+    
     def camel_rather_dash options={}
       val = @name      unless  options.key? :value
       val = options[:value] if options.key? :value

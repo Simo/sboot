@@ -1,27 +1,29 @@
 package <%= @package %>.business.exceptions;
 
-<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
+<% if @entity.primary_key.is_uuid? -%>
+import java.util.UUID;
+<% end -%>
 
 public class <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException extends RuntimeException {
 
-  private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
-  private String klass;
+    private <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>;
+    private String klass;
 
-  public <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException(String klass, <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
-    this.klass = klass;
-    this.<%= @entity.primary_key[:name] %> = <%= @entity.primary_key[:name] %>;
-  }
+    public <%= @entity.name.split('_').collect(&:capitalize).join %>EntityNotFoundException(String klass, <%= @entity.primary_key[:type] %> <%= @entity.primary_key[:name] %>) {
+        this.klass = klass;
+        this.<%= @entity.primary_key[:name] %> = <%= @entity.primary_key[:name] %>;
+    }
 
-  public <%= @entity.primary_key[:type] %> get<%= @entity.primary_key[:name].capitalize %>() {
-    return <%= @entity.primary_key[:name] %>;
-  }
+    public <%= @entity.primary_key[:type] %> get<%= @entity.primary_key[:name].capitalize %>() {
+        return <%= @entity.primary_key[:name] %>;
+    }
 
-  public String getKlass(){
-    return klass;
-  }
+    public String getKlass(){
+        return klass;
+    }
 
-  @Override
-  public String getMessage() {
-    return "" + klass + " entity with ID '" + <%= @entity.primary_key[:name] %> + "' not found";
-  }
+    @Override
+    public String getMessage() {
+        return "" + klass + " entity with ID '" + <%= @entity.primary_key[:name] %> + "' not found";
+    }
 }

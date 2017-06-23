@@ -1,11 +1,15 @@
 package <%= @package %>.business.services;
 
-<% if @entity.primary_key.is_uuid? -%>import java.util.UUID;<% end -%>
 import <%= @package %>.business.dtos.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
 
-<% if @entity.datetype -%>import java.text.ParseException;
-<% end -%>
 import java.util.List;
+<% if @entity.primary_key.is_uuid? -%>
+import java.util.UUID;
+<% end -%>
+<% if @entity.datetype or @entity.details.any? {|r| r.detail.datetype } -%>
+
+import java.text.ParseException;
+<% end -%>
 
 public interface <%= @entity.name.split('_').collect(&:capitalize).join %>Service {
 
@@ -13,9 +17,9 @@ public interface <%= @entity.name.split('_').collect(&:capitalize).join %>Servic
 
     <%= @entity.name.split('_').collect(&:capitalize).join %>DTO trova(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 
-    <%= @entity.name.split('_').collect(&:capitalize).join %>DTO salva(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype -%>throws ParseException <% end -%>;
+    <%= @entity.name.split('_').collect(&:capitalize).join %>DTO salva(<%= @entity.name.split('_').collect(&:capitalize).join %>DTO model) <% if @entity.datetype or @entity.details.any? {|r| r.detail.datetype } -%>throws ParseException<% end -%>;
 
-    List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> salvaLista(List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> models) <% if @entity.datetype -%>throws ParseException <% end -%>;
+    List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> salvaLista(List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> models) <% if @entity.datetype or @entity.details.any? {|r| r.detail.datetype } -%>throws ParseException<% end -%>;
 
     Long cancella(<%= @entity.primary_key.type %> <%= @entity.primary_key.name %>);
 

@@ -20,6 +20,7 @@ class DomainEntity<Sboot::SourceItem
     send('define_key_properties') unless options.empty?
   end
   
+  # Ridefinisce le proprietà dell'entità
   def define_properties props
       props.each do |a|
           idx = @properties.index {|p| p[:name] == a[:name] }
@@ -27,14 +28,17 @@ class DomainEntity<Sboot::SourceItem
           @properties[idx] = a if idx     # Sostituisco l'elemento senza cambiare l'ordine
           @properties << a     unless idx # Elemento non presente, lo aggiungo
       end
+      define_key_properties
   end
   
   def remove_property name
       @properties.delete_if { |p| p.name == name }
   end
   
+  # Marca una proprietà come da ignorare nella generazione degli accessors.
+  # Lo scopo è di non generare accessors per proprietà gestite da relazioni master/detail.
   def ignore_property name
-      @properties.select { |p| p.name == name }.each { |p| p.ignored = true }
+      @properties.select { |p| p.name == name }.each { |p| p.fk = true }
   end
   
   # entity, property_name, relation_name
@@ -42,6 +46,7 @@ class DomainEntity<Sboot::SourceItem
       details << Sboot::Relation.new(entity: detail, property: key, name: name)
   end
   
+  # entity, property_name, relation_name
   def many_to_one master, key, name
       masters << Sboot::Relation.new(entity: master, property: key, name: name)
   end
@@ -98,6 +103,10 @@ class DomainEntity<Sboot::SourceItem
   end
 
   def define_key_properties
+    # Azzero le proprietà nel caso qualcosa sia cambiato a seguito di una chiamata define_properties
+    @primary_key = nil
+    @datetype = false
+    
     @properties.each do |property|
       @primary_key = property if property[:constraint] == 'pk'
       @datetype = true if property[:type] == 'Date'

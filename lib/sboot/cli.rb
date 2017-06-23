@@ -84,7 +84,7 @@ module Sboot
         
       relation = case args[1].downcase
         when /one_?to_?one/
-          STDERR.puts "Non implementato"
+          STDERR.puts "Non implementato".light_red
           return
         when /one_?to_?many/
           # La proprietà deve essere ignorata durante la generazione, viene generata come join
@@ -100,12 +100,12 @@ module Sboot
           # Il legame è dato dal campo del detail
           detail.many_to_one master, detail_def[:property], detail_def[:name] || master.name
         when /many_?to_?many/
-          STDERR.puts "Non implementato"
+          STDERR.puts "Non implementato".light_red
           return
         else
           abort "Tipo di relazione '#{args[1]}' non riconosciuta"
       end
-        
+      
       # Generazione del codice
       generate_code master, options[:env]
       generate_code detail, options[:env]
@@ -114,11 +114,58 @@ module Sboot
       repo.save_entity master
       repo.save_entity detail
     end
-
+    
+    desc "modify [options] {entità} {proprieta'[:tipo][:constraint]}", "Aggiunge/modifica proprietà ad un'entità"
+    method_option :env,    :enum    => [ "fullstack", "api", "backend", "business", "conversion", "persistence" ],
+                           :default => "fullstack",
+                           :desc    => "tipo di stack da generare"
+    def modify(name, *args)
+      environment = options[:env] || 'fullstack'
+      # Inizializzo il repository di sboot, utile per ricaricare le entità (o altro)
+      repo = Sboot::ConfigRepository.new config: Sboot::Config.new("#{ Dir.pwd }/.sbootconf")
+      # Provo a vedere se l'entità era stata definita in precedenza
+      entity = repo.load_entity(name)
+            
+      abort "Entità '#{name}' non definita: usare prima il comando 'generate'".light_red if entity.nil?
+            
+      # Entità trovata, aggiorno l'elenco degli attributi/proprietà
+      entity.define_properties generate_attributes(args) # TODO: L'environment serve?
+       
+      generate_code entity, environment
+      generate_npm environment
+        
+      # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
+      repo.save_entity entity
+    end
+      
+    desc "remove [options] {entità} {proprietà}", "Rimuove proprietà da un'entità"
+    method_option :env,    :enum    => [ "fullstack", "api", "backend", "business", "conversion", "persistence" ],
+                           :default => "fullstack",
+                           :desc    => "tipo di stack da generare"
+    def remove(name, *args)
+      environment = options[:env] || 'fullstack'
+      # Inizializzo il repository di sboot, utile per ricaricare le entità (o altro)
+      repo = Sboot::ConfigRepository.new config: Sboot::Config.new("#{ Dir.pwd }/.sbootconf")
+      # Provo a vedere se l'entità era stata definita in precedenza
+      entity = repo.load_entity(name)
+        
+      abort "Entità '#{name}' non definita: usare prima il comando 'generate'".light_red if entity.nil?
+        
+      # Entità trovata, aggiorno l'elenco degli attributi/proprietà
+      args.each {|p| entity.remove_property p}
+        
+      generate_code entity, environment
+      generate_npm environment
+        
+      # Salvo la definizione per usi futuri (ad esempio definizione di relazioni)
+      repo.save_entity entity
+    end
+    
     map "archetype" => "new"
     map "i" => "init"
     map "g" => "generate"
     map "s" => "schema"
+    map "m" => "modify"
 
     private
     
@@ -126,7 +173,7 @@ module Sboot
       parts = entity.split(':')
       
       entity   = repo.load_entity(parts[0])
-      abort "Entità '#{parts[0]}' non definita: usare prima il comando 'generate'" if entity.nil?
+      abort "Entità '#{parts[0]}' non definita: usare prima il comando 'generate'".light_red if entity.nil?
       property = if parts.length > 1 then parts[1] else entity.pk end
 #       name     = if parts.length > 2 then parts[2] else entity.java_class_name end
       name     = parts[2] if parts.length > 2

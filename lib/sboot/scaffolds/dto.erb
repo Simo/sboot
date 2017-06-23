@@ -1,7 +1,9 @@
 package <%= @package %>.business.dtos;
 
-<% if @entity.datetype -%>
+<% if @entity.datetype or @entity.details.any? {|r| r.detail.datetype } -%>
 import java.text.ParseException;
+<% end -%>
+<% if @entity.datetype -%>
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -12,21 +14,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 <% end -%>
-import <%= @package %>.persistence.entities.<%= @entity.name.split('_').collect(&:capitalize).join %>;
-<% @entity.details.map {|r| r.detail}.uniq.each do |relation| -%>
-import <%= @package %>.persistence.entities.<%= relation.detail.java_class_name %>;
-<% end -%>
-<% @entity.masters.map {|r| r.master}.uniq.each do |relation| -%>
-import <%= @package %>.persistence.entities.<%= relation.master.java_class_name %>;
+import <%= @package %>.persistence.entities.<%= @entity.java_class_name %>;
+<% @entity.details.map {|r| r.detail}.uniq {|d| d.name}.each do |ent| -%>
+import <%= @package %>.persistence.entities.<%= ent.java_class_name %>;
 <% end -%>
 
-public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
+public class <%= @entity.java_class_name %>DTO {
 
 <%#
 
 ***** Proprietà dell'entità *****
 %><% @entity.properties.each do |property| -%>
-<%   unless property[:constraint] == 'pk' or property[:ignored] -%>
+<%   unless property.is_fk? -%>
     private <%= property.dto_type %> <%= property[:name].split('_').collect(&:capitalize).join.tap { |e| e[0] = e[0].downcase }%>;
 <%   end -%>
 <% end -%>
@@ -51,7 +50,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 ***** COSTRUTTORE ***** %>
     public <%= @entity.name.split('_').collect(&:capitalize).join %>DTO(<%= @entity.name.split('_').collect(&:capitalize).join %> entity){
 <% @entity.properties.each do |property| -%>
-<%   unless property[:ignored] -%>
+<%   unless property.is_fk? -%>
 <%     unless property.date_type? -%>
         this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>();
 <%     else -%>
@@ -73,17 +72,17 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 %><% @entity.details.each do |relation| -%>
 
         for(<%= relation.detail.java_class_name %> detail: entity.get<%= relation.collection_name.sub(/^[a-z]/) {|f| f.upcase} %>()) {
-            add<%= relation.detail.java_class_name %>(new <%= relation.detail.java_class_name %>DTO(detail));
+            add<%= relation.item_in_collection %>(new <%= relation.detail.java_class_name %>DTO(detail));
         }
 <% end -%>
     }
 
 <%# ***** CONVERTER ***** %>
-    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype -%>throws ParseException <% end -%>{
+    public <%= @entity.name.split('_').collect(&:capitalize).join %> convert() <% if @entity.datetype or @entity.details.any? {|r| r.detail.datetype } -%>throws ParseException<% end -%> {
         <%= @entity.name.split('_').collect(&:capitalize).join %> entity = new <%= @entity.name.split('_').collect(&:capitalize).join %>();
 
 <% @entity.properties.each do |property| -%>
-<%   unless property[:ignored] -%>
+<%   unless property.is_fk? -%>
 <%     unless property.date_type? -%>
         entity.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(this.<%= property.camel_rather_dash firstLetter: 'downcase' %>);
 <%     else -%>
@@ -113,7 +112,7 @@ public class <%= @entity.name.split('_').collect(&:capitalize).join %>DTO {
 
 ***** ACCESSORS ***** 
 %><% @entity.properties.each do |property| -%>
-<%   unless property[:ignored] -%>
+<%   unless property.is_fk? -%>
 
     public <%= property.dto_type %> get<%= property.camel_rather_dash firstLetter: 'upcase' %>() {
         return <%= property.camel_rather_dash firstLetter: 'downcase' %>;

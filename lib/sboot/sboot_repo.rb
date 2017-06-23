@@ -25,6 +25,7 @@ module Sboot
             navigator.nav_to_root_folder Dir.pwd
             serialized_object = File.read file_yml
             result = YAML::load(serialized_object)
+            result.define_key_properties
             navigator.set_original_path_back
             result
         end
