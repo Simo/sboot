@@ -25,7 +25,8 @@ module Sboot
     end
     
     def collection_name
-      "#{@entity.name_pluralized.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase }}#{@name.split('_').collect(&:capitalize).join unless @name.nil?}"
+      name = if @entity.name_pluralized.nil? then @entity.name else @entity.name_pluralized end
+      "#{name.split('_').collect(&:capitalize).join.sub(/^[A-Z]/) {|f| f.downcase }}#{@name.split('_').collect(&:capitalize).join unless @name.nil?}"
     end
     
     def item_in_collection
