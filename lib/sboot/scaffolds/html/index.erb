@@ -3,44 +3,53 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorator="layouts/layout">
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8"/>
         <title>Lista <%= @entity.name.capitalize %></title>
     </head>
     <body>
-    <div layout:fragment="content">
-      <h1>Elenco</h1>
-      <table>
-        <thead>
-          <tr>
-            <% @entity.properties.each do |property| -%><th><%= property[:name].capitalize %></th>
-      			<% end -%><th></th>
-          </tr>
-        </thead>
-        <tbody>
-        <% unless @entity.collection_defined? -%><tr th:each="<%= @entity.name.downcase %>Elemento : ${<%= @entity.name.downcase %>Lista}">
-      	      <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>Elemento.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
-              <% end -%><td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}}">Mostra</a></td>
-      				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a></td>
-      				<td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>
-      		</tr><% end -%>
-        <% if @entity.collection_defined?-%><tr th:each="<%= @entity.name.downcase %> : ${<%= @entity.name_pluralized.downcase %>}">
-              <% @entity.properties.each do |property| -%><td th:text="${<%= @entity.name.downcase %>.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
-              <% end -%><td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}}">Mostra</a>
-              <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a>
-              <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>
+      <div layout:fragment="content">
+        <h1>Elenco</h1>
+        <table>
+          <thead>
+            <tr>
+<% @entity.properties.each do |property| -%>
+              <th><%= property[:name].capitalize %></th>
+<% end -%>
+              <th></th>
             </tr>
-        <% end -%>
-        </tbody>
-      </table>
-      <br>
-      <a th:href="@{'/<%= @entity.collection.downcase %>/new'}">Inserisci</a>
-    </div>
-    <div layout:fragment="scripting">
-      <script type="text/javascript">
-          $(document).ready(function() {
+          </thead>
+          <tbody>
+<% unless @entity.collection_defined? -%>
+            <tr th:each="<%= @entity.name.downcase %>Elemento : ${<%= @entity.name.downcase %>Lista}">
+<%     @entity.properties.each do |property| -%>
+              <td th:text="${<%= @entity.name.downcase %>Elemento.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
+<%     end -%>
+              <td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}}">Mostra</a></td>
+              <td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a></td>
+              <td><a th:href="@{'/<%= @entity.name.downcase %>/'+${<%= @entity.name.downcase %>Elemento.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>
+            </tr>
+<% end -%>
+<% if @entity.collection_defined?-%>
+            <tr th:each="<%= @entity.name.downcase %> : ${<%= @entity.name_pluralized.downcase %>}">
+<%     @entity.properties.each do |property| -%>
+              <td th:text="${<%= @entity.name.downcase %>.<%= property.camel_rather_dash %>}"><%= property.camel_rather_dash firstLetter: 'upcase'  %></td>
+<%     end -%>
+              <td><a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}}">Mostra</a>
+                  <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/edit'}">Modifica</a>
+                  <a th:href="@{'/<%= @entity.name_pluralized.downcase %>/'+${<%= @entity.name.downcase %>.<%= @entity.primary_key.name %>}+'/delete'}">Cancella</a></td>
+              </tr>
+<% end -%>
+          </tbody>
+        </table>
+        <br/>
+        <a th:href="@{'/<%= @entity.collection.downcase %>/new'}">Inserisci</a>
+      </div>
+      <div layout:fragment="scripting">
+        <script type="text/javascript">
+          $(function() {
               $('table').DataTable();
           });
-      </script>
-    </div>
+        </script>
+      </div>
     </body>
 </html>

@@ -1,4 +1,4 @@
-require 'diff_match_patch'
+require 'sboot/diff_patch_match'
 require 'fileutils'
 require 'colorize'
 
@@ -21,13 +21,7 @@ module Sboot
             # Controllo di sicurezza
             abort "File '#{repo_file filename}' not found" unless File.exists? "#{repo_file filename}"
             
-            dmp         = DiffMatchPatch.new
-            dmp.diff_timeout = 0
-#             dmp.diff_editCost = 8
-            dmp.match_threshold = 0.2
-#             dmp.match_distance = 1000
-#             dmp.patch_deleteThreshold = 0.9
-            dmp.patch_margin = 3
+            dmp         = DiffPatchMatch.new
             refFile     = File.read(repo_file filename)
             fileToPatch = File.read(filename)
             diff        = dmp.diff_main(refFile, text) 
@@ -40,6 +34,7 @@ module Sboot
                 backup_file filename
                 # Genero anche un file HTML per evidenziare meglio le modifiche che si voleva apportare
                 File.write "#{filename}.diff.html", "<pre><code>#{dmp.diff_prettyHtml(diff).gsub(/\n/, '<br/>')}</code></pre>"
+                File.write "#{filename}.new", text
             end
             
             # Salvo il sorgente modificato

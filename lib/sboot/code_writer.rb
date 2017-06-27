@@ -18,6 +18,8 @@ module Sboot
           path = "#{stack[:path]}/#{create_path file}"
           write_file "#{path}/#{ @entity.name.split('_').collect(&:capitalize).join unless file.key == :messagedto }#{file.ext}.java", ERB.new(getTemplate(file.key),nil,'-').result(binding)
       end
+      
+      write_file "#{stack[:path]}/#{package_to_path}/web/ThymeleafConfig.java", ERB.new(getTemplate("ThymeleafConfig.java"),nil,'-').result(binding)
     end
 
     private
