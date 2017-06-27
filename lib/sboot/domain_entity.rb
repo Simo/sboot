@@ -6,7 +6,7 @@ class DomainEntity<Sboot::SourceItem
 
   attr_accessor :name_pluralized, :properties, :pk, :environment, :primary_key, :datetype
   # Supporto per la generazione di relazioni
-  attr_accessor :masters, :details
+  attr_accessor :masters, :details, :one2one, :inverse_one2one
 
   def initialize options={}
     @name = options[:name] if options.key? :name
@@ -17,6 +17,8 @@ class DomainEntity<Sboot::SourceItem
     @join_column = options[:join_column] if options.key? :join_column
     @details = []
     @masters = []
+    @one2one = []
+    @inverse_one2one = []
     send('define_key_properties') unless options.empty?
   end
   
@@ -49,6 +51,16 @@ class DomainEntity<Sboot::SourceItem
   # entity, property_name, relation_name
   def many_to_one master, key, name
       masters << Sboot::Relation.new(entity: master, property: key, name: name)
+  end
+  
+  # entity, property_name, relation_name
+  def one_to_one detail, key, name
+    # FIXME: da implementare
+  end
+  
+  # entity, property_name, relation_name
+  def inverse_one_to_one master, key, name
+    # FIXME: da implementare
   end
 
 # Non usata  

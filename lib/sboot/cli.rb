@@ -84,8 +84,11 @@ module Sboot
         
       relation = case args[1].downcase
         when /one_?to_?one/
-          STDERR.puts "Non implementato".light_red
-          return
+#           STDERR.puts "Non implementato".light_red
+#           return
+          detail.ignore_property detail_def[:property]
+          master.one_to_one detail, detail_def[:property], detail_def[:name] || master.name
+          detail.inverse_one_to_one master, detail_def[:property], detail_def[:name]
         when /one_?to_?many/
           # La proprietà deve essere ignorata durante la generazione, viene generata come join
           detail.ignore_property detail_def[:property]

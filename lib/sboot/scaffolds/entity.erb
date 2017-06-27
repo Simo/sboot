@@ -62,6 +62,14 @@ public class <%= @entity.java_class_name %> {
     @JoinColumn(name="<%= relation.property.upcase %>")
     private <%= relation.master.java_class_name %> <%= relation.java_instance_name %>;
 <% end -%>
+<%#
+
+***** Proprietà per i legami one-to-one *****
+%><% @entity.one2one.each do |relation| -%>
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="<%= relation.property.upcase %>")
+    private <%= relation.detail.java_class_name %> <%= relation.java_instance_name %>;
+<%end -%>
 <%# 
 
 ***** Metodi per accedere alle proprietà ***** 
@@ -104,5 +112,17 @@ public class <%= @entity.java_class_name %> {
     public void set<%= relation.java_class_name %>(<%= relation.master.java_class_name %> <%= relation.java_instance_name %>) {
         this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
     }
-<% end -%>
+<% end -%><%#
+
+***** Metodi per le relazioni one-to-one *****
+%><% @entity.one2one.each do |relation| -%>
+
+    public <%= relation.entity.java_class_name %> get<%= relation.java_class_name %>() {
+        return <%= relation.java_instance_name %>;
+    }
+    
+    public void set<%= relation.java_class_name %>(<%= relation.entity.java_class_name %> <%= relation.java_instance_name %>) {
+        this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
+    }
+<%end -%>
 }

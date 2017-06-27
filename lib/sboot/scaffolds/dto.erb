@@ -18,6 +18,9 @@ import <%= @package %>.persistence.entities.<%= @entity.java_class_name %>;
 <% @entity.details.map {|r| r.detail}.uniq {|d| d.name}.each do |ent| -%>
 import <%= @package %>.persistence.entities.<%= ent.java_class_name %>;
 <% end -%>
+<% @entity.one2one.map {|r| r.entity}.uniq {|d| d.name}.each do |ent| -%>
+import <%= @package %>.persistence.entities.<%= ent.java_class_name %>;
+<% end -%>
 
 public class <%= @entity.java_class_name %>DTO {
 
@@ -41,6 +44,12 @@ public class <%= @entity.java_class_name %>DTO {
 %><% @entity.masters.each do |relation| -%>
     private <%= relation.master.java_class_name %>DTO <%= relation.java_instance_name %>;
 <% end -%>
+<%#
+
+***** Proprietà dei legami one-to-one *****
+%><% @entity.one2one.each do |relation| -%>
+    private <%= relation.entity.java_class_name %>DTO <%= relation.java_instance_name %>;
+<% end -%>
 <%# 
 
 ***** COSTRUTTORE VUOTO ***** %>
@@ -57,6 +66,15 @@ public class <%= @entity.java_class_name %>DTO {
         this.<%= property.camel_rather_dash firstLetter: 'downcase' %> = this.toString(entity.get<%= property.camel_rather_dash firstLetter: 'upcase' %>());
 <%     end -%>
 <%   end -%>
+<% end -%>
+<%#
+
+     ***** Creazione DTO one-to-one *****
+%><% @entity.one2one.each do |relation| -%>
+
+        if(entity.get<%= relation.java_class_name %>() != null) {
+            this.<%= relation.java_instance_name %> = new <%= relation.entity.java_class_name %>DTO(entity.get<%= relation.java_class_name %>());
+        }
 <% end -%>
 <%#
 
@@ -148,6 +166,19 @@ public class <%= @entity.java_class_name %>DTO {
     }
   
     public void set<%= relation.java_class_name %>(<%= relation.master.java_class_name %>DTO <%= relation.java_instance_name %>) {
+        this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
+    }
+<% end -%>
+<%#
+
+***** Metodi per accedere alle relazioni one-to-one *****
+%><% @entity.one2one.each do |relation| -%>
+
+    public <%= relation.entity.java_class_name %>DTO get<%= relation.java_class_name %>() {
+        return <%= relation.java_instance_name %>;
+    }
+    
+    public void set<%= relation.java_class_name %>(<%= relation.entity.java_class_name %>DTO <%= relation.java_instance_name %>) {
         this.<%= relation.java_instance_name %> = <%= relation.java_instance_name %>;
     }
 <% end -%>
