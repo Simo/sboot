@@ -4,7 +4,7 @@ module Sboot
     attr_accessor :types, :constraints, :has_id
 
     def initialize options={}
-      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Integer',double: 'Double',numeric: 'Double',date: 'Date', byte: "byte[]"}
+      @types = {string: 'String',text: 'String',varchar: 'String',varchar2: 'String',number: 'Long',long: 'Long',int: 'Integer',integer: 'Integer',double: 'Double',numeric: 'Double',float: 'Float', ldate: 'LocalDate',date: 'Date', byte: "byte[]"}
       @constraints = {pk: { role: 'pk', type: 'Long'}, uuid: { role: 'pk', type: 'UUID'}}
       @has_id = false
     end

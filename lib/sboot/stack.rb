@@ -16,7 +16,7 @@ module Sboot
       @ng = [:ng_component_elenco, :ng_component_elenco_html, :ng_component_dettaglio, :ng_component_dettaglio_html,:ng_component_form, :ng_component_form_html, :ng_component_form_reactive, :ng_component_form_reactive_html, :ng_service, :ng_interface]
 
       @fulltest = [:controller_test, :service_test]
-      @apitest = [:controller_rest_test, :service_test]
+      @apitest = [:resource_rest_test, :service_test]
       @servicetest = [:service_test]
     end
 

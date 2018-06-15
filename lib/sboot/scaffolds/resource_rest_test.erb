@@ -1,0 +1,228 @@
+package <%= @package %>.web.rest;
+
+import <%= @package %>.service.<%= @entity.name.split('_').collect(&:capitalize).join %>Service;
+import <%= @package %>.service.dto.<%= @entity.name.split('_').collect(&:capitalize).join %>DTO;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+
+import static org.mockito.Mockito.*;
+
+/**
+* Test class for the <%= @entity.name.split('_').collect(&:capitalize).join %>Resource REST controller.
+*
+* @see <%= @entity.name.split('_').collect(&:capitalize).join %>Resource
+*/
+@RunWith(SpringRunner.class)
+@WebMvcTest(controllers = <%= @entity.name.split('_').collect(&:capitalize).join %>Resource.class, secure = false)
+public class <%= @entity.name.split('_').collect(&:capitalize).join %>ResourceIntTest {
+
+<% @entity.properties.each do |property| -%>
+  <% unless property[:constraint] == 'pk' -%>
+    <% if property.type == 'String' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = "AAAAAAAAAA";
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = "BBBBBBBBBB";
+    <% elsif property.type == 'Long' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = "1L";
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = "2L";
+    <% elsif property.type == 'Double' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = new Double(1);
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = new Double(1);
+    <% elsif property.type == 'Float' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = 1F;
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = 2F;
+    <% elsif property.type == 'Integer' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = new Integer(1);
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = new Integer(2);
+    <% elsif property.type == 'LocalDate' %>
+      private static final <%= property.type %> DEFAULT_<%= property.name.upcase %> = LocalDate.ofEpochDay(0L);
+      private static final <%= property.type %> UPDATED_<%= property.name.upcase %> = LocalDate.now(ZoneId.systemDefault());
+    <% end %>
+  <% end -%>
+<% end -%>
+
+
+@Autowired
+private <%= @entity.name.split('_').collect(&:capitalize).join %>Resource <%= @entity.single_downcase %>Resource;
+
+@Autowired
+private MockMvc mvc;
+
+@MockBean
+private <%= @entity.name.split('_').collect(&:capitalize).join %>Service <%= @entity.single_downcase %>Service;
+
+@Before
+public void setup() {
+}
+
+/**
+* Create an entity for this test.
+*
+* This is a static method, as tests for other entities might also need it,
+* if they test an entity which requires the current entity.
+*/
+
+public static <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>New() {
+<%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %> = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
+<%- @entity.properties.each do |property| -%>
+  <%= @entity.single_downcase %>.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(DEFAULT_<%= property.name.upcase %>);
+<%- end -%>
+return <%= @entity.single_downcase %>;
+}
+
+public static <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Created() {
+<%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %> = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
+<%- @entity.properties.each do |property| -%>
+  <%= @entity.single_downcase %>.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(DEFAULT_<%= property.name.upcase %>);
+<%- end -%>
+return <%= @entity.single_downcase %>;
+}
+
+public static <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>Updated() {
+<%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %> = new <%= @entity.name.split('_').collect(&:capitalize).join %>DTO();
+<%- @entity.properties.each do |property| -%>
+  <%= @entity.single_downcase %>.set<%= property.camel_rather_dash firstLetter: 'upcase' %>(UPDATED_<%= property.name.upcase %>);
+<%- end -%>
+return <%= @entity.single_downcase %>;
+}
+
+public List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> listCreated(){
+  List<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO> lista = new ArrayList<<%= @entity.name.split('_').collect(&:capitalize).join %>DTO>();
+  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>DTO = <%= @entity.name.split('_').collect(&:capitalize).join %>ResourceIntTest.<%= @entity.single_downcase %>Created();
+  lista.add(<%= @entity.single_downcase %>DTO);
+  return lista;
+  }
+
+  @Test
+  public void create<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>DTO = this.<%= @entity.single_downcase %>New();
+  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>DTO1 = this.<%= @entity.single_downcase %>Created();
+
+  when(this.<%= @entity.single_downcase %>Service.save(any())).thenReturn(<%= @entity.single_downcase %>DTO1);
+
+  mvc.perform(post("/api/<%= @entity.single_downcase %>s")
+  .contentType(TestUtil.APPLICATION_JSON_UTF8)
+  .content(TestUtil.convertObjectToJsonBytes(<%= @entity.single_downcase %>DTO)))
+  .andExpect(status().isCreated())
+  .andExpect(jsonPath("$.id").value(1L))
+  <%- @entity.properties.each do |property| -%>
+    .andExpect(jsonPath("$.<%= property.camel_rather_dash %>").value(DEFAULT_<%= property.name.upcase %>))
+  <%- end -%>
+  .andDo(print());
+  }
+
+
+  @Test
+  public void create<%= @entity.name.split('_').collect(&:capitalize).join %>WithExistingId() throws Exception {
+
+  // Create the <%= @entity.name.split('_').collect(&:capitalize).join %> with an existing ID
+  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>DTO1 = this.<%= @entity.single_downcase %>Created();
+
+  // An entity with an existing ID cannot be created, so this API call must fail
+  mvc.perform(post("/api/<%= @entity.single_downcase %>s")
+  .contentType(TestUtil.APPLICATION_JSON_UTF8)
+  .content(TestUtil.convertObjectToJsonBytes(<%= @entity.single_downcase %>DTO1)))
+  .andExpect(status().isBadRequest());
+  }
+
+
+  @Test
+  public void getAll<%= @entity.name.split('_').collect(&:capitalize).join %>s() throws Exception {
+
+  when(this.<%= @entity.single_downcase %>Service.findAll()).thenReturn(this.listCreated());
+
+  // Get all the <%= @entity.single_downcase %>List
+  mvc.perform(get("/api/<%= @entity.single_downcase %>s?sort=id,desc"))
+  .andExpect(status().isOk())
+  .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+  .andExpect(jsonPath("$").isArray())
+  .andExpect(jsonPath("$.length()").value(1))
+  <%- @entity.properties.each do |property| -%>
+    .andExpect(jsonPath("$.[*].<%= property.camel_rather_dash %>").value(hasItem(DEFAULT_<%= property.name.upcase %>)))
+  <%- end -%>
+  .andDo(print());
+  }
+
+
+  @Test
+  public void get<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  <%= @entity.name.split('_').collect(&:capitalize).join %>DTO <%= @entity.single_downcase %>DTO = <%= @entity.single_downcase %>Created();
+
+  when(this.<%= @entity.single_downcase %>Service.findOne(any())).thenReturn(<%= @entity.single_downcase %>DTO);
+
+  // Get the <%= @entity.single_downcase %>
+  mvc.perform(get("/api/<%= @entity.single_downcase %>s/{id}", <%= @entity.single_downcase %>DTO.getId()))
+  .andExpect(status().isOk())
+  .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+  .andExpect(jsonPath("$.id").value(<%= @entity.single_downcase %>DTO.getId().intValue()))
+  <%- @entity.properties.each do |property| -%>
+    .andExpect(jsonPath("$.<%= property.camel_rather_dash %>").value(DEFAULT_<%= property.name.upcase %>))
+  <%- end -%>
+  .andDo(print());
+  }
+
+  @Test
+  public void getNonExisting<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  when(this.<%= @entity.single_downcase %>Service.findOne(anyLong())).thenReturn(null);
+
+  // Get the <%= @entity.single_downcase %>
+  mvc.perform(get("/api/<%= @entity.single_downcase %>s/{id}", Long.MAX_VALUE))
+  .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void update<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  when(this.<%= @entity.single_downcase %>Service.save(any())).thenReturn(<%= @entity.single_downcase %>Updated());
+
+  mvc.perform(put("/api/<%= @entity.single_downcase %>s")
+  .contentType(TestUtil.APPLICATION_JSON_UTF8)
+  .content(TestUtil.convertObjectToJsonBytes(<%= @entity.single_downcase %>Created())))
+  .andExpect(status().isOk());
+
+  }
+
+  @Test
+  public void updateNonExisting<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  when(this.<%= @entity.single_downcase %>Service.save(any())).thenReturn(<%= @entity.single_downcase %>Created());
+
+  // If the entity doesn't have an ID, it will be created instead of just being updated
+  mvc.perform(put("/api/<%= @entity.single_downcase %>s")
+  .contentType(TestUtil.APPLICATION_JSON_UTF8)
+  .content(TestUtil.convertObjectToJsonBytes(<%= @entity.single_downcase %>New())))
+  .andExpect(status().isCreated());
+  }
+
+  @Test
+  public void delete<%= @entity.name.split('_').collect(&:capitalize).join %>() throws Exception {
+
+  doNothing().when(this.<%= @entity.single_downcase %>Service).delete(anyLong());
+  // Get the <%= @entity.single_downcase %>
+  mvc.perform(delete("/api/<%= @entity.single_downcase %>s/{id}", <%= @entity.single_downcase %>Created().getId())
+  .accept(TestUtil.APPLICATION_JSON_UTF8))
+  .andExpect(status().isOk());
+  }
+
+}
